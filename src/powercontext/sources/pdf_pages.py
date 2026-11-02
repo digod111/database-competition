@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import hashlib
 import io
+import math
+import re
 from urllib.parse import quote
 
 from pydantic import BaseModel
@@ -33,9 +35,15 @@ from powercontext.sources.projections import TEXT_EVIDENCE_PROJECTION_KEY, TextE
 PDF_PAGE_SOURCE_NAME = "pdf-page"
 PDF_PAGE_SOURCE_VERSION = "1"
 
-# Ask the lexical index for a deeper ranked pool than the number of pages we return so
-# same-page duplicates never starve the delivered citation list.
-_SEARCH_POOL_MULTIPLIER = 4
+# Offline retrieval tuning. The whole-question lexical query alone ranks a page by its
+# single best match; a financial answer is usually spread across a page that matches
+# several question terms. So we issue one ranked query per question term, then fuse the
+# per-term rankings. Rare terms (small result sets) carry more weight than common ones.
+_QUERY_TERM_POOL = 64
+_TOKEN_PATTERN = re.compile(r"[a-z]+|\d+")
+_MIN_TERM_LENGTH = 3
+_RRF_K = 30
+_IDF_SCALE = 1000.0
 
 
 class PDFDocumentInput(BaseModel):
@@ -161,28 +169,66 @@ PDF_PAGE_SOURCE_DEFINITION = AdapterSourceDefinition(
 )
 
 
+def expand_pdf_query(question: str, /) -> tuple[str, ...]:
+    """Expand one question into the distinct lexical queries used for fusion.
+
+    The whole question plus every distinct content term is queried separately. Fusing the
+    per-term rankings lets a page that matches several question terms outrank a page that
+    only matches the question once, without relying on any external index.
+    """
+
+    queries = [question]
+    for term in _TOKEN_PATTERN.findall(question.lower()):
+        if len(term) >= _MIN_TERM_LENGTH and term not in queries:
+            queries.append(term)
+    return tuple(queries)
+
+
 async def search_pdf_pages(memory, question: str, limit: int = 10) -> tuple[MemoryCitation, ...]:
     """Return up to ``limit`` distinct physical-page citations for one question.
 
     Only the public scoped-Memory API is used, so every returned citation is a real,
-    independently retrievable entry. Lexical ranking is delegated to the index; this
-    function's job is to walk that ranking and keep the first distinct pages.
+    independently retrievable entry. Each question term is searched separately and the
+    rankings are fused with reciprocal-rank fusion, weighting rare terms above common
+    ones. This is offline query processing over the platform's own index; it never
+    fabricates a reference.
     """
 
     if limit < 1:
         return ()
 
-    page = await memory.search(SearchMemoryRequest(query=question, mode="fts", limit=limit * _SEARCH_POOL_MULTIPLIER))
+    pool = max(_QUERY_TERM_POOL, limit)
+    scores: dict[str, float] = {}
+    representatives: dict[str, MemoryCitation] = {}
+    for sub_query in expand_pdf_query(question):
+        page = await memory.search(SearchMemoryRequest(query=sub_query, mode="fts", limit=pool))
+        hits = page.hits
+        if not hits:
+            continue
+        weight = math.log(1.0 + _IDF_SCALE / len(hits))
+        for rank, hit in enumerate(hits):
+            scores[hit.entry_id] = scores.get(hit.entry_id, 0.0) + weight / (_RRF_K + rank)
+            representatives.setdefault(
+                hit.entry_id,
+                MemoryCitation(
+                    memory_ref=hit.memory_ref,
+                    entry_id=hit.entry_id,
+                    entry_version_id=hit.entry_version_id,
+                ),
+            )
+
     citations: list[MemoryCitation] = []
     seen: set[str] = set()
-    for hit in page.hits:
-        citation = MemoryCitation(
-            memory_ref=hit.memory_ref,
-            entry_id=hit.entry_id,
-            entry_version_id=hit.entry_version_id,
-        )
+    for entry_id in sorted(scores, key=lambda key: (-scores[key], key)):
+        if len(citations) == limit:
+            break
+        citation = representatives[entry_id]
         record = await memory.get(GetMemoryEntryRequest(citation=citation))
-        locations = {reference.source_id for reference in record.entry.sources if reference.source_type == PDF_PAGE_SOURCE_NAME}
+        locations = {
+            reference.source_id
+            for reference in record.entry.sources
+            if reference.source_type == PDF_PAGE_SOURCE_NAME
+        }
         if len(locations) != 1:
             continue
         location = next(iter(locations))
@@ -190,8 +236,6 @@ async def search_pdf_pages(memory, question: str, limit: int = 10) -> tuple[Memo
             continue
         seen.add(location)
         citations.append(citation)
-        if len(citations) == limit:
-            break
     return tuple(citations)
 
 
