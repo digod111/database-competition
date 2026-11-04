@@ -47,9 +47,11 @@ else:
     from multiprocessing.popen_spawn_posix import Popen as SpawnPopen
 
 from powercontext._logging import log_safely
+from powercontext.builtin.persistence.cursors import SourceCursorRepository
 from powercontext.builtin.persistence.database import AsyncDatabase
 from powercontext.builtin.persistence.errors import ArtifactProcessingLeadershipLostError
 from powercontext.builtin.persistence.processing_intents import ArtifactProcessingIntentRepository
+from powercontext.builtin.persistence.sources import SourceRepository
 from powercontext.builtin.persistence.supervision import (
     ArtifactProcessingBindingStateRepository,
     ArtifactProcessingFence,
@@ -117,6 +119,9 @@ class ArtifactProcessingBinding:
     # Only automatic admission is filtered; already accepted requests retain
     # their own Worker authorization and domain completion semantics.
     automatic_scope_filter: Callable[[AsyncConnection, tuple[str, ...]], Awaitable[frozenset[str]]] | None = None
+    # Admit one window once this many new Source journal entries accumulated
+    # beyond the persisted cursor. None disables count-triggered admission.
+    source_count_threshold: int | None = None
 
     def __post_init__(self) -> None:
         if not self.binding_name or self.binding_name != self.binding_name.strip():
@@ -131,6 +136,10 @@ class ArtifactProcessingBinding:
             raise ValueError("max_workers must be a positive integer")  # noqa: TRY003
         if self.worker_timeout_seconds <= 0:
             raise ValueError("worker_timeout_seconds must be positive")  # noqa: TRY003
+        if self.source_count_threshold is not None and (
+            type(self.source_count_threshold) is not int or self.source_count_threshold < 1
+        ):
+            raise ValueError("source_count_threshold must be a positive integer")  # noqa: TRY003
         if self.automatic_processing_interval is not None:
             if self.automatic_processing_interval.total_seconds() <= 0:
                 raise ValueError("automatic interval must be positive")  # noqa: TRY003
@@ -393,6 +402,7 @@ class _FamilyState:
     retries: dict[str, _RetryState] = field(default_factory=dict)
     requested_after: int = 0
     scan_after: int = 0
+    count_after: int = 0
     scan_generation: int = 0
     scan_in_progress: bool = False
     reconcile_after: str | None = None
@@ -425,6 +435,8 @@ class ArtifactProcessingSupervisor:
         intents: ArtifactProcessingIntentRepository | None = None,
         leases: ArtifactProcessingLeaseRepository | None = None,
         binding_states: ArtifactProcessingBindingStateRepository | None = None,
+        sources: SourceRepository | None = None,
+        cursors: SourceCursorRepository | None = None,
         holder_id: str | None = None,
         oceanbase_tick_seconds: float = _OCEANBASE_TICK_SECONDS,
         oceanbase_lease_seconds: float = _OCEANBASE_LEASE_SECONDS,
@@ -448,6 +460,8 @@ class ArtifactProcessingSupervisor:
         self._intents = intents or ArtifactProcessingIntentRepository()
         self._leases = leases or ArtifactProcessingLeaseRepository()
         self._binding_states = binding_states or ArtifactProcessingBindingStateRepository()
+        self._sources = sources
+        self._cursors = cursors
         self.holder_id = holder_id or str(uuid4())
         self._tick = oceanbase_tick_seconds
         self._lease_seconds = oceanbase_lease_seconds
@@ -656,6 +670,58 @@ class ArtifactProcessingSupervisor:
         else:
             await self._discover_requested(state)
             await self._discover_automatic(state)
+        # Count-triggered admission re-reads persisted Source progress so a
+        # Family can fire on accumulated inputs even without a schedule.
+        await self._discover_count(state)
+
+    async def _discover_count(self, state: _FamilyState) -> None:
+        binding = state.binding
+        threshold = binding.source_count_threshold
+        if threshold is None or self._sources is None or self._cursors is None:
+            return
+        capacity = self._fresh_capacity(state)
+        if capacity <= 0:
+            return
+        loop = asyncio.get_running_loop()
+        page = min(capacity, _DISCOVERY_PAGE_SIZE)
+        matched: list[str] = []
+        rows = ()
+        async with self._database.transaction() as connection:
+            await self._leases.require_fence(connection, self._require_current_fence())
+            rows = await self._intents.scan(
+                connection,
+                binding.binding_name,
+                after_sequence=state.count_after,
+                limit=page,
+                dirty_only=True,
+            )
+            for row in rows:
+                scope = row.scope_id
+                if scope in state.queued or scope in state.running or scope in state.retries:
+                    continue
+                # An outstanding accepted invocation already owns this scope;
+                # do not stack a second count-triggered request on top of it.
+                if row.requested_generation > row.handled_generation:
+                    continue
+                head = await self._sources.journal_position(connection, scope)
+                stored = await self._cursors.load(connection, scope, binding.binding_name)
+                consumed = 0 if stored is None else stored.cursor.sequence
+                if head - consumed < threshold:
+                    continue
+                await self._intents.request(connection, scope, binding.binding_name)
+                matched.append(scope)
+        if len(rows) == page:
+            state.count_after = rows[-1].pending_sequence
+            state.next_discovery_at = loop.time() + _DISCOVERY_PAGE_DELAY_SECONDS
+        else:
+            state.count_after = 0
+            # Re-check periodically so a later capture can reach the threshold
+            # even when nothing else notifies this Family.
+            poll_at = loop.time() + self._tick
+            if state.next_discovery_at <= loop.time() or state.next_discovery_at > poll_at:
+                state.next_discovery_at = poll_at
+        for scope in matched:
+            self._enqueue(state, scope)
 
     async def _discover_requested(self, state: _FamilyState) -> None:
         capacity = self._fresh_capacity(state)
@@ -1095,6 +1161,8 @@ class ArtifactProcessingSupervisor:
                 deadlines.append(state.next_schedule_at)
             if state.discovery_pending or state.scan_in_progress or not state.reconcile_complete or state.degraded:
                 deadlines.append(max(now, state.next_discovery_at))
+            if state.binding.source_count_threshold is not None:
+                deadlines.append(state.next_discovery_at if state.next_discovery_at > now else now + self._tick)
         return None if not deadlines else max(0.001, min(deadlines) - now)
 
     def _log_failure(
