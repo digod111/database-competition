@@ -788,6 +788,7 @@ def _artifact_processing_bindings(  # noqa: C901 - validate and assemble one reg
                 if family == "skill"
                 else SourceProcessingPendingProvider(contexts.database, binding, family),
                 automatic_scope_filter=enabled_profile_scopes if family == "profile" else None,
+                source_count_threshold=getattr(config.runtime, f"{prefix}_source_count_threshold", None),
             )
         )
     _validate_processing_registrations(configured)
@@ -847,6 +848,8 @@ async def _open_artifact_processing_supervisor(
                     lease_mode="oceanbase" if isinstance(config.database, OceanBaseConfig) else "single-process",
                     leases=contexts.repositories.processing_leases,
                     binding_states=contexts.repositories.processing_binding_states,
+                    sources=contexts.repositories.sources,
+                    cursors=contexts.repositories.cursors,
                     tracing=tracing,
                 )
             )
