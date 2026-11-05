@@ -163,7 +163,7 @@ static int resolve_copy_file_options(const ParseNode *opt_node, ObResolverParams
       const ParseNode *val_node = opt->children_[1];
       if (0 == opt_name.case_compare("format")) {
         if (OB_ISNULL(val_node)) {
-          ret = OB_ERR_PARSE_SYNTAX;
+          ret = OB_ERR_PARSER_SYNTAX;
         } else {
           ObString fmt(val_node->str_len_, val_node->str_value_);
           if (0 != fmt.case_compare("csv")) {
@@ -175,7 +175,7 @@ static int resolve_copy_file_options(const ParseNode *opt_node, ObResolverParams
         into_item.write_header_ = (NULL == val_node) ? true : (0 != val_node->value_);
       } else if (0 == opt_name.case_compare("nullstr")) {
         if (OB_ISNULL(val_node)) {
-          ret = OB_ERR_PARSE_SYNTAX;
+          ret = OB_ERR_PARSER_SYNTAX;
         } else {
           ObString nv(val_node->str_len_, val_node->str_value_);
           if (OB_FAIL(ob_write_string(*params.allocator_, nv, into_item.null_str_, true))) {
@@ -184,7 +184,7 @@ static int resolve_copy_file_options(const ParseNode *opt_node, ObResolverParams
         }
       } else if (0 == opt_name.case_compare("delimiter")) {
         if (OB_ISNULL(val_node)) {
-          ret = OB_ERR_PARSE_SYNTAX;
+          ret = OB_ERR_PARSER_SYNTAX;
         } else {
           into_item.field_str_.set_varchar(ObString(val_node->str_len_, val_node->str_value_));
           into_item.field_str_.set_collation_type(sys_cs);
@@ -410,7 +410,7 @@ int ObResolver::resolve_show_ai_columns(const ParseNode &parse_tree, ObStmt *&st
                                                         db_name,
                                                         table_name))) {
       LOG_WARN("fail to resolve relation name", K(ret));
-    } else if (db_name.empty() && OB_FAIL(params_.session_info_->get_database_name(db_name))) {
+    } else if (db_name.empty() && OB_FALSE_IT(db_name = params_.session_info_->get_database_name())) {
       LOG_WARN("fail to get current database", K(ret));
     } else if (OB_FAIL(guard->get_table_schema(db_name, table_name, false, table))) {
       LOG_WARN("fail to get table schema", K(ret), K(db_name), K(table_name));
@@ -422,7 +422,7 @@ int ObResolver::resolve_show_ai_columns(const ParseNode &parse_tree, ObStmt *&st
   } else {
     ObString db_name;
     const ObDatabaseSchema *db_schema = NULL;
-    if (OB_FAIL(params_.session_info_->get_database_name(db_name))) {
+    if (OB_FALSE_IT(db_name = params_.session_info_->get_database_name())) {
       LOG_WARN("fail to get current database", K(ret));
     } else if (OB_FAIL(guard->get_database_schema(db_name, db_schema))) {
       LOG_WARN("fail to get database schema", K(ret), K(db_name));
@@ -628,7 +628,7 @@ int ObResolver::resolve_ai_column_retry(const ParseNode &parse_tree, ObStmt *&st
                                                       db_name,
                                                       table_name))) {
     LOG_WARN("fail to get relation name", K(ret));
-  } else if (db_name.empty() && OB_FAIL(params_.session_info_->get_database_name(db_name))) {
+  } else if (db_name.empty() && OB_FALSE_IT(db_name = params_.session_info_->get_database_name())) {
     LOG_WARN("fail to get current database", K(ret));
   } else {
     const ParseNode *column_name_node = column_ref->children_[2];
@@ -680,7 +680,7 @@ int ObResolver::resolve_ai_column_retry(const ParseNode &parse_tree, ObStmt *&st
     } else if (0 != predicate.length()) {
       ret = sql.append(" WHERE ");
       if (OB_SUCC(ret)) {
-        ret = sql.append(predicate);
+        ret = sql.append(predicate.ptr(), predicate.length());
       }
     }
     if (OB_FAIL(ret)) {

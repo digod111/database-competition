@@ -365,9 +365,7 @@ struct ObFileScanState
 public:
   explicit ObFileScanState(ObIAllocator &alloc)
     : alloc_(alloc),
-      cols_(alloc),
-      paths_(alloc),
-      col_data_(alloc),
+      cols_(),
       csv_ctx_(),
       csv_(),
       csv_opened_(false),
@@ -378,8 +376,10 @@ public:
       pq_buf_(NULL),
       pq_len_(0),
       pq_arena_(),
+      col_data_(),
       pq_row_(0),
       pq_loaded_rg_(-1),
+      paths_(),
       glob_idx_(0)
   {
     MEMSET(&pq_meta_, 0, sizeof(pq_meta_));
@@ -428,7 +428,7 @@ int ObFileScanState::close_csv()
     csv_opened_ = false;
   }
   if (csv_ctx_.fd_ >= 0) {
-    close(csv_ctx_.fd_);
+    ::close(csv_ctx_.fd_);
     csv_ctx_.fd_ = -1;
   }
   return OB_SUCCESS;
@@ -440,7 +440,7 @@ int ObFileScanState::open_csv()
   OZ(close_csv());
   if (OB_SUCC(ret)) {
     csv_ctx_.offset_ = 0;
-    csv_ctx_.fd_ = open(param_.path_.ptr(), O_RDONLY);
+    csv_ctx_.fd_ = ::open(param_.path_.ptr(), O_RDONLY);
     if (csv_ctx_.fd_ < 0) {
       ret = OB_FILE_NOT_OPENED;
       LOG_WARN("fail to open csv file", K(param_.path_), K(errno));
@@ -466,7 +466,7 @@ int ObFileScanState::read_whole(const char *path, char *&buf, int64_t &len)
   int ret = OB_SUCCESS;
   buf = NULL;
   len = 0;
-  int fd = open(path, O_RDONLY);
+  int fd = ::open(path, O_RDONLY);
   if (fd < 0) {
     ret = OB_FILE_NOT_OPENED;
     LOG_WARN("fail to open file", K(path), K(errno));
@@ -496,7 +496,7 @@ int ObFileScanState::read_whole(const char *path, char *&buf, int64_t &len)
         }
       }
     }
-    close(fd);
+    ::close(fd);
   }
   return ret;
 }
@@ -723,7 +723,7 @@ int ObFunctionTableOp::inner_open()
     ret = OB_ERR_UNEXPECTED;
   } else if (ObExtendType == MY_SPEC.value_expr_->datum_meta_.type_) {
     next_row_func_ = &ObFunctionTableOp::inner_get_next_row_udf;
-  } else if (T_CONST_EXPR == MY_SPEC.value_expr_->type_) {
+  } else if (MY_SPEC.value_expr_->is_const_expr()) {
     // a constant varchar value expr may be a file table marker
     // ("\x01FSTBL\x1f..." produced by the resolver for read_csv and friends)
     ObDatum *value = NULL;

@@ -19,7 +19,7 @@
 #include "observer/ai_column/ob_ai_column_worker.h"
 #include "common/mysqlclient/ob_mysql_proxy.h"
 #include "common/mysqlclient/ob_mysql_result.h"
-#include "lib/allocator/ob_arena_allocator.h"
+#include "lib/allocator/page_arena.h"
 #include "share/schema/ob_multi_version_schema_service.h"
 #include "share/schema/ob_schema_getter_guard.h"
 #include "share/schema/ob_table_schema.h"
@@ -216,7 +216,7 @@ int ObAIColumnWorker::process_tables()
     ret = OB_NOT_INIT;
   } else if (OB_FAIL(schema_service_->get_runtime_schema_guard(guard))) {
     LOG_WARN("fail to get schema guard", K(ret));
-  } else if (OB_FAIL(guard.get_table_ids_in_tenant(table_ids))) {
+  } else if (OB_FAIL(guard.get_table_ids_in_runtime(table_ids))) {
     LOG_WARN("fail to get table ids", K(ret));
   }
   for (int64_t i = 0; OB_SUCC(ret) && i < table_ids.count(); ++i) {
@@ -225,7 +225,7 @@ int ObAIColumnWorker::process_tables()
     if (OB_FAIL(guard.get_table_schema(table_ids.at(i), table))) {
       LOG_WARN("fail to get table schema", K(ret), "table_id", table_ids.at(i));
       ret = OB_SUCCESS; // ignore this table
-    } else if (OB_ISNULL(table) || table->is_sys_table() || table->is_index_tid()) {
+    } else if (OB_ISNULL(table) || table->is_sys_table() || table->is_index_table()) {
       // do nothing
     } else if (OB_FAIL(guard.get_database_schema(table->get_database_id(), db_schema))) {
       LOG_WARN("fail to get database schema", K(ret));
@@ -375,7 +375,7 @@ int ObAIColumnWorker::process_one_row(const ObTableSchema &table,
     } else if (OB_FAIL(update.append(" = ("))) {
     } else if (OB_FAIL(update.append(ai_column.get_ai_meta().expr_text_))) {
     } else if (OB_FAIL(update.append(") WHERE "))) {
-    } else if (OB_FAIL(update.append(rowkey_pred))) {
+    } else if (OB_FAIL(update.append(rowkey_pred.ptr(), rowkey_pred.length()))) {
     } else {
       int tmp_ret = execute_write(update.string());
       if (OB_SUCCESS == tmp_ret) {
@@ -400,7 +400,7 @@ int ObAIColumnWorker::process_one_row(const ObTableSchema &table,
         }
         if (OB_FAIL(ret)) {
         } else if (OB_FAIL(fail_update.append(" WHERE "))) {
-        } else if (OB_FAIL(fail_update.append(rowkey_pred))) {
+        } else if (OB_FAIL(fail_update.append(rowkey_pred.ptr(), rowkey_pred.length()))) {
         } else if (OB_FAIL(fail_update.append(" AND "))) {
         } else if (OB_FAIL(append_quoted_ident(fail_update, status_name))) {
         } else if (OB_FAIL(fail_update.append(" = "))) {

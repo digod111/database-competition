@@ -121,10 +121,9 @@ public:
   }
   inline void set_column_names(const common::ObIArray<common::ObString> &column_names)
   {
-    int ret = common::OB_SUCCESS;
-    for (int i = 0; common::OB_SUCC(ret) && i < column_names.count(); ++i) {
-      if (OB_FAIL(column_names_.push_back(column_names.at(i)))) {
-      }
+    for (int64_t i = 0; i < column_names.count(); ++i) {
+      int tmp_ret = column_names_.push_back(column_names.at(i));
+      UNUSED(tmp_ret);
     }
   }
   inline bool get_write_header() const

@@ -912,6 +912,7 @@ int ObCreateTableResolver::resolve_table_elements(const ParseNode *node,
       }
       for (int64_t i = 0; OB_SUCC(ret) && i < ai_column_ids.count(); ++i) {
         const ObColumnSchemaV2 *ai_col = table_schema.get_column_schema(ai_column_ids.at(i));
+        ObColumnSchemaV2 *ai_col_mut = NULL;
         ObColumnSchemaV2 status_col;
         uint64_t status_column_id = OB_INVALID_ID;
         if (OB_ISNULL(ai_col)) {
@@ -922,9 +923,9 @@ int ObCreateTableResolver::resolve_table_elements(const ParseNode *node,
           SQL_RESV_LOG(WARN, "fail to build ai status column", K(ret));
         } else if (OB_FAIL(table_schema.add_column(status_col))) {
           SQL_RESV_LOG(WARN, "fail to add ai status column", K(ret));
-        } else if (OB_ISNULL(ai_col = table_schema.get_column_schema(ai_column_ids.at(i)))) {
+        } else if (OB_ISNULL(ai_col_mut = table_schema.get_column_schema(ai_column_ids.at(i)))) {
           ret = OB_ERR_UNEXPECTED;
-        } else if (OB_FALSE_IT(ai_col->set_ai_status_column_id(status_column_id))) {
+        } else if (OB_FALSE_IT(ai_col_mut->set_ai_status_column_id(status_column_id))) {
         } else {
           ObColumnNameHashWrapper name_key(status_col.get_column_name_str());
           if (OB_FAIL(column_name_set_.set_refactored(name_key))) {

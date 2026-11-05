@@ -124,13 +124,13 @@ struct ObSelectIntoItem
         pl_vars_(),
         closed_cht_(),
         is_optional_(DEFAULT_OPTIONAL_ENCLOSED),
+        write_header_(false),
+        column_names_(),
+        null_str_(),
         is_single_(DEFAULT_SINGLE_OPT),
         max_file_size_(DEFAULT_MAX_FILE_SIZE),
         escaped_cht_(),
         buffer_size_(DEFAULT_BUFFER_SIZE),
-        write_header_(false),
-        column_names_(),
-        null_str_(),
         external_properties_()
   {
     field_str_.set_varchar(DEFAULT_FIELD_TERM_STR);

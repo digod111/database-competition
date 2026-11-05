@@ -604,12 +604,15 @@ int ObDelUpdResolver::resolve_additional_assignments(ObIArray<ObTableAssignment>
             } else if (ObTableSchema::is_ai_status_column_name(
                          column_schema->get_column_name_str())) {
               // Dependent columns changed, mark the AI value as PENDING.
+              ObConstRawExpr *pending_expr = NULL;
               if (OB_FAIL(ObRawExprUtils::build_const_string_expr(*params_.expr_factory_,
                                                                   ObVarcharType,
                                                                   ObString::make_string("P"),
                                                                   CS_TYPE_UTF8MB4_BIN,
-                                                                  assignment.expr_))) {
+                                                                  pending_expr))) {
                 LOG_WARN("fail to build pending status expr", K(ret));
+              } else {
+                assignment.expr_ = pending_expr;
               }
             } else if (trigger_exist) {
               assignment.expr_ = col_item->expr_;
@@ -858,7 +861,7 @@ int ObDelUpdResolver::check_need_assignment(const common::ObIArray<ObAssignment>
       for (int64_t i = 0; OB_SUCC(ret) && !need_assign && i < assigns.count(); ++i) {
         const ObAssignment &assignment = assigns.at(i);
         const ObColumnRefRawExpr *lhs = assignment.column_expr_;
-        if (assignment.table_id_ != table_id || OB_ISNULL(lhs)) {
+        if (OB_ISNULL(lhs) || lhs->get_table_id() != table_id) {
           // do nothing
         } else if (lhs->get_column_id() == column.get_column_id()) {
           // do nothing, an AI column can not be assigned by the user

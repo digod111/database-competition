@@ -93,7 +93,7 @@ jobs:
           echo "$PWD/deps/3rd/usr/local/oceanbase/devtools/bin" >> "$GITHUB_PATH"
           bash build.sh release -DOB_USE_CCACHE=ON -DNEED_PARSER_CACHE=OFF \
             2>&1 | tee "$ACCEPTANCE_OUTPUT/configure.log"
-          cmake --build build_release --target seekdb -j2 \
+          cmake --build build_release --target seekdb -j2 -- -k \
             2>&1 | tee "$ACCEPTANCE_OUTPUT/build.log"
           test -x build_release/src/observer/seekdb
           echo "::notice title=AI acceptance stage::Modified seekdb compiled successfully"

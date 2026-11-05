@@ -4054,6 +4054,13 @@ int ObDMLResolver::resolve_file_table_item(const ParseNode &parse_tree,
   CK (OB_NOT_NULL(parse_tree.children_[1]));
 
   int64_t enable_file_sql = 0;
+  using oceanbase::file_sql::ObFileTableParam;
+  using oceanbase::file_sql::ObFileTableCol;
+  using oceanbase::file_sql::FT_READ_CSV;
+  using oceanbase::file_sql::FT_READ_JSON;
+  using oceanbase::file_sql::FT_READ_NDJSON;
+  using oceanbase::file_sql::FT_READ_PARQUET;
+  using oceanbase::file_sql::FT_GLOB;
   ObFileTableParam param;
   ObSEArray<ObFileTableCol, 16> cols;
   const ParseNode *name_node = parse_tree.children_[0];
@@ -4175,7 +4182,7 @@ int ObDMLResolver::resolve_file_table_item(const ParseNode &parse_tree,
     // the physical operator decodes it and drives the file scan
     char marker_buf[common::OB_MAX_FILE_NAME_LENGTH + 128];
     int64_t marker_len = 0;
-    ObRawExpr *marker_expr = NULL;
+    ObConstRawExpr *marker_expr = NULL;
     ObString marker_str;
     if (OB_FAIL(file_sql::encode_file_table_param(param, marker_buf,
                                                   static_cast<int64_t>(sizeof(marker_buf)),

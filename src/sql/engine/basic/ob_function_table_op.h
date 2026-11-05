@@ -27,10 +27,13 @@ namespace sql
 {
 
 class ObExpr;
+} // end namespace sql
 namespace file_sql
 {
 struct ObFileScanState;
-}
+} // end namespace file_sql
+namespace sql
+{
 class ObFunctionTableSpec : public ObOpSpec
 {
 OB_UNIS_VERSION_V(1);

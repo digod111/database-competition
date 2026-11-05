@@ -29,9 +29,9 @@ class ObMySQLProxy;
 }
 namespace share
 {
-class ObMultiVersionSchemaService;
 namespace schema
 {
+class ObMultiVersionSchemaService;
 class ObTableSchema;
 class ObColumnSchemaV2;
 }
@@ -57,7 +57,7 @@ public:
   virtual ~ObAIColumnWorker();
 
   int init(common::ObMySQLProxy *sql_proxy,
-           share::ObMultiVersionSchemaService *schema_service);
+           share::schema::ObMultiVersionSchemaService *schema_service);
   int start();
   void stop();
   void wait();
@@ -94,7 +94,7 @@ private:
   bool is_inited_;
   common::ObTimer timer_;
   common::ObMySQLProxy *sql_proxy_;
-  share::ObMultiVersionSchemaService *schema_service_;
+  share::schema::ObMultiVersionSchemaService *schema_service_;
 };
 
 // Process wide AI COLUMN worker instance, started by ObServer.
