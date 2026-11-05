@@ -1,0 +1,205 @@
+name: AI function acceptance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ai-function-enhancement]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-function-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-sql:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+    env:
+      ACCEPTANCE_OUTPUT: ${{ github.workspace }}/.ai-function-acceptance
+      CCACHE_DIR: ${{ github.workspace }}/.ai-ccache
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install build prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$ACCEPTANCE_OUTPUT"
+          sudo apt-get update 2>&1 | tee "$ACCEPTANCE_OUTPUT/prerequisites.log"
+          sudo apt-get install -y git wget curl rpm rpm2cpio cpio make build-essential \
+            binutils m4 libtool-bin libaio1 libncurses5 python3 cmake pkg-config \
+            ccache libgtest-dev 2>&1 | tee -a "$ACCEPTANCE_OUTPUT/prerequisites.log"
+          git rev-parse HEAD > "$ACCEPTANCE_OUTPUT/commit.txt"
+          df -h > "$ACCEPTANCE_OUTPUT/disk.txt"
+          free -h > "$ACCEPTANCE_OUTPUT/memory.txt"
+
+      - name: Set up pinned native Rust toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          rust_version=$(sed -n 's/^channel = "\(.*\)"/\1/p' rust/rust-toolchain.toml)
+          test -n "$rust_version"
+          rustup toolchain install "$rust_version" --profile minimal \
+            2>&1 | tee "$ACCEPTANCE_OUTPUT/rust.log"
+          echo "RUSTUP_TOOLCHAIN=$rust_version" >> "$GITHUB_ENV"
+          echo "::notice title=AI acceptance stage::Pinned native Rust toolchain is ready"
+
+      - name: Cache pinned C++ dependencies
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: deps/3rd
+          key: ${{ runner.os }}-ai-sdk-${{ hashFiles('deps/init/oceanbase.el9.x86_64.deps') }}
+
+      - name: Cache C++ compilation
+        id: ccache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ runner.os }}-ai-ccache-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-ai-ccache-
+
+      - name: Cache compiled seekdb
+        id: seekdb-binary
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: build_release/src/observer/seekdb
+          key: ${{ runner.os }}-ai-seekdb-${{ hashFiles('src/**', 'include/**', 'cmake/**', 'deps/init/**', 'rust/**', 'CMakeLists.txt', 'build.sh') }}
+
+      - name: Run standalone core and protocol tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            export PATH=/usr/bin:/bin
+            /usr/bin/cmake -S unittest/sql/engine/expr -B "$RUNNER_TEMP/ai-core" \
+              -DGTEST_SOURCE_DIR=/usr/src/googletest -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++
+            /usr/bin/cmake --build "$RUNNER_TEMP/ai-core" -j2
+            /usr/bin/ctest --test-dir "$RUNNER_TEMP/ai-core" --output-on-failure
+          } 2>&1 | tee "$ACCEPTANCE_OUTPUT/core-tests.log"
+
+      - name: Build modified seekdb
+        if: steps.seekdb-binary.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ccache --max-size=3G
+          bash build.sh init 2>&1 | tee "$ACCEPTANCE_OUTPUT/init.log"
+          echo "::notice title=AI acceptance stage::Pinned C++ dependencies are installed"
+          export PATH="$PWD/deps/3rd/usr/local/oceanbase/devtools/bin:$PATH"
+          echo "$PWD/deps/3rd/usr/local/oceanbase/devtools/bin" >> "$GITHUB_PATH"
+          bash build.sh release -DOB_USE_CCACHE=ON -DNEED_PARSER_CACHE=OFF \
+            2>&1 | tee "$ACCEPTANCE_OUTPUT/configure.log"
+          cmake --build build_release --target seekdb -j2 \
+            2>&1 | tee "$ACCEPTANCE_OUTPUT/build.log"
+          test -x build_release/src/observer/seekdb
+          echo "::notice title=AI acceptance stage::Modified seekdb compiled successfully"
+
+      - name: Verify cached seekdb
+        if: steps.seekdb-binary.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x build_release/src/observer/seekdb
+          echo "::notice title=AI acceptance stage::Cached seekdb binary is ready"
+
+      - name: Save compiled seekdb immediately
+        if: steps.seekdb-binary.outputs.cache-hit != 'true'
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: build_release/src/observer/seekdb
+          key: ${{ steps.seekdb-binary.outputs.cache-primary-key }}
+
+      - name: Save C++ compilation cache immediately
+        if: steps.ccache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ steps.ccache.outputs.cache-primary-key }}
+
+      - name: Run official AI acceptance and model DDL regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NO_PROXY="${NO_PROXY:+$NO_PROXY,}127.0.0.1,localhost"
+          export no_proxy="${no_proxy:+$no_proxy,}127.0.0.1,localhost"
+          python3 -B unittest/sql/engine/expr/ai_mock_service.py --port 8000 \
+            > "$ACCEPTANCE_OUTPUT/mock.log" 2>&1 &
+          mock_pid=$!
+          trap 'kill "$mock_pid" 2>/dev/null || true; wait "$mock_pid" 2>/dev/null || true' EXIT
+          python3 - <<'PY'
+          import time
+          from urllib.request import urlopen
+          for attempt in range(100):
+              try:
+                  with urlopen('http://127.0.0.1:8000/__requests', timeout=1) as response:
+                      assert response.status == 200
+                  break
+              except OSError:
+                  time.sleep(0.1)
+          else:
+              raise SystemExit('Mock AI service did not become ready')
+          PY
+          client_root="$PWD/deps/3rd/u01/obclient"
+          for lib_dir in "$client_root/lib" "$client_root/lib64"; do
+            if [[ -d "$lib_dir" ]]; then
+              export LD_LIBRARY_PATH="$lib_dir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            fi
+          done
+          test -x "$client_root/bin/obclient"
+          test -x "$client_root/bin/mysqltest"
+          python3 -B .github/script/seekdb/mysqltest_for_seekdb.py run \
+            --seekdb "$PWD/build_release/src/observer/seekdb" \
+            --obclient "$client_root/bin/obclient" \
+            --mysqltest "$client_root/bin/mysqltest" \
+            --base-dir "$ACCEPTANCE_OUTPUT/instance" \
+            --work-dir "$ACCEPTANCE_OUTPUT/sql" --port 2881 \
+            --slice-index 0 --slice-count 1 \
+            --case ai_function.ai_function_enhancement \
+            --case ai_function.ai_function_enhancement_regression \
+            --case ai_function.ai_model_ddl \
+            2>&1 | tee "$ACCEPTANCE_OUTPUT/sql-tests.log"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          result = json.loads((Path(os.environ['ACCEPTANCE_OUTPUT']) / 'sql/seekdb_result.json').read_text())
+          expected = {'ai_function.ai_function_enhancement', 'ai_function.ai_function_enhancement_regression',
+                      'ai_function.ai_model_ddl'}
+          assert result['success'], result
+          assert result['case_count'] == len(expected), result
+          assert set(result['cases']) == expected, result
+          assert not result['failed_cases'], result
+          print('::notice title=AI acceptance stage::All three selected SQL cases passed')
+          PY
+          python3 - <<'PY'
+          import json
+          from urllib.request import urlopen
+          with urlopen('http://127.0.0.1:8000/__requests', timeout=5) as response:
+              events = json.load(response)
+          batches = [event['body']['input'] for event in events
+                     if event['path'].endswith('/embeddings')
+                     and isinstance(event['body'].get('input'), list)
+                     and any(isinstance(text, str) and text.startswith('row-')
+                             for text in event['body']['input'])]
+          assert batches and any(len(batch) > 1 for batch in batches), 'No cross-row embedding request was observed'
+          assert all(1 <= len(batch) <= 64 for batch in batches), 'Embedding request exceeded the batch limit'
+          assert all(text is not None for batch in batches for text in batch), 'NULL row leaked into a model request'
+          PY
+
+      - name: Attach failure details to the check
+        if: failure()
+        shell: bash
+        run: python3 -B .github/script/seekdb/ai_acceptance_diagnostics.py "$ACCEPTANCE_OUTPUT"
+
+      - name: Save build and SQL evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ai-function-acceptance-${{ github.sha }}
+          path: ${{ env.ACCEPTANCE_OUTPUT }}
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
