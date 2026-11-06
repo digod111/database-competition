@@ -264,22 +264,43 @@ namespace {
 
 struct FdReaderCtx
 {
+  static const int64_t READ_BUF_SIZE = 256 * 1024;
   int fd_;
   int64_t offset_;  // logical file offset of next read
-  FdReaderCtx() : fd_(-1), offset_(0) {}
+  char *buf_;       // heap buffer, never thread-local (see fd_read_fn)
+  FdReaderCtx() : fd_(-1), offset_(0), buf_(NULL) {}
+  ~FdReaderCtx()
+  {
+    if (NULL != buf_) {
+      free(buf_);
+      buf_ = NULL;
+    }
+  }
 };
 
 int64_t fd_read_fn(void *ctx, const char **buf)
 {
   FdReaderCtx *fc = static_cast<FdReaderCtx *>(ctx);
-  static thread_local char tls_buf[256 * 1024];
-  int64_t n = pread(fc->fd_, tls_buf, sizeof(tls_buf), fc->offset_);
-  if (n > 0) {
-    fc->offset_ += n;
-    *buf = tls_buf;
+  // NOTE: the read buffer must NOT be thread-local storage. A thread_local
+  // buffer of this size becomes part of the process static TLS block, which
+  // makes every thread stack smaller than TLS + 4KB rejected by glibc
+  // pthread_create with EINVAL. Keep it on the heap instead.
+  static char empty_buf[1] = {0};
+  int64_t n = 0;
+  if (NULL == fc->buf_) {
+    fc->buf_ = static_cast<char *>(malloc(static_cast<size_t>(FdReaderCtx::READ_BUF_SIZE)));
+  }
+  if (NULL == fc->buf_) {
+    *buf = empty_buf;
   } else {
-    n = 0;
-    *buf = tls_buf;
+    n = pread(fc->fd_, fc->buf_, static_cast<size_t>(FdReaderCtx::READ_BUF_SIZE), fc->offset_);
+    if (n > 0) {
+      fc->offset_ += n;
+      *buf = fc->buf_;
+    } else {
+      n = 0;
+      *buf = empty_buf;
+    }
   }
   return n;
 }

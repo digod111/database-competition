@@ -28,6 +28,7 @@
 
 #include <dirent.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -46,22 +47,43 @@ namespace file_sql
 // ---------------------------------------------------------------------------
 struct CsvReadCtx
 {
+  static const int64_t READ_BUF_SIZE = 256 * 1024;
   int fd_;
   int64_t offset_;
-  CsvReadCtx() : fd_(-1), offset_(0) {}
+  char *buf_;  // heap buffer, never thread-local (keeps static TLS small)
+  CsvReadCtx() : fd_(-1), offset_(0), buf_(NULL) {}
+  ~CsvReadCtx()
+  {
+    if (NULL != buf_) {
+      free(buf_);
+      buf_ = NULL;
+    }
+  }
 };
 
 int64_t op_fd_read_fn(void *ctx, const char **buf)
 {
   CsvReadCtx *fc = static_cast<CsvReadCtx *>(ctx);
-  static thread_local char tls_buf[256 * 1024];
-  int64_t n = pread(fc->fd_, tls_buf, sizeof(tls_buf), fc->offset_);
-  if (n > 0) {
-    fc->offset_ += n;
-    *buf = tls_buf;
+  // NOTE: never use a thread_local buffer here. A large thread_local array is
+  // part of the process static TLS block, and glibc rejects pthread_create with
+  // EINVAL when a thread stack cannot hold TLS + 4KB (seekdb thread stacks are
+  // only a few hundred KB).
+  static char empty_buf[1] = {0};
+  int64_t n = 0;
+  if (NULL == fc->buf_) {
+    fc->buf_ = static_cast<char *>(malloc(static_cast<size_t>(CsvReadCtx::READ_BUF_SIZE)));
+  }
+  if (NULL == fc->buf_) {
+    *buf = empty_buf;
   } else {
-    n = 0;
-    *buf = tls_buf;
+    n = pread(fc->fd_, fc->buf_, static_cast<size_t>(CsvReadCtx::READ_BUF_SIZE), fc->offset_);
+    if (n > 0) {
+      fc->offset_ += n;
+      *buf = fc->buf_;
+    } else {
+      n = 0;
+      *buf = empty_buf;
+    }
   }
   return n;
 }

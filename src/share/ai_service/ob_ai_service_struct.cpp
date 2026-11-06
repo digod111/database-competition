@@ -30,6 +30,9 @@ namespace share
 {
 const ObString ObAiModelEndpointInfo::DEFAULT_SCOPE = "ALL";
 
+// max_concurrency of an AI endpoint is bounded to [1, 1024]
+const int64_t AI_ENDPOINT_MAX_CONCURRENCY_LIMIT = 1024;
+
 const char *VALID_PROVIDERS[] = {
   "ALIYUN-OPENAI",
   "ALIYUN-DASHSCOPE",
@@ -98,6 +101,8 @@ int ObAiModelEndpointInfo::deep_copy(
   } else if (OB_FAIL(ob_write_string(allocator, other.parameters_, parameters_))) {
   } else if (OB_FAIL(ob_write_string(allocator, other.request_transform_fn_, request_transform_fn_))) {
   } else if (OB_FAIL(ob_write_string(allocator, other.response_transform_fn_, response_transform_fn_))) {
+  } else {
+    max_concurrency_ = other.max_concurrency_;
   }
   return ret;
 }
@@ -164,7 +169,27 @@ int ObAiModelEndpointInfo::merge_delta_endpoint(common::ObArenaAllocator &alloca
     ObJsonObjPair elem;
     if (OB_FAIL(iter.get_elem(elem))) {
     } else {
-      EXTRACT_JSON_ELEM_STR("scope", scope_)
+      if (elem.first.case_compare("max_concurrency") == 0) {
+        ObJsonNodeType json_type = elem.second->json_type();
+        bool is_number_type = (ObJsonNodeType::J_INT == json_type
+            || ObJsonNodeType::J_UINT == json_type
+            || ObJsonNodeType::J_DOUBLE == json_type
+            || ObJsonNodeType::J_DECIMAL == json_type);
+        if (!is_number_type) {
+          ret = OB_AI_FUNC_PARAM_VALUE_INVALID;
+          LOG_USER_ERROR(OB_AI_FUNC_PARAM_VALUE_INVALID, elem.first.length(), elem.first.ptr());
+          LOG_WARN("invalid json type for max_concurrency", K(ret), K(json_type));
+        } else {
+          int64_t max_concurrency = elem.second->get_int();
+          if (max_concurrency <= 0 || max_concurrency > AI_ENDPOINT_MAX_CONCURRENCY_LIMIT) {
+            ret = OB_AI_FUNC_PARAM_VALUE_INVALID;
+            LOG_USER_ERROR(OB_AI_FUNC_PARAM_VALUE_INVALID, elem.first.length(), elem.first.ptr());
+            LOG_WARN("max_concurrency out of range", K(ret), K(max_concurrency));
+          } else {
+            max_concurrency_ = max_concurrency;
+          }
+        }
+      } else EXTRACT_JSON_ELEM_STR("scope", scope_)
       EXTRACT_JSON_ELEM_STR("ai_model_name", ai_model_name_)
       EXTRACT_JSON_ELEM_STR("url", url_)
       EXTRACT_JSON_ELEM_STR_WITH_PROCESS("access_key", access_key_, has_api_key = true)

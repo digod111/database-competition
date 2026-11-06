@@ -35,7 +35,7 @@ public:
   static int alter_ai_model_endpoint(ObArenaAllocator &allocator, const ObString &endpoint_name, const ObIJsonBase &alter_jbase);
   static int drop_ai_model_endpoint(const ObString &endpoint_name);
   static int read_ai_endpoint(ObArenaAllocator &allocator, const ObString &endpoint_name, ObAiModelEndpointInfo &endpoint_info);
-  static int read_ai_endpoint_by_ai_model_name(ObArenaAllocator &allocator, const ObString &ai_model_name, ObAiModelEndpointInfo &endpoint_info);
+  static int read_ai_endpoint_by_ai_model_name(common::ObISQLClient &sql_client, ObArenaAllocator &allocator, const ObString &ai_model_name, ObAiModelEndpointInfo &endpoint_info);
 
 private:
   static const int64_t SPECIAL_ENDPOINT_ID_FOR_VERSION;

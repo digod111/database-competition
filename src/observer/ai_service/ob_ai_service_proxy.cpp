@@ -51,6 +51,10 @@ int ObAiServiceProxy::insert_ai_endpoint(ObMySQLTransaction &trans, const int64_
   } else if (OB_FAIL(sql.add_column("parameters", ObHexEscapeSqlStr(endpoint.parameters_)))) {
   } else if (OB_FAIL(sql.add_column("request_transform_fn", ObHexEscapeSqlStr(endpoint.request_transform_fn_)))) {
   } else if (OB_FAIL(sql.add_column("response_transform_fn", ObHexEscapeSqlStr(endpoint.response_transform_fn_)))) {
+  } else if (endpoint.max_concurrency_ > 0) {
+    if (OB_FAIL(sql.add_column("max_concurrency", endpoint.max_concurrency_))) {
+    }
+  } else if (OB_FAIL(sql.add_column(true, "max_concurrency"))) {
   } else if (OB_FAIL(sql.splice_insert_sql(OB_ALL_AI_MODEL_ENDPOINT_TNAME, buffer))) {
   } else if (OB_FAIL(trans.write(buffer.ptr(), affected_rows))) {
   } else if (1 != affected_rows) {
@@ -83,6 +87,10 @@ int ObAiServiceProxy::update_ai_endpoint(ObMySQLTransaction &trans, const int64_
   } else if (OB_FAIL(sql.add_column("parameters", ObHexEscapeSqlStr(endpoint.parameters_)))) {
   } else if (OB_FAIL(sql.add_column("request_transform_fn", ObHexEscapeSqlStr(endpoint.request_transform_fn_)))) {
   } else if (OB_FAIL(sql.add_column("response_transform_fn", ObHexEscapeSqlStr(endpoint.response_transform_fn_)))) {
+  } else if (endpoint.max_concurrency_ > 0) {
+    if (OB_FAIL(sql.add_column("max_concurrency", endpoint.max_concurrency_))) {
+    }
+  } else if (OB_FAIL(sql.add_column(true, "max_concurrency"))) {
   } else if (OB_FAIL(sql.splice_update_sql(OB_ALL_AI_MODEL_ENDPOINT_TNAME, buffer))) {
   } else if (OB_FAIL(trans.write(buffer.ptr(), affected_rows))) {
   } else if (1 != affected_rows) {
@@ -160,11 +168,13 @@ int ObAiServiceProxy::select_ai_endpoint_by_ai_model_name(ObArenaAllocator &allo
     SMART_VAR(ObMySQLProxy::MySQLResult, res) {
       ObMySQLResult *result = NULL;
       if (OB_FAIL(sql_proxy.read(res, sql.ptr()))) {
+        LOG_WARN("select ai endpoint by ai model name query failed", KR(ret), K(sql));
       } else if (NULL == (result = res.get_result())) {
         ret = OB_ERR_UNEXPECTED;
       } else if (OB_FAIL(result->next())) {
         if (OB_ITER_END == ret) {
           ret = OB_AI_FUNC_ENDPOINT_NOT_FOUND;
+          LOG_INFO("no endpoint row for ai model name", K(ai_model_name), K(sql));
         } else {
         }
       } else if (OB_FAIL(build_ai_endpoint_(allocator, *result, endpoint))) {
@@ -195,6 +205,7 @@ int ObAiServiceProxy::build_ai_endpoint_(ObArenaAllocator &allocator, ObMySQLRes
   ObString request_transform_fn;
   ObString response_transform_fn;
   int64_t type = 0;
+  int64_t max_concurrency = 0;
   EXTRACT_INT_FIELD_MYSQL(result, "endpoint_id", endpoint.endpoint_id_, uint64_t);
   EXTRACT_VARCHAR_FIELD_MYSQL(result, "scope", scope);
   EXTRACT_VARCHAR_FIELD_MYSQL(result, "endpoint_name", name);
@@ -206,6 +217,7 @@ int ObAiServiceProxy::build_ai_endpoint_(ObArenaAllocator &allocator, ObMySQLRes
   EXTRACT_VARCHAR_FIELD_MYSQL_WITH_DEFAULT_VALUE(result, "parameters", arguments, true, false, ""/*wont be used*/);
   EXTRACT_VARCHAR_FIELD_MYSQL_WITH_DEFAULT_VALUE(result, "request_transform_fn", request_transform_fn, true, false, ""/*wont be used*/);
   EXTRACT_VARCHAR_FIELD_MYSQL_WITH_DEFAULT_VALUE(result, "response_transform_fn", response_transform_fn, true, false, ""/*wont be used*/);
+  EXTRACT_INT_FIELD_MYSQL_WITH_DEFAULT_VALUE(result, "max_concurrency", max_concurrency, int64_t, true, false, 0/*wont be used*/);
 
   if (OB_FAIL(ret)) {
   } else if (OB_FAIL(deep_copy_ob_string(allocator, scope, endpoint.scope_))) {
@@ -218,6 +230,8 @@ int ObAiServiceProxy::build_ai_endpoint_(ObArenaAllocator &allocator, ObMySQLRes
   } else if (OB_FAIL(deep_copy_ob_string(allocator, arguments, endpoint.parameters_))) {
   } else if (OB_FAIL(deep_copy_ob_string(allocator, request_transform_fn, endpoint.request_transform_fn_))) {
   } else if (OB_FAIL(deep_copy_ob_string(allocator, response_transform_fn, endpoint.response_transform_fn_))) {
+  } else {
+    endpoint.max_concurrency_ = max_concurrency;
   }
 
   if (OB_SUCC(ret)) {

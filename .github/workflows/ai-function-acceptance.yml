@@ -120,12 +120,105 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ steps.ccache.outputs.cache-primary-key }}
 
+      - name: Diagnose seekdb startup in foreground
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -uo pipefail
+          {
+            echo "=== ulimit ==="
+            ulimit -a
+            echo "=== threads-max ==="
+            cat /proc/sys/kernel/threads-max 2>/dev/null || true
+            echo "=== pids.max ==="
+            cat /sys/fs/cgroup/pids.max 2>/dev/null || true
+            echo "=== memory ==="
+            free -h
+            echo "=== foreground start (nodaemon, 40s) ==="
+            rm -rf "$RUNNER_TEMP/diag_instance"
+            mkdir -p "$RUNNER_TEMP/diag_instance"
+            set +e
+            timeout -s KILL 40 ./build_release/src/observer/seekdb \
+              --base-dir="$RUNNER_TEMP/diag_instance" --port=2890 --nodaemon \
+              > "$RUNNER_TEMP/ob_stdout.txt" 2>&1
+            echo "=== seekdb exit code: $? ==="
+            head -100 "$RUNNER_TEMP/ob_stdout.txt"
+            echo "=== log dir ==="
+            ls -la "$RUNNER_TEMP/diag_instance/log" 2>/dev/null || true
+            for f in "$RUNNER_TEMP/diag_instance/log"/*.log; do
+              echo "--- $f ---"
+              tail -30 "$f" 2>/dev/null || true
+            done
+            echo "=== strace clone/clone3 ==="
+            if command -v strace >/dev/null 2>&1; then
+              rm -rf "$RUNNER_TEMP/diag2"
+              mkdir -p "$RUNNER_TEMP/diag2"
+              timeout -s KILL 20 strace -f -e trace=clone,clone3,mmap,mprotect \
+                -o "$RUNNER_TEMP/st.txt" \
+                ./build_release/src/observer/seekdb \
+                --base-dir="$RUNNER_TEMP/diag2" --port=2891 --nodaemon \
+                > /dev/null 2>&1
+              echo "strace wrapper exit: $?"
+              grep -E "clone|EAGAIN|EPERM|ENOMEM|EINVAL" "$RUNNER_TEMP/st.txt" | tail -30 || true
+            else
+              echo "strace not available"
+            fi
+            echo "=== strace failed syscalls ==="
+            grep -n "= -1" "$RUNNER_TEMP/st.txt" 2>/dev/null | tail -20 || true
+            echo "=== strace last 60 lines ==="
+            tail -60 "$RUNNER_TEMP/st.txt" 2>/dev/null || true
+            echo "=== pthread interposer build ==="
+            echo 'I2RlZmluZSBfR05VX1NPVVJDRQojaW5jbHVkZSA8cHRocmVhZC5oPgojaW5jbHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgojaW5jbHVkZSA8ZGxmY24uaD4KI2luY2x1ZGUgPHN0cmluZy5oPgojaW5jbHVkZSA8c3RkZGVmLmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KI2luY2x1ZGUgPGdudS9saWJjLXZlcnNpb24uaD4KCnR5cGVkZWYgaW50ICgqcGNfdCkocHRocmVhZF90ICosIGNvbnN0IHB0aHJlYWRfYXR0cl90ICosIHZvaWQgKigqKSh2b2lkICopLCB2b2lkICopOwp0eXBlZGVmIGludCAoKnNhc190KShwdGhyZWFkX2F0dHJfdCAqLCB2b2lkICosIHNpemVfdCk7CgpzdGF0aWMgc2l6ZV90IGdfcmVxX3NpemUgPSAwOwpzdGF0aWMgdm9pZCAqZ19yZXFfYWRkciA9IE5VTEw7CnN0YXRpYyBpbnQgZ19pbl9maXggPSAwOwoKc3RhdGljIHNhc190IGdldF9zZXRzdGFjayh2b2lkKQp7CiAgc3RhdGljIHNhc190IHJlYWwgPSBOVUxMOwogIGlmICghcmVhbCkgcmVhbCA9IChzYXNfdClkbHN5bShSVExEX05FWFQsICJwdGhyZWFkX2F0dHJfc2V0c3RhY2siKTsKICByZXR1cm4gcmVhbDsKfQoKc3RhdGljIGludCBub29wX3NldHN0YWNrKHZvaWQpCnsKICBjb25zdCBjaGFyICp2ID0gZ2V0ZW52KCJTSElNX05PT1BfU0VUU1RBQ0siKTsKICByZXR1cm4gKHYgIT0gTlVMTCAmJiB2WzBdID09ICcxJyk7Cn0KCnN0YXRpYyB2b2lkIGR1bXBfYXR0cihjb25zdCBjaGFyICp0YWcsIGNvbnN0IHB0aHJlYWRfYXR0cl90ICphKQp7CiAgaW50IHBvbCA9IC0xLCBkZXQgPSAtMSwgaW5oID0gLTEsIHNjb3BlID0gLTE7CiAgc2l6ZV90IHNzID0gMCwgZ3MgPSAwOwogIHN0cnVjdCBzY2hlZF9wYXJhbSBzcDsKICBtZW1zZXQoJnNwLCAwLCBzaXplb2Yoc3ApKTsKICBpZiAoYSA9PSBOVUxMKSB7CiAgICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSAlcyBhdHRyPU5VTExcbiIsIHRhZyk7CiAgICBmZmx1c2goc3RkZXJyKTsKICAgIHJldHVybjsKICB9CiAgcHRocmVhZF9hdHRyX2dldHNjaGVkcG9saWN5KGEsICZwb2wpOwogIHB0aHJlYWRfYXR0cl9nZXRzdGFja3NpemUoYSwgJnNzKTsKICBwdGhyZWFkX2F0dHJfZ2V0Z3VhcmRzaXplKGEsICZncyk7CiAgcHRocmVhZF9hdHRyX2dldGRldGFjaHN0YXRlKGEsICZkZXQpOwogIHB0aHJlYWRfYXR0cl9nZXRpbmhlcml0c2NoZWQoYSwgJmluaCk7CiAgcHRocmVhZF9hdHRyX2dldHNjb3BlKGEsICZzY29wZSk7CiAgcHRocmVhZF9hdHRyX2dldHNjaGVkcGFyYW0oYSwgJnNwKTsKICBmcHJpbnRmKHN0ZGVyciwKICAgICAgICAgICJbU0hJTV0gJXMgcG9saWN5PSVkIHByaW89JWQgc3RhY2tzaXplPSV6dSBndWFyZD0lenUgZGV0YWNoPSVkIGluaGVyaXQ9JWQgc2NvcGU9JWRcbiIsCiAgICAgICAgICB0YWcsIHBvbCwgc3Auc2NoZWRfcHJpb3JpdHksIHNzLCBncywgZGV0LCBpbmgsIHNjb3BlKTsKICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSAlcyByYXc6IiwgdGFnKTsKICB7CiAgICBjb25zdCB1bnNpZ25lZCBjaGFyICpwID0gKGNvbnN0IHVuc2lnbmVkIGNoYXIgKilhOwogICAgc2l6ZV90IGk7CiAgICBmb3IgKGkgPSAwOyBpIDwgc2l6ZW9mKHB0aHJlYWRfYXR0cl90KTsgKytpKSBmcHJpbnRmKHN0ZGVyciwgIiAlMDJ4IiwgcFtpXSk7CiAgfQogIGZwcmludGYoc3RkZXJyLCAiXG4iKTsKICBmZmx1c2goc3RkZXJyKTsKfQoKaW50IHB0aHJlYWRfYXR0cl9zZXRzdGFjayhwdGhyZWFkX2F0dHJfdCAqYSwgdm9pZCAqYWRkciwgc2l6ZV90IHNpemUpCnsKICBzYXNfdCByZWFsID0gZ2V0X3NldHN0YWNrKCk7CiAgbG9uZyBwcyA9IHN5c2NvbmYoX1NDX1BBR0VTSVpFKTsKICBpbnQgcjsKICBnX3JlcV9hZGRyID0gYWRkcjsKICBnX3JlcV9zaXplID0gc2l6ZTsKICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSBzZXRzdGFjayBhZGRyPSVwIHNpemU9JXp1IHBzPSVsZCBhZGRyX2FsaWduZWQ9JWQgc2l6ZV9hbGlnbmVkPSVkXG4iLAogICAgICAgICAgYWRkciwgc2l6ZSwgcHMsCiAgICAgICAgICBwcyA+IDAgPyAoaW50KSgoKHVuc2lnbmVkIGxvbmcpYWRkciAlICh1bnNpZ25lZCBsb25nKXBzKSA9PSAwKSA6IC0xLAogICAgICAgICAgcHMgPiAwID8gKGludCkoKHNpemUgJSAoc2l6ZV90KXBzKSA9PSAwKSA6IC0xKTsKICBpZiAobm9vcF9zZXRzdGFjaygpKSB7CiAgICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSBzZXRzdGFjayBTS0lQUEVEIChub29wLCBhdHRyIHVudG91Y2hlZClcbiIpOwogICAgZmZsdXNoKHN0ZGVycik7CiAgICByZXR1cm4gMDsKICB9CiAgciA9IHJlYWwoYSwgYWRkciwgc2l6ZSk7CiAgZnByaW50ZihzdGRlcnIsICJbU0hJTV0gc2V0c3RhY2sgcmV0PSVkICglcylcbiIsIHIsIHIgPT0gMCA/ICJvayIgOiBzdHJlcnJvcihyKSk7CiAgZmZsdXNoKHN0ZGVycik7CiAgcmV0dXJuIHI7Cn0KCnN0YXRpYyB2b2lkICpkdW1teV9mbih2b2lkICpwKSB7IHJldHVybiBwOyB9CgppbnQgcHRocmVhZF9jcmVhdGUocHRocmVhZF90ICp0LCBjb25zdCBwdGhyZWFkX2F0dHJfdCAqYSwgdm9pZCAqKCpmKSh2b2lkICopLCB2b2lkICphcmcpCnsKICBzdGF0aWMgcGNfdCByZWFsID0gTlVMTDsKICBsb25nIHBzOwogIHNpemVfdCBhbDsKICBwdGhyZWFkX3QgdGQ7CiAgcHRocmVhZF9hdHRyX3QgYWIsIGFjLCBhZDsKICBpbnQgcmEgPSAtMSwgcmIgPSAtMSwgcmMgPSAtMSwgcmQgPSAtMSwgcjsKCiAgaWYgKCFyZWFsKSByZWFsID0gKHBjX3QpZGxzeW0oUlRMRF9ORVhULCAicHRocmVhZF9jcmVhdGUiKTsKICByID0gcmVhbCh0LCBhLCBmLCBhcmcpOwogIGlmIChyID09IDApIHsKICAgIGZwcmludGYoc3RkZXJyLCAiW1NISU1dIGNyZWF0ZSBvayB0aWQ9JWx1XG4iLCAodW5zaWduZWQgbG9uZykqdCk7CiAgICBmZmx1c2goc3RkZXJyKTsKICAgIHJldHVybiAwOwogIH0KICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSBjcmVhdGUgRkFJTEVEIHI9JWQgKCVzKVxuIiwgciwgc3RyZXJyb3IocikpOwogIGR1bXBfYXR0cigiRkFJTEVELUFUVFIiLCBhKTsKICBpZiAoZ19pbl9maXgpIHsKICAgIGZmbHVzaChzdGRlcnIpOwogICAgcmV0dXJuIHI7CiAgfQogIGdfaW5fZml4ID0gMTsKICBwcyA9IHN5c2NvbmYoX1NDX1BBR0VTSVpFKTsKICBhbCA9IChwcyA+IDAgJiYgZ19yZXFfc2l6ZSA+IDApID8gKCgoZ19yZXFfc2l6ZSArIChzaXplX3QpcHMgLSAxKSAvIChzaXplX3QpcHMpICogKHNpemVfdClwcykgOiBnX3JlcV9zaXplOwogIGZwcmludGYoc3RkZXJyLCAiW1NISU1dIGdsaWJjPSVzIHBzPSVsZCByZXFfYWRkcj0lcCByZXFfc2l6ZT0lenUgYWxpZ25lZF9zaXplPSV6dVxuIiwKICAgICAgICAgIGdudV9nZXRfbGliY192ZXJzaW9uKCksIHBzLCBnX3JlcV9hZGRyLCBnX3JlcV9zaXplLCBhbCk7CgogIHJhID0gcmVhbCgmdGQsIE5VTEwsIGR1bW15X2ZuLCBOVUxMKTsKICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSBBIGRlZmF1bHQtYXR0cihzeXN0ZW0gc3RhY2spIHI9JWQgKCVzKVxuIiwgcmEsIHJhID8gc3RyZXJyb3IocmEpIDogIm9rIik7CiAgaWYgKHJhID09IDApIHB0aHJlYWRfam9pbih0ZCwgTlVMTCk7CgogIHB0aHJlYWRfYXR0cl9pbml0KCZhYik7CiAgaWYgKGdfcmVxX3NpemUgPiAwKSBwdGhyZWFkX2F0dHJfc2V0c3RhY2tzaXplKCZhYiwgZ19yZXFfc2l6ZSk7CiAgcmIgPSByZWFsKCZ0ZCwgJmFiLCBkdW1teV9mbiwgTlVMTCk7CiAgZnByaW50ZihzdGRlcnIsICJbU0hJTV0gQiBzZXRzdGFja3NpemUoJXp1KSByPSVkICglcylcbiIsIGdfcmVxX3NpemUsIHJiLCByYiA/IHN0cmVycm9yKHJiKSA6ICJvayIpOwogIGlmIChyYiA9PSAwKSBwdGhyZWFkX2pvaW4odGQsIE5VTEwpOwoKICBwdGhyZWFkX2F0dHJfaW5pdCgmYWMpOwogIGlmIChhbCA+IDApIHB0aHJlYWRfYXR0cl9zZXRzdGFja3NpemUoJmFjLCBhbCk7CiAgcmMgPSByZWFsKCZ0ZCwgJmFjLCBkdW1teV9mbiwgTlVMTCk7CiAgZnByaW50ZihzdGRlcnIsICJbU0hJTV0gQyBzZXRzdGFja3NpemUoYWxpZ25lZCAlenUpIHI9JWQgKCVzKVxuIiwgYWwsIHJjLCByYyA/IHN0cmVycm9yKHJjKSA6ICJvayIpOwogIGlmIChyYyA9PSAwKSBwdGhyZWFkX2pvaW4odGQsIE5VTEwpOwoKICBwdGhyZWFkX2F0dHJfaW5pdCgmYWQpOwogIGlmIChnX3JlcV9hZGRyICE9IE5VTEwgJiYgYWwgPiAwICYmIDAgPT0gZ2V0X3NldHN0YWNrKCkoJmFkLCBnX3JlcV9hZGRyLCBhbCkpIHsKICAgIHJkID0gcmVhbCgmdGQsICZhZCwgZHVtbXlfZm4sIE5VTEwpOwogIH0KICBmcHJpbnRmKHN0ZGVyciwgIltTSElNXSBEIHNldHN0YWNrKGFkZHIsJXp1KSByPSVkICglcylcbiIsIGFsLCByZCwgcmQgPyBzdHJlcnJvcihyZCkgOiAib2siKTsKICBpZiAocmQgPT0gMCkgcHRocmVhZF9qb2luKHRkLCBOVUxMKTsKCiAgaWYgKHJhID09IDApIHsKICAgIHIgPSByZWFsKHQsIE5VTEwsIGYsIGFyZyk7CiAgfSBlbHNlIGlmIChyYiA9PSAwKSB7CiAgICByID0gcmVhbCh0LCAmYWIsIGYsIGFyZyk7CiAgfSBlbHNlIGlmIChyYyA9PSAwKSB7CiAgICByID0gcmVhbCh0LCAmYWMsIGYsIGFyZyk7CiAgfSBlbHNlIGlmIChyZCA9PSAwKSB7CiAgICByID0gcmVhbCh0LCAmYWQsIGYsIGFyZyk7CiAgfSBlbHNlIHsKICAgIGZwcmludGYoc3RkZXJyLCAiW1NISU1dIG5vIHdvcmtpbmcgdmFyaWFudCwgZ2l2aW5nIHVwXG4iKTsKICB9CiAgZnByaW50ZihzdGRlcnIsICJbU0hJTV0gcmV0cnktd2l0aC1yZWFsLXN0YXJ0IHI9JWQgKCVzKVxuIiwgciwgciA9PSAwID8gIm9rIiA6IHN0cmVycm9yKHIpKTsKICBnX2luX2ZpeCA9IDA7CiAgZmZsdXNoKHN0ZGVycik7CiAgcmV0dXJuIHI7Cn0K' | base64 -d > "$RUNNER_TEMP/shim.c"
+            /usr/bin/gcc -shared -fPIC -O1 -o "$RUNNER_TEMP/shim.so" "$RUNNER_TEMP/shim.c" -ldl               && echo "shim built" || echo "shim build failed"
+            echo "=== run with pthread interposer ==="
+            rm -rf "$RUNNER_TEMP/diag3"
+            mkdir -p "$RUNNER_TEMP/diag3"
+            LD_PRELOAD="$RUNNER_TEMP/shim.so" timeout -s KILL 40               ./build_release/src/observer/seekdb               --base-dir="$RUNNER_TEMP/diag3" --port=2892 --nodaemon               > "$RUNNER_TEMP/ob_shim.txt" 2>&1
+            echo "shim run exit: $?"
+            grep -E "SHIM|Starting seekdb|exit code" "$RUNNER_TEMP/ob_shim.txt" | tail -40 || true
+            echo "--- shim run full tail ---"
+            tail -40 "$RUNNER_TEMP/ob_shim.txt"
+            echo "--- shim run seekdb.log ---"
+            tail -20 "$RUNNER_TEMP/diag3/log/seekdb.log" 2>/dev/null || true
+            echo "=== run with SHIM_NOOP_SETSTACK=1 ==="
+            rm -rf "$RUNNER_TEMP/diag5"
+            mkdir -p "$RUNNER_TEMP/diag5"
+            SHIM_NOOP_SETSTACK=1 LD_PRELOAD="$RUNNER_TEMP/shim.so" timeout -s KILL 40 \
+              ./build_release/src/observer/seekdb \
+              --base-dir="$RUNNER_TEMP/diag5" --port=2894 --nodaemon \
+              > "$RUNNER_TEMP/ob_noop.txt" 2>&1
+            echo "noop-setstack run exit: $?"
+            tail -30 "$RUNNER_TEMP/ob_noop.txt"
+            echo "--- noop run seekdb.log ---"
+            tail -20 "$RUNNER_TEMP/diag5/log/seekdb.log" 2>/dev/null || true
+            echo "=== run with 8MB stack ulimit ==="
+            rm -rf "$RUNNER_TEMP/diag4"
+            mkdir -p "$RUNNER_TEMP/diag4"
+            ( ulimit -s 8192; LD_PRELOAD="$RUNNER_TEMP/shim.so" timeout -s KILL 30               ./build_release/src/observer/seekdb               --base-dir="$RUNNER_TEMP/diag4" --port=2893 --nodaemon )               > "$RUNNER_TEMP/ob_u8.txt" 2>&1
+            echo "8MB-stack run exit: $?"
+            grep -E "SHIM|Starting seekdb" "$RUNNER_TEMP/ob_u8.txt" | tail -20 || true
+            tail -20 "$RUNNER_TEMP/diag4/log/seekdb.log" 2>/dev/null || true
+            echo "=== done ==="
+          } 2>&1 | tee "$ACCEPTANCE_OUTPUT/diagnose.log"
+
       - name: Run official AI acceptance and model DDL regression
         shell: bash
         run: |
           set -euo pipefail
           export NO_PROXY="${NO_PROXY:+$NO_PROXY,}127.0.0.1,localhost"
           export no_proxy="${no_proxy:+$no_proxy,}127.0.0.1,localhost"
+          echo "=== prepare local sshd for file_sql mysqltest ==="
+          sudo apt-get install -y openssh-server >/dev/null 2>&1 || true
+          sudo mkdir -p /run/sshd
+          sudo service ssh start || sudo /usr/sbin/sshd || true
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          [[ -f ~/.ssh/id_ed25519 ]] || ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519 -q
+          cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/authorized_keys
+          ssh -o StrictHostKeyChecking=accept-new 127.0.0.1 true && echo "ssh ok"
+          echo "=== expose mysql_test dir expected by test includes ==="
+          ln -sfn "$PWD/tools/deploy/mysql_test" "$PWD/mysql_test"
+          ls mysql_test/test_suite/file_sql/data/ | head -3
           python3 -B unittest/sql/engine/expr/ai_mock_service.py --port 8000 \
             > "$ACCEPTANCE_OUTPUT/mock.log" 2>&1 &
           mock_pid=$!
@@ -159,20 +252,35 @@ jobs:
             --work-dir "$ACCEPTANCE_OUTPUT/sql" --port 2881 \
             --slice-index 0 --slice-count 1 \
             --case ai_function.ai_function_enhancement \
-            --case ai_function.ai_function_enhancement_regression \
+            --case ai_function.ai_prompt \
             --case ai_function.ai_model_ddl \
+            --case ai_function.ai_model_endpoint_ddl \
+            --case file_sql.file_sql_basic \
+            --case ai_column.ai_column_ddl \
+            --case ai_column.ai_column_t1_dml \
+            --case ai_column.ai_column_retry_strict \
+            --case ai_column.ai_column_vector_index \
+            --case ai_column.ai_column_worker \
             2>&1 | tee "$ACCEPTANCE_OUTPUT/sql-tests.log"
           python3 - <<'PY'
           import json, os
           from pathlib import Path
           result = json.loads((Path(os.environ['ACCEPTANCE_OUTPUT']) / 'sql/seekdb_result.json').read_text())
-          expected = {'ai_function.ai_function_enhancement', 'ai_function.ai_function_enhancement_regression',
-                      'ai_function.ai_model_ddl'}
+          expected = {'ai_function.ai_function_enhancement',
+                      'ai_function.ai_prompt',
+                      'ai_function.ai_model_ddl',
+                      'ai_function.ai_model_endpoint_ddl',
+                      'file_sql.file_sql_basic',
+                      'ai_column.ai_column_ddl',
+                      'ai_column.ai_column_t1_dml',
+                      'ai_column.ai_column_retry_strict',
+                      'ai_column.ai_column_vector_index',
+                      'ai_column.ai_column_worker'}
           assert result['success'], result
           assert result['case_count'] == len(expected), result
           assert set(result['cases']) == expected, result
           assert not result['failed_cases'], result
-          print('::notice title=AI acceptance stage::All three selected SQL cases passed')
+          print('::notice title=AI acceptance stage::All official AI/file_sql SQL cases passed')
           PY
           python3 - <<'PY'
           import json

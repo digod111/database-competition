@@ -93,7 +93,7 @@ int ObAiServiceExecutor::create_ai_model_endpoint(common::ObArenaAllocator &allo
     LOG_USER_ERROR(OB_AI_FUNC_ENDPOINT_EXISTS, endpoint_name.length(), endpoint_name.ptr());
   } else {
     // check if the ai model endpoint has the same ai model name is already exists
-    if (OB_FAIL(read_ai_endpoint_by_ai_model_name(allocator, endpoint.get_ai_model_name(), tmp_endpoint))) {
+    if (OB_FAIL(read_ai_endpoint_by_ai_model_name(trans, allocator, endpoint.get_ai_model_name(), tmp_endpoint))) {
       if (ret == OB_AI_FUNC_ENDPOINT_NOT_FOUND) {
         ret = OB_SUCCESS;
       } else {
@@ -103,8 +103,8 @@ int ObAiServiceExecutor::create_ai_model_endpoint(common::ObArenaAllocator &allo
       FORWARD_USER_ERROR_MSG(OB_AI_FUNC_ENDPOINT_EXISTS, "The ai model endpoint '%.*s' has the same ai model name '%.*s'", tmp_endpoint.get_name().length(), tmp_endpoint.get_name().ptr(), tmp_endpoint.get_ai_model_name().length(), tmp_endpoint.get_ai_model_name().ptr());
     }
   }
-  
-  
+
+
   if (OB_FAIL(ret)) {
   } else if (OB_FAIL(fetch_new_ai_model_endpoint_id( new_endpoint_id))) {
   } else if (FALSE_IT(endpoint.set_endpoint_id(new_endpoint_id))) {
@@ -147,7 +147,7 @@ int ObAiServiceExecutor::alter_ai_model_endpoint(ObArenaAllocator &allocator, co
   } else {
     // if change ai model name, check if the ai model endpoint has the same ai model name is already exists
     // if not exists, continue
-    if (OB_FAIL(read_ai_endpoint_by_ai_model_name(allocator, new_endpoint.get_ai_model_name(), tmp_endpoint))) {
+    if (OB_FAIL(read_ai_endpoint_by_ai_model_name(trans, allocator, new_endpoint.get_ai_model_name(), tmp_endpoint))) {
       if (ret == OB_AI_FUNC_ENDPOINT_NOT_FOUND) {
         ret = OB_SUCCESS;
       } else {
@@ -220,18 +220,17 @@ int ObAiServiceExecutor::read_ai_endpoint(ObArenaAllocator &allocator, const ObS
   return ret;
 }
 
-int ObAiServiceExecutor::read_ai_endpoint_by_ai_model_name(ObArenaAllocator &allocator, const ObString &ai_model_name, ObAiModelEndpointInfo &endpoint_info)
+int ObAiServiceExecutor::read_ai_endpoint_by_ai_model_name(common::ObISQLClient &sql_client, ObArenaAllocator &allocator, const ObString &ai_model_name, ObAiModelEndpointInfo &endpoint_info)
 {
   int ret = OB_SUCCESS;
-  
-  
+
+
   ObNameCaseMode name_case_mode;
   if (OB_FAIL(local_get_runtime_name_case_mode(name_case_mode))) {
   } else if (OB_NAME_CASE_INVALID >= name_case_mode || OB_NAME_CASE_MAX <= name_case_mode) {
     ret = OB_ERR_UNEXPECTED;
-  } else if (OB_ISNULL(GCTX.sql_proxy_)) {
-    ret = OB_ERR_UNEXPECTED;
-  } else if (OB_FAIL(ObAiServiceProxy::select_ai_endpoint_by_ai_model_name(allocator, *GCTX.sql_proxy_, ai_model_name, name_case_mode, endpoint_info))) {
+  } else if (OB_FAIL(ObAiServiceProxy::select_ai_endpoint_by_ai_model_name(allocator, sql_client, ai_model_name, name_case_mode, endpoint_info))) {
+    LOG_WARN("select ai endpoint by ai model name failed", KR(ret), K(ai_model_name), K(name_case_mode));
   }
   return ret;
 }

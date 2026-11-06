@@ -4853,22 +4853,16 @@ column_definition_ref data_type opt_column_attribute_list opt_column_reference o
   merge_nodes(attributes, result, T_COLUMN_ATTRIBUTES, $10);
   malloc_non_terminal_node($$, result->malloc_pool_, T_COLUMN_DEFINITION, 7, $1, $2, attributes, $7, $9, $12, $4);
 }
-| column_definition_ref data_type opt_column_attribute_list NAME_OB COLUMN '(' expr ')' opt_with_ai_options opt_position_column
+| column_definition_ref data_type opt_column_attribute_list AI COLUMN '(' expr ')' opt_with_ai_options opt_position_column
 {
-  if (OB_UNLIKELY(NULL == $4 || 0 == $4->str_len_
-      || 0 != strcasecmp($4->str_value_, "ai"))) {
-    yyerror(&@4, result, "expect AI here");
-    YYERROR;
-  } else {
-    (void)($5); /* make bison mute */
-    ParseNode *attributes = NULL;
-    ParseNode *ai_node = NULL;
-    merge_nodes(attributes, result, T_COLUMN_ATTRIBUTES, $3);
-    set_data_type_collation($2, attributes, false, true);
-    dup_expr_string($7, result, @7.first_column, @7.last_column);
-    malloc_non_terminal_node(ai_node, result->malloc_pool_, T_AI_COLUMN_DEF, 2, $7, $9);
-    malloc_non_terminal_node($$, result->malloc_pool_, T_COLUMN_DEFINITION, 5, $1, $2, attributes, ai_node, $10);
-  }
+  (void)($5); /* make bison mute */
+  ParseNode *attributes = NULL;
+  ParseNode *ai_node = NULL;
+  merge_nodes(attributes, result, T_COLUMN_ATTRIBUTES, $3);
+  set_data_type_collation($2, attributes, false, true);
+  dup_expr_string($7, result, @7.first_column, @7.last_column);
+  malloc_non_terminal_node(ai_node, result->malloc_pool_, T_AI_COLUMN_DEF, 2, $7, $9);
+  malloc_non_terminal_node($$, result->malloc_pool_, T_COLUMN_DEFINITION, 5, $1, $2, attributes, ai_node, $10);
 }
 | column_definition_ref SERIAL opt_column_attribute_list opt_position_column
 {
@@ -12819,15 +12813,9 @@ SHOW opt_extended_or_full TABLES opt_from_or_in_database_clause opt_show_conditi
   $$->value_ = $2[0];
   malloc_non_terminal_node($$, result->malloc_pool_, T_SHOW_COLUMNS, 4, $$, $5, $6, $7);
 }
-| SHOW NAME_OB COLUMNS opt_ai_show_target opt_show_condition
+| SHOW AI COLUMNS opt_ai_show_target opt_show_condition
 {
-  if (OB_UNLIKELY(NULL == $2 || 0 == $2->str_len_
-      || 0 != strcasecmp($2->str_value_, "ai"))) {
-    yyerror(&@2, result, "expect AI here");
-    YYERROR;
-  } else {
-    malloc_non_terminal_node($$, result->malloc_pool_, T_SHOW_AI_COLUMNS, 2, $4, $5);
-  }
+  malloc_non_terminal_node($$, result->malloc_pool_, T_SHOW_AI_COLUMNS, 2, $4, $5);
 }
 | SHOW TABLE STATUS opt_from_or_in_database_clause opt_show_condition
 { malloc_non_terminal_node($$, result->malloc_pool_, T_SHOW_TABLE_STATUS, 2, $4, $5); }
@@ -14981,11 +14969,11 @@ opt_set table_option_list_space_seperated
 {
   malloc_non_terminal_node($$, result->malloc_pool_, T_ALTER_FOREIGN_KEY_OPTION, 1, $1);
 }
-| NAME_OB NAME_OB COLUMN column_definition_ref opt_ai_retry_where
+| NAME_OB AI COLUMN column_definition_ref opt_ai_retry_where
 {
-  if (OB_UNLIKELY(NULL == $1 || NULL == $2 || 0 == $1->str_len_ || 0 == $2->str_len_
-      || 0 != strcasecmp($1->str_value_, "retry") || 0 != strcasecmp($2->str_value_, "ai"))) {
-    yyerror(&@1, result, "expect RETRY AI here");
+  if (OB_UNLIKELY(NULL == $1 || 0 == $1->str_len_
+      || 0 != strcasecmp($1->str_value_, "retry"))) {
+    yyerror(&@1, result, "expect RETRY here");
     YYERROR;
   } else {
     ParseNode *retry_node = NULL;

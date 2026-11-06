@@ -5215,6 +5215,20 @@ public:
   inline virtual share::ObSysVarClassType get_type() const { return share::SYS_VAR_ENABLE_FILE_SQL; }
   inline virtual const common::ObObj &get_global_default_value() const { return share::ObSysVariables::get_default_value(719); }
 };
+class ObSysVarAiColumnStrictRead : public ObIntSysVar
+{
+public:
+  ObSysVarAiColumnStrictRead() : ObIntSysVar(NULL, NULL, NULL, NULL, NULL) {}
+  inline virtual share::ObSysVarClassType get_type() const { return share::SYS_VAR_AI_COLUMN_STRICT_READ; }
+  inline virtual const common::ObObj &get_global_default_value() const { return share::ObSysVariables::get_default_value(720); }
+};
+class ObSysVarAiColumnWorker : public ObIntSysVar
+{
+public:
+  ObSysVarAiColumnWorker() : ObIntSysVar(NULL, NULL, NULL, NULL, NULL) {}
+  inline virtual share::ObSysVarClassType get_type() const { return share::SYS_VAR_AI_COLUMN_WORKER; }
+  inline virtual const common::ObObj &get_global_default_value() const { return share::ObSysVariables::get_default_value(721); }
+};
 
 
 class ObSysVarFactory
