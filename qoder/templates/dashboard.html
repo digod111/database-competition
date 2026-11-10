@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}今日复习 · 温故{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <span class="eyebrow">今日</span>
+    <h1>{{ user.display_name }}，今天复习什么？</h1>
+    <p class="muted">计划由 seekdb 中的学习状态与 PowerContext 中的记忆共同决定。</p>
+  </div>
+  <div class="head-badges">
+    <span class="tag tag-violet">记忆 {{ data.memory.counts.weak_point + data.memory.counts.session_summary + data.memory.counts.handoff + data.memory.counts.profile }} 条</span>
+    <span class="tag tag-green">已练 {{ data.progress.seen }}/{{ data.progress.total }} 题</span>
+  </div>
+</section>
+
+<section class="dashboard-grid">
+  <article class="card plan-card">
+    <div class="card-head">
+      <h2>{% if active_detail %}继续本轮复习{% else %}开始今日复习{% endif %}</h2>
+      {% if active_detail %}
+        <span class="tag tag-amber">{{ active_detail.plan.focus_course or '综合复习' }}</span>
+      {% endif %}
+    </div>
+    {% if active_detail %}
+      <div class="progress-line">
+        <div class="progress-track"><span style="width: {{ (active_detail.progress.answered / active_detail.progress.planned * 100) if active_detail.progress.planned else 0 }}%"></span></div>
+        <span class="progress-label">{{ active_detail.progress.answered }}/{{ active_detail.progress.planned }} 已完成</span>
+      </div>
+      <ul class="mini-plan">
+        {% for item in active_view %}
+          <li class="mini-item {{ item.status }}">
+            <span class="mini-index">{{ "%02d"|format(item.number) }}</span>
+            <span class="mini-title">{{ item.knowledge_point }}</span>
+            <span class="mini-state">
+              {% if item.status == 'done-correct' %}答对
+              {% elif item.status == 'done-wrong' %}答错
+              {% elif item.status == 'current' %}当前
+              {% else %}待做{% endif %}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="actions">
+        <a class="btn primary" href="/practice/{{ active_detail.session.id }}">继续答题</a>
+        <span class="hint">已答对 {{ active_detail.progress.correct }} 题</span>
+      </div>
+    {% else %}
+      <p class="muted">选一门课开始，或做一次跨课程综合复习。每轮默认 6 题，可在“教练记忆”里调整。</p>
+      <div class="start-grid">
+        <a class="start-tile" href="/practice/start">
+          <strong>综合复习</strong>
+          <small>到期 + 薄弱点 + 新题</small>
+        </a>
+        {% for course in catalog %}
+          <a class="start-tile" href="/practice/start?course={{ course.course }}">
+            <strong>{{ course.course }}</strong>
+            <small>{{ course.questions }} 题 · {{ course.materials }} 段笔记</small>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </article>
+
+  <article class="card memory-card">
+    <div class="card-head">
+      <h2>教练记得</h2>
+      <a class="link" href="/memory">查看记忆证据 →</a>
+    </div>
+    <div class="memory-block">
+      <div class="memory-kicker">偏好</div>
+      <p>每日目标 <strong>{{ profile.daily_goal }}</strong> 题 · 解析风格 <strong>{{ STYLE_LABELS.get(profile.explanation_style, '简洁') }}</strong></p>
+    </div>
+    <div class="memory-block">
+      <div class="memory-kicker">薄弱点</div>
+      {% if data.memory.weak_points %}
+        <div class="chip-row">
+          {% for weak in data.memory.weak_points[:5] %}
+            <span class="chip chip-warn">{{ weak.knowledge_point }} · 错 {{ weak.wrong }} 次</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="muted">还没有薄弱点。开始第一轮复习后，错题会自动变成记忆。</p>
+      {% endif %}
+    </div>
+    <div class="memory-block">
+      <div class="memory-kicker">上次交接</div>
+      {% if data.memory.handoff and data.memory.handoff.status == 'open' and data.memory.handoff.remaining %}
+        <p>还有 <strong>{{ data.memory.handoff.remaining|length }}</strong> 题没做完，下次优先补上。</p>
+      {% else %}
+        <p class="muted">没有未完成的交接。</p>
+      {% endif %}
+    </div>
+    <div class="memory-block">
+      <div class="memory-kicker">上下文包</div>
+      <p class="muted">PowerContext <code>context/prepare</code>：
+        {% if data.memory.prepared_status == 'ready' %}组装了 {{ data.memory.counts.prepared_citations }} 条历史记忆。{% else %}本轮暂无匹配记忆。{% endif %}
+      </p>
+    </div>
+  </article>
+</section>
+
+<section class="stat-row">
+  <div class="stat">
+    <span class="stat-label">已练题目</span>
+    <strong>{{ data.progress.seen }}<small>/{{ data.progress.total }}</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">平均掌握度</span>
+    <strong>{{ (data.progress.avg_mastery * 100) | round(0) }}<small>%</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">累计正确率</span>
+    <strong>{{ (data.stats.accuracy * 100) | round(0) }}<small>%</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">学习天数</span>
+    <strong>{{ data.stats.active_days }}<small>天</small></strong>
+  </div>
+</section>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head">
+      <h2>最近检索</h2>
+      <span class="tag tag-green">seekdb</span>
+    </div>
+    {% if data.recent_queries %}
+      <ul class="log-list">
+        {% for query in data.recent_queries %}
+          <li>
+            <div class="log-main">
+              <span class="log-purpose">{{ query.purpose }}</span>
+              <span class="log-detail">{{ query.row_count }} 行 · {{ query.elapsed_ms }} ms</span>
+            </div>
+            <div class="log-meta"><code>{{ query.query_id }}</code> · {{ query.time|fmt_time }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">还没有检索记录。去资料库搜一个知识点试试。</p>
+    {% endif %}
+  </article>
+
+  <article class="card">
+    <div class="card-head">
+      <h2>学习记录</h2>
+      <a class="link" href="/stats">使用统计 →</a>
+    </div>
+    {% if latest_summary %}
+      <div class="latest-summary">
+        <p class="muted">上一轮：{{ latest_summary.finished_at|fmt_time }}</p>
+        <p>{{ latest_summary.summary }}</p>
+        <div class="chip-row">
+          <span class="chip">正确率 {{ (latest_summary.accuracy * 100) | round(0) }}%</span>
+          <span class="chip">{{ latest_summary.answered }} 题</span>
+        </div>
+      </div>
+    {% endif %}
+    {% if sessions %}
+      <ul class="session-list">
+        {% for session in sessions %}
+          <li>
+            <span class="session-status {{ session.status }}">{{ '进行中' if session.status == 'active' else '已结束' }}</span>
+            <span class="session-time">{{ session.started_at|fmt_time }}</span>
+            <span class="session-stat">{{ session.answered_count }}/{{ session.planned_count }} 题</span>
+            {% if session.status == 'finished' %}
+              <a class="link" href="/practice/{{ session.id }}/summary">总结</a>
+            {% else %}
+              <a class="link" href="/practice/{{ session.id }}">继续</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">还没有复习记录。</p>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

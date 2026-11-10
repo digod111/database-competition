@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}复习中 · 温故{% endblock %}
+{% block content %}
+<section class="practice-head">
+  <div>
+    <span class="eyebrow">复习中</span>
+    <h1>{{ plan.focus_course or '综合复习' }} <small class="muted">· 第 {{ progress.answered + 1 }} 题</small></h1>
+  </div>
+  <div class="head-badges">
+    <span class="tag tag-violet">解析风格：{{ STYLE_LABELS.get(profile.explanation_style, '简洁') }}</span>
+    <span class="tag tag-green">计划 {{ progress.planned }} 题</span>
+  </div>
+</section>
+
+<div class="progress-line wide">
+  <div class="progress-track"><span style="width: {{ (progress.answered / progress.planned * 100) if progress.planned else 0 }}%"></span></div>
+  <span class="progress-label">{{ progress.answered }}/{{ progress.planned }}</span>
+</div>
+
+<section class="practice-grid">
+  <aside class="card plan-panel">
+    <div class="card-head">
+      <h2>本轮计划</h2>
+      <span class="tag tag-violet">记忆驱动</span>
+    </div>
+    <ul class="plan-list">
+      {% for item in plan_view %}
+        <li class="plan-item {{ item.status }}">
+          <span class="plan-index">{{ "%02d"|format(item.number) }}</span>
+          <div class="plan-body">
+            <strong>{{ item.knowledge_point }}</strong>
+            <small>{{ item.course }} · {{ item.chapter }}</small>
+            {% if item.status == 'current' %}
+              <div class="reason-row">
+                {% for reason in item.reasons %}<span class="reason">{{ reason }}</span>{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <span class="plan-state">
+            {% if item.status == 'done-correct' %}✓
+            {% elif item.status == 'done-wrong' %}✕
+            {% elif item.status == 'current' %}●
+            {% else %}○{% endif %}
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="plan-foot">
+      <span class="muted">候选：到期 {{ plan.candidate_counts.due }} · 薄弱 {{ plan.candidate_counts.weak }} · 新题 {{ plan.candidate_counts.new }} · 交接 {{ plan.candidate_counts.handoff }}</span>
+    </div>
+  </aside>
+
+  <article class="card question-panel">
+    {% if next_item %}
+      <div class="practice-root"
+           data-session="{{ session_id }}"
+           data-question="{{ next_item.id }}"
+           data-type="{{ next_item.type }}"
+           data-style="{{ profile.explanation_style }}">
+        <div class="question-meta">
+          <span class="tag">{{ next_item.course }}</span>
+          <span class="tag">{{ next_item.chapter }}</span>
+          <span class="tag tag-amber">{{ next_item.knowledge_point }}</span>
+          <span class="difficulty">难度 {{ "★" * next_item.difficulty }}</span>
+        </div>
+        <h2 class="question-stem">{{ next_item.stem }}</h2>
+        {% if next_item.type == 'mcq' %}
+          <div class="options" id="option-list">
+            {% for option in next_item.options %}
+              <button class="option-btn" type="button" data-index="{{ loop.index0 }}">
+                <span class="option-letter">{{ "ABCD"[loop.index0] }}</span>
+                <span class="option-text">{{ option }}</span>
+              </button>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="short-answer">
+            <p class="muted">先在心里或纸上作答，再按实际表现自评。简答题不自动判分，但同样参与 SM-2 调度。</p>
+            <div class="rating-row" id="short-ratings">
+              <button class="btn ghost" type="button" data-rating="correct">我答对了</button>
+              <button class="btn ghost" type="button" data-rating="partial">有点模糊</button>
+              <button class="btn ghost" type="button" data-rating="wrong">没答出来</button>
+            </div>
+          </div>
+        {% endif %}
+        <div class="answer-actions">
+          <button class="btn primary" id="submit-answer" type="button" disabled>提交答案</button>
+          <span class="hint">选择题支持键盘 1–4 选择，Enter 提交</span>
+        </div>
+      </div>
+
+      <section class="feedback-panel hidden" id="feedback-panel">
+        <div class="feedback-verdict" id="feedback-verdict"></div>
+        <div class="feedback-section">
+          <h3>解析</h3>
+          <p id="feedback-text"></p>
+        </div>
+        <div class="feedback-section">
+          <h3>笔记出处 <span class="tag tag-green">seekdb 检索</span></h3>
+          <div class="evidence-list" id="feedback-evidence"></div>
+        </div>
+        <div class="feedback-meta" id="feedback-meta"></div>
+        <div class="feedback-actions">
+          <a class="btn primary" id="next-link" href="/practice/{{ session_id }}">下一题 →</a>
+          <button class="btn ghost" id="finish-btn" type="button" data-session="{{ session_id }}">结束本轮</button>
+        </div>
+      </section>
+    {% else %}
+      <div class="empty-state">
+        <span class="eyebrow">本轮完成</span>
+        <h2>这一轮的题目都答完了。</h2>
+        <p class="muted">结束后，温故会把本轮薄弱点、会话摘要和未完成交接写入 PowerContext。</p>
+        <button class="btn primary" id="finish-btn" type="button" data-session="{{ session_id }}">结束本轮并生成总结</button>
+      </div>
+    {% endif %}
+  </article>
+</section>
+
+<section class="card influence-card">
+  <div class="card-head">
+    <h2>本轮计划如何被记忆影响</h2>
+    <span class="tag tag-violet">PowerContext</span>
+  </div>
+  {% if influences %}
+    <div class="influence-grid">
+      {% for influence in influences %}
+        <article class="influence-item kind-{{ influence.memory_kind }}">
+          <div class="influence-top">
+            <span class="influence-kind">
+              {% if influence.memory_kind == 'profile' %}学习偏好
+              {% elif influence.memory_kind == 'weak_point' %}薄弱点
+              {% elif influence.memory_kind == 'weak_chapter' %}同章节
+              {% elif influence.memory_kind == 'handoff' %}上次交接
+              {% elif influence.memory_kind == 'prepared_context' %}上下文包
+              {% else %}{{ influence.memory_kind }}{% endif %}
+            </span>
+            <code class="artifact">{{ influence.memory_id or '—' }}</code>
+          </div>
+          <h3>{{ influence.title }}</h3>
+          <p>{{ influence.effect }}</p>
+          {% if influence.affected_question_ids %}
+            <div class="chip-row">
+              {% for qid in influence.affected_question_ids %}<span class="chip">{{ qid }}</span>{% endfor %}
+            </div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">这是第一轮，还没有历史记忆。答完这一轮后，下一轮的计划会引用这里的记忆。</p>
+  {% endif %}
+</section>
+{% endblock %}

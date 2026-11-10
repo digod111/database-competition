@@ -1,0 +1,23 @@
+{
+  "attempts": 11,
+  "correct": 10,
+  "accuracy": 0.9091,
+  "sessions": 2,
+  "users": 1,
+  "active_days": 1,
+  "weak_points": [
+    {
+      "knowledge_point": "B+树插入与分裂",
+      "wrong_count": 1,
+      "users": 1
+    }
+  ],
+  "recent_days": [
+    {
+      "day": "2026-11-10",
+      "attempts": 11,
+      "correct": 10,
+      "accuracy": 0.909
+    }
+  ]
+}

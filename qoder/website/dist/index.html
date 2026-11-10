@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>温故 · 复习教练 — 把错题变成下一次的题目</title>
+  <meta name="description" content="温故是一个本地优先的复习教练：用 seekdb 找到笔记原文，用 PowerContext 记住你错过什么、偏好怎样复习。重启之后，它仍然记得。">
+  <meta name="theme-color" content="#f7f2e8">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="温故 · 复习教练，回到顶部">
+      <span class="brand-mark">温</span>
+      <span class="brand-copy"><strong>温故</strong><small>复习教练</small></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="页面导航">
+      <a class="nav-link" href="#problem">问题</a>
+      <a class="nav-link" href="#features">能力</a>
+      <a class="nav-link" href="#loop">闭环</a>
+      <a class="nav-link" href="#tech">技术</a>
+      <a class="nav-link" href="#evidence">证据</a>
+      <a class="nav-link" href="#usage">使用数据</a>
+      <a class="nav-link" href="#run">运行</a>
+    </nav>
+    <a class="header-cta" href="#repo">代码仓库</a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="site-nav">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero section-pad" aria-labelledby="hero-title">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <div class="hero-watermark" aria-hidden="true">温</div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>2026 OceanBase 数据库大赛 · Qoder 生态赛道</p>
+        <h1 id="hero-title">把错题，<br><em>变成下一次的题目。</em></h1>
+        <p class="hero-lead">温故是一个本地优先的复习教练：用 <strong>seekdb</strong> 找到笔记原文，用 <strong>PowerContext</strong> 记住你错过什么、偏好怎样复习。重启之后，它仍然记得。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#loop">看它如何记住<span aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="#evidence">核对技术证据</a>
+        </div>
+        <ul class="hero-meta" aria-label="技术组成">
+          <li>seekdb 中文全文检索</li>
+          <li>PowerContext 跨会话记忆</li>
+          <li>Qoder Sites 发布</li>
+        </ul>
+      </div>
+      <div class="hero-visual reveal">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">127.0.0.1:8000 / 复习中</span>
+          </div>
+          <div class="browser-shot">
+            <img src="assets/hero-practice.png" alt="温故答题页：B+树题目、本轮计划和记忆影响" loading="eager">
+          </div>
+        </div>
+        <aside class="float-card float-memory">
+          <span class="float-label">教练记得</span>
+          <strong>B+树插入与分裂</strong>
+          <small>错 1 次 · 掌握度 0.33</small>
+          <span class="float-link">下一轮加练 3 题 <span aria-hidden="true">→</span></span>
+        </aside>
+        <aside class="float-card float-query">
+          <span class="float-label">seekdb</span>
+          <code>MATCH … AGAINST</code>
+          <small>首条相关度 2.694 · 有 query_id</small>
+        </aside>
+      </div>
+    </section>
+
+    <section class="metrics-wrap" aria-label="关键数据">
+      <div class="metrics reveal">
+        <div><strong>35</strong><span>笔记片段</span></div>
+        <div><strong>27</strong><span>道练习题</span></div>
+        <div><strong id="metric-checks">23/23</strong><span>demo 自检通过</span></div>
+        <div><strong id="metric-bplus">1 → 3</strong><span>薄弱点相关题</span></div>
+        <div><strong>0</strong><span>外部模型依赖</span></div>
+      </div>
+    </section>
+
+    <section class="section-pad" id="problem" aria-labelledby="problem-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">问题</p>
+        <h2 id="problem-title">复习不是不努力，<br>是信息没有连起来。</h2>
+        <p class="section-lead">笔记、题库、错题和复习计划分散在不同地方。温故把它们放进同一个可检索、可记忆、可核对的闭环。</p>
+      </div>
+      <div class="problem-grid">
+        <article class="problem-card reveal">
+          <span class="card-index">01</span>
+          <h3>资料散</h3>
+          <p>笔记在 Markdown，题库在表格，错题在截图里。想找一句原文，先翻三个地方。</p>
+        </article>
+        <article class="problem-card reveal">
+          <span class="card-index">02</span>
+          <h3>复习凭感觉</h3>
+          <p>每次都从头开始，不知道哪些题已经会了、哪些题一直在错，时间花在重复的地方。</p>
+        </article>
+        <article class="problem-card reveal">
+          <span class="card-index">03</span>
+          <h3>记忆跨天丢失</h3>
+          <p>今天错过的题，明天打开应用时“教练”不记得；计划没有延续性，薄弱点也没有被真正跟踪。</p>
+        </article>
+      </div>
+      <p class="problem-quote reveal">温故把「找原文 → 练题 → 记住」连成一条闭环，而不是再做一个只读的笔记工具。</p>
+    </section>
+
+    <section class="section-pad section-tint" id="features" aria-labelledby="features-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">核心能力</p>
+        <h2 id="features-title">一个教练，四种记忆，一条闭环。</h2>
+        <p class="section-lead">每项能力都对应真实的数据流：seekdb 负责“找得到”，PowerContext 负责“记得住”。</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card reveal">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 4.5h9.5A2.5 2.5 0 0 1 17 7v12.5H7.5A2.5 2.5 0 0 1 5 17V4.5Z"/><path d="M8.5 8h5M8.5 11.5h5M8.5 15h3"/></svg>
+          </span>
+          <div class="feature-head"><h3>资料入库</h3><span class="tag tag-green">seekdb</span></div>
+          <p>Markdown 笔记按 <code>##</code> 小节切块，题库用 JSON 导入；课程、章节、知识点、来源路径全部保留。</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 4.5 4.5"/></svg>
+          </span>
+          <div class="feature-head"><h3>中文混合检索</h3><span class="tag tag-green">seekdb</span></div>
+          <p>ngram 全文索引 + 课程/章节/知识点结构化过滤 + 相关度排序；找不到时自动回退到 LIKE 匹配。</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="2.5"/></svg>
+          </span>
+          <div class="feature-head"><h3>今日复习 + 判分</h3><span class="tag">coach</span></div>
+          <p>到期、薄弱、新题、交接四类候选；单选题自动判分，简答题自评，轻量 SM-2 安排下一次。</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M8 9h8M8 13h5"/></svg>
+          </span>
+          <div class="feature-head"><h3>解析引用</h3><span class="tag tag-green">seekdb</span></div>
+          <p>每道题答完后，检索对应笔记片段，展示原文高亮、来源文件、相关度和 query_id。</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4a5 5 0 0 1 5 5c0 2.2-1.4 3.4-2.4 4.6-.7.8-1.1 1.5-1.1 2.4h-3c0-2 .8-2.9 1.8-3.9 1-1 1.7-1.7 1.7-3.1A2 2 0 0 0 12 7a2 2 0 0 0-2 2H7a5 5 0 0 1 5-5Z"/><path d="M10.5 19h3"/></svg>
+          </span>
+          <div class="feature-head"><h3>跨会话记忆</h3><span class="tag tag-violet">PowerContext</span></div>
+          <p>偏好、薄弱点、会话摘要、未完成交接四类记忆；重启后召回，改变下一轮题量、解析详略和选题权重。</p>
+        </article>
+        <article class="feature-card reveal">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+          </span>
+          <div class="feature-head"><h3>可核对证据</h3><span class="tag tag-amber">JSONL</span></div>
+          <p>SQL、参数、返回行数、相关度、query_id、记忆 artifact_id、重启前后健康状态，都能在技术证据页看到。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-pad" id="loop" aria-labelledby="loop-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">闭环</p>
+        <h2 id="loop-title">它不是每次从零开始，<br>而是接着上一次的你来。</h2>
+        <p class="section-lead">一条可复现的验证路径：第一轮故意错一道 B+树题，重启 PowerContext，第二轮观察计划如何被记忆改变。</p>
+      </div>
+      <div class="loop-layout">
+        <ol class="loop-steps">
+          <li class="loop-step reveal">
+            <span class="loop-num">01</span>
+            <div><h3>检索原文</h3><p>答题后，用「知识点 + 题干」检索同课程笔记；seekdb 返回原文片段、来源路径与相关度。</p><span class="tag tag-green">seekdb</span></div>
+          </li>
+          <li class="loop-step reveal">
+            <span class="loop-num">02</span>
+            <div><h3>练习判分</h3><p>到期、薄弱、新题、交接四类候选；判分后更新掌握度，用 SM-2 轻量调度下一次复习。</p><span class="tag">coach</span></div>
+          </li>
+          <li class="loop-step reveal">
+            <span class="loop-num">03</span>
+            <div><h3>写入记忆</h3><p>本轮结束写回四类记忆：学习偏好、薄弱点、会话摘要、未完成交接。</p><span class="tag tag-violet">PowerContext</span></div>
+          </li>
+          <li class="loop-step reveal">
+            <span class="loop-num">04</span>
+            <div><h3>重启召回</h3><p>重启上下文服务，用新进程召回；下一轮计划显示“哪条记忆影响了哪道题”。</p><span class="tag tag-violet">PowerContext</span></div>
+          </li>
+        </ol>
+        <aside class="loop-proof reveal" aria-label="真实运行片段">
+          <div class="proof-head">
+            <span class="tag tag-amber">真实运行片段</span>
+            <code>docs/runs/demo_summary.json</code>
+          </div>
+          <dl class="proof-list">
+            <div><dt>第一轮 B+树题</dt><dd id="proof-bplus1">1 道</dd></div>
+            <div><dt>故意错答后掌握度</dt><dd>0.325</dd></div>
+            <div><dt>PowerContext 重启</dt><dd><span class="ok-dot"></span>true → true</dd></div>
+            <div><dt>第二轮 B+树题</dt><dd class="strong" id="proof-bplus2">3 道</dd></div>
+            <div><dt>第二轮结果</dt><dd>6/6 · 交接 completed</dd></div>
+            <div><dt>自检</dt><dd id="proof-checks">23/23 通过</dd></div>
+          </dl>
+          <p class="proof-note">第二轮：知识点加权 1 题 + 同章节扩展 2 题；掌握度 0.325 → 0.491。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-pad section-dark" id="tech" aria-labelledby="tech-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">技术分工</p>
+        <h2 id="tech-title">两种技术，<br class="mobile-only">各有明确分工。</h2>
+        <p class="section-lead">不是“装了两个组件”，而是分别承担知识检索与跨会话记忆，并在计划里汇合。</p>
+      </div>
+      <div class="tech-grid">
+        <article class="tech-panel reveal">
+          <div class="tech-head">
+            <div><span class="tech-kicker">01 / 知识库与检索</span><h3>seekdb</h3></div>
+            <span class="tag tag-green">MySQL 协议 · 2881</span>
+          </div>
+          <p class="tech-lead">笔记、题库、掌握度、答题记录、会话与使用统计都在这里。中文检索使用真实全文索引，不靠关键词拼接。</p>
+          <div class="schema-list" aria-label="seekdb 主要表">
+            <span><code>materials</code> 笔记片段</span>
+            <span><code>questions</code> 题库</span>
+            <span><code>question_state</code> 掌握度</span>
+            <span><code>attempts</code> 答题流水</span>
+            <span><code>sessions</code> 会话</span>
+            <span><code>usage_events</code> 使用日志</span>
+          </div>
+          <div class="code-frame">
+            <div class="code-head"><span>全文检索 + 结构化过滤</span><button class="copy-btn" type="button" data-copy="#sql-code">复制</button></div>
+            <pre><code id="sql-code">SELECT id, course, chapter, title, content,
+       MATCH(search_text) AGAINST (%s IN NATURAL LANGUAGE MODE) AS score
+FROM materials
+WHERE MATCH(search_text) AGAINST (%s IN NATURAL LANGUAGE MODE)
+  AND course = %s
+ORDER BY score DESC
+LIMIT %s;</code></pre>
+          </div>
+          <div class="result-table" role="table" aria-label="检索结果示例">
+            <div class="result-row result-head" role="row"><span>结果</span><span>相关度</span></div>
+            <div class="result-row" role="row"><span>B+树 / B+树的插入与分裂</span><strong>2.694</strong></div>
+            <div class="result-row" role="row"><span>B+树 / B+树的结构</span><strong>1.222</strong></div>
+            <div class="result-row" role="row"><span>B+树 / B+树的范围查询</span><strong>1.135</strong></div>
+          </div>
+          <p class="panel-note">每次查询写入 <code>docs/runs/db_queries.jsonl</code>，含 SQL、参数、行数、相关度与 query_id。</p>
+        </article>
+
+        <article class="tech-panel reveal">
+          <div class="tech-head">
+            <div><span class="tech-kicker">02 / 跨会话记忆</span><h3>PowerContext</h3></div>
+            <span class="tag tag-violet">HTTP · 18081</span>
+          </div>
+          <p class="tech-lead">每个用户一个 Scope，四类 Atomic Memory 显式写入；下一轮开始时召回，并用 <code>context/prepare</code> 组装上下文包。</p>
+          <div class="memory-types">
+            <div class="memory-type"><span class="memory-kind">profile</span><p>每日目标 6 题 · 解析风格简洁</p></div>
+            <div class="memory-type"><span class="memory-kind">weak_point</span><p>B+树插入与分裂 · 错 1 次 · 掌握度 0.33</p></div>
+            <div class="memory-type"><span class="memory-kind">session_summary</span><p>本轮 5 题 / 答对 4 题 / 薄弱点 B+树</p></div>
+            <div class="memory-type"><span class="memory-kind">handoff</span><p>Q-DS-005 未完成 · 下次优先补做</p></div>
+          </div>
+          <div class="quote-frame">
+            <span class="tag tag-violet">context/prepare</span>
+            <p>“B+树插入与分裂 薄弱点 复习计划” → 2 条 citation：一条会话摘要、一条 weak_point 记忆。</p>
+            <code>artifact_id · art_388679… / art_6c8dfb…</code>
+          </div>
+          <div class="memory-proof">
+            <div><span>重启后新进程召回</span><strong>4 类记忆</strong></div>
+            <div><span>计划变化</span><strong>B+树 1 → 3 题</strong></div>
+            <div><span>交接状态</span><strong>completed</strong></div>
+          </div>
+        </article>
+      </div>
+      <p class="dark-note reveal">没有使用向量检索或外部 LLM：当前环境没有可靠、可离线复现的 embedding 来源。主路径是真实中文全文索引 + 结构化过滤 + 确定性调度；升级路径写在 <code>docs/technical_note.md</code>。</p>
+    </section>
+
+    <section class="section-pad" id="evidence" aria-labelledby="evidence-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">验证证据</p>
+        <h2 id="evidence-title">每一条结论，<br>都有可核对的记录。</h2>
+        <p class="section-lead">下方数字来自一次完整的 <code>python -m wengu demo</code> 运行；截图与日志随代码仓库提交。</p>
+      </div>
+      <div class="evidence-layout">
+        <article class="checklist-card reveal">
+          <div class="checklist-head"><h3>本次运行自检</h3><span class="tag tag-green">23 / 23</span></div>
+          <ul class="checklist">
+            <li><span class="check-icon">✓</span>第一轮计划包含 B+树目标题，且留有一道未完成题</li>
+            <li><span class="check-icon">✓</span>故意错答后写入 <code>weak_point</code>，掌握度 0.325</li>
+            <li><span class="check-icon">✓</span>PowerContext 重启前后健康检查均为 true</li>
+            <li><span class="check-icon">✓</span>新 Python 进程召回 4 类记忆，含 prepared citation</li>
+            <li><span class="check-icon">✓</span>第二轮 B+树题从 1 道扩展到 3 道，并补做交接题</li>
+            <li><span class="check-icon">✓</span>第二轮 6/6 答对，交接状态 completed</li>
+            <li><span class="check-icon">✓</span>检索首条为 B+树的插入与分裂，相关度 2.694</li>
+            <li><span class="check-icon">✓</span>SQL 含 <code>MATCH … AGAINST</code>，query_id 与检索响应一致</li>
+          </ul>
+        </article>
+        <article class="files-card reveal">
+          <div class="checklist-head"><h3>证据文件</h3><span class="tag tag-amber">docs/runs</span></div>
+          <dl class="file-list">
+            <div><dt><code>db_queries.jsonl</code></dt><dd>每次 seekdb 查询：SQL、参数、行数、相关度、query_id</dd></div>
+            <div><dt><code>powercontext_memory.jsonl</code></dt><dd>记忆写入/召回、artifact_id、prepared citation</dd></div>
+            <div><dt><code>powercontext_restart.jsonl</code></dt><dd>stop / start / restart 前后健康状态与 pid</dd></div>
+            <div><dt><code>coach_plans.jsonl</code></dt><dd>每次计划的候选、分数、来源与记忆影响</dd></div>
+            <div><dt><code>demo_summary.json</code></dt><dd>23 项自检、两轮计划对比、召回、检索与统计</dd></div>
+          </dl>
+        </article>
+      </div>
+
+      <div class="gallery-head reveal">
+        <h3>页面截图</h3>
+        <span>点击图片放大 · 全部来自真实运行</span>
+      </div>
+      <div class="gallery">
+        <figure class="shot-card reveal" tabindex="0" role="button" data-lightbox data-full="assets/feedback.png" data-caption="答题后的解析与 seekdb 原文引用">
+          <img src="assets/feedback.png" alt="答题反馈面板：判分、解析、seekdb 原文引用和相关度" loading="lazy">
+          <figcaption><span>解析与出处</span><small>seekdb · query_id</small></figcaption>
+        </figure>
+        <figure class="shot-card reveal" tabindex="0" role="button" data-lightbox data-full="assets/memory.png" data-caption="教练记忆：四类记忆与 context/prepare citation">
+          <img src="assets/memory.png" alt="教练记忆页：学习偏好、薄弱点、会话摘要、交接与上下文包" loading="lazy">
+          <figcaption><span>教练记忆</span><small>PowerContext · 4 类记忆</small></figcaption>
+        </figure>
+        <figure class="shot-card reveal" tabindex="0" role="button" data-lightbox data-full="assets/evidence.png" data-caption="技术证据：FULLTEXT 查询、记忆读写与重启记录">
+          <img src="assets/evidence.png" alt="技术证据页：seekdb 全文检索、PowerContext 记忆读写、重启记录" loading="lazy">
+          <figcaption><span>技术证据</span><small>FULLTEXT · restart log</small></figcaption>
+        </figure>
+        <figure class="shot-card reveal" tabindex="0" role="button" data-lightbox data-full="assets/search.png" data-caption="资料库检索：中文全文命中与相关度排序">
+          <img src="assets/search.png" alt="资料库检索页：B+树插入分裂的命中结果与相关度" loading="lazy">
+          <figcaption><span>资料库检索</span><small>ngram · 相关度</small></figcaption>
+        </figure>
+        <figure class="shot-card reveal" tabindex="0" role="button" data-lightbox data-full="assets/summary.png" data-caption="本轮总结：正确率、薄弱点与写入的记忆">
+          <img src="assets/summary.png" alt="本轮总结页：正确率、知识点掌握度与写入的记忆" loading="lazy">
+          <figcaption><span>本轮总结</span><small>session_summary</small></figcaption>
+        </figure>
+        <figure class="shot-card reveal" tabindex="0" role="button" data-lightbox data-full="assets/dashboard.png" data-caption="今日复习：计划、记忆摘要和最近检索">
+          <img src="assets/dashboard.png" alt="今日复习页：开始复习、教练记得和最近检索" loading="lazy">
+          <figcaption><span>今日复习</span><small>plan · memory</small></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-pad section-tint" id="usage" aria-labelledby="usage-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">使用数据</p>
+        <h2 id="usage-title">真实使用数据，<br>不做估算。</h2>
+        <p class="section-lead">统计来自应用真实日志；<code>demo-</code> / <code>pytest-</code> 验证账号会被排除。当前还没有邀请到真实同学使用，所以下面会如实显示“数据收集中”。</p>
+      </div>
+      <div id="usage-root" class="usage-root reveal" aria-live="polite">
+        <div class="usage-empty">
+          <span class="tag tag-amber">真实数据</span>
+          <h3>真实使用数据收集中</h3>
+          <p>当前数据库只有演示账号。邀请同学使用后，运行 <code>python tools/export_usage.py</code> 并重新发布，这里会自动显示真实人数、次数、正确率与反馈。</p>
+        </div>
+      </div>
+      <div class="verification-strip reveal" id="verification-strip" aria-label="验证样例数据">
+        <div><strong>11</strong><span>演示答题</span></div>
+        <div><strong>2</strong><span>演示会话</span></div>
+        <div><strong>90.9%</strong><span>演示正确率</span></div>
+        <div><strong>23/23</strong><span>自检通过</span></div>
+        <p><span class="tag tag-violet">演示账号</span>这是验证样例，不是真实使用数据。</p>
+      </div>
+    </section>
+
+    <section class="section-pad" id="record" aria-labelledby="record-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">Qoder 开发记录</p>
+        <h2 id="record-title">开发过程本身，<br>也是作品的一部分。</h2>
+        <p class="section-lead">从读题、技术探针到编码、调试、测试与发布，主要开发工作都在 Qoder 中完成。完整记录含 Qoder 账号 UID，随代码仓库提交。</p>
+      </div>
+      <ol class="timeline">
+        <li class="timeline-item reveal">
+          <span class="timeline-time">17:10–17:23</span>
+          <div><h3>需求拆解与技术探针</h3><p>读题面、拆硬性验收、对比三个方向；用临时库验证 seekdb ngram 中文全文检索与 PowerContext API 返回结构。</p></div>
+        </li>
+        <li class="timeline-item reveal">
+          <span class="timeline-time">17:23–17:35</span>
+          <div><h3>数据层、教练逻辑与记忆闭环</h3><p>建表/导入/检索、SM-2 轻量调度、四类记忆、Scope 代际、重启管理；实现 Web 页面与 CLI。</p></div>
+        </li>
+        <li class="timeline-item reveal">
+          <span class="timeline-time">17:35–17:44</span>
+          <div><h3>浏览器验证与一键 demo</h3><p>走通入口、资料检索、答题、总结、记忆与证据页；修复选题多样性、交接加权、影响拆分等问题；demo 23/23 通过。</p></div>
+        </li>
+        <li class="timeline-item reveal">
+          <span class="timeline-time">17:44–17:53</span>
+          <div><h3>测试与截图</h3><p>22 个单元测试、3 个集成测试；Playwright + 本机 Chrome 生成 11 张真实页面截图。</p></div>
+        </li>
+        <li class="timeline-item reveal">
+          <span class="timeline-time">17:53–18:20</span>
+          <div><h3>文档、网站与发布</h3><p>README、验证样例、技术说明、使用数据导出；用 Qoder Sites 制作并公开本网站。</p></div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section-pad section-dark" id="run" aria-labelledby="run-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">本地运行</p>
+        <h2 id="run-title">在自己的电脑上跑起来。</h2>
+        <p class="section-lead">温故需要本机 seekdb 与 PowerContext，因此没有公网在线体验；按下面三步运行即可复现完整流程。</p>
+      </div>
+      <div class="run-grid">
+        <article class="run-step reveal">
+          <span class="run-num">01</span>
+          <h3>启动 seekdb</h3>
+          <div class="code-frame code-frame-dark">
+            <div class="code-head"><span>Docker</span><button class="copy-btn" type="button" data-copy="#run-docker">复制</button></div>
+            <pre><code id="run-docker">docker run -d --name seekdb-wengu \
+  -p 2881:2881 \
+  -v seekdb-wengu-data:/var/lib/seekdb \
+  oceanbase/seekdb:latest</code></pre>
+          </div>
+        </article>
+        <article class="run-step reveal">
+          <span class="run-num">02</span>
+          <h3>安装依赖并初始化</h3>
+          <div class="code-frame code-frame-dark">
+            <div class="code-head"><span>Python</span><button class="copy-btn" type="button" data-copy="#run-python">复制</button></div>
+            <pre><code id="run-python">python -m venv .venv
+.venv/Scripts/python -m pip install \
+  -r requirements.txt
+cp .env.example .env
+python -m wengu init</code></pre>
+          </div>
+        </article>
+        <article class="run-step reveal">
+          <span class="run-num">03</span>
+          <h3>启动应用 / 运行验证</h3>
+          <div class="code-frame code-frame-dark">
+            <div class="code-head"><span>Web + demo</span><button class="copy-btn" type="button" data-copy="#run-web">复制</button></div>
+            <pre><code id="run-web">python -m wengu server
+# 打开 http://127.0.0.1:8000
+
+python -m wengu demo
+# 生成两轮复习 + 重启召回的全部证据</code></pre>
+          </div>
+        </article>
+      </div>
+      <div class="review-path reveal">
+        <span class="tag tag-green">评审快速路径</span>
+        <p>按 README 启动 → 打开「今日」开始一轮 → 故意错一道 → 结束本轮 → 在「教练记忆」看到 weak_point → 执行 <code>python -m wengu pc restart</code> → 开始下一轮，观察「本轮计划如何被记忆影响」。</p>
+      </div>
+    </section>
+
+    <section class="section-pad" id="repo" aria-labelledby="repo-title">
+      <div class="section-head reveal">
+        <p class="eyebrow">代码与材料</p>
+        <h2 id="repo-title">完整源码、种子库与证据。</h2>
+        <p class="section-lead">基于 <code>oceanbase/powercontext</code> 的 <code>2026-competition-ecosystem</code> 分支开发，本作品资产位于 <code>qoder/</code> 目录。</p>
+      </div>
+      <div class="repo-grid">
+        <article class="repo-card reveal">
+          <span class="tag tag-green">代码仓库</span>
+          <h3><a class="repo-link" href="https://github.com/oceanbase/powercontext" target="_blank" rel="noopener noreferrer" data-repo-link>oceanbase/powercontext</a></h3>
+          <p>公开基础仓库；本作品基于 <code>2026-competition-ecosystem</code> 分支开发。完整源码、种子数据、运行说明与证据位于比赛私有仓库的 <code>qoder/</code> 目录，评审可在测试平台访问。</p>
+          <dl class="repo-meta">
+            <div><dt>分支</dt><dd><code>2026-competition-ecosystem</code></dd></div>
+            <div><dt>资产目录</dt><dd><code>qoder/</code></dd></div>
+            <div><dt>基础仓库</dt><dd><a href="https://github.com/oceanbase/powercontext" target="_blank" rel="noopener noreferrer">oceanbase/powercontext</a></dd></div>
+          </dl>
+        </article>
+        <article class="repo-card reveal">
+          <span class="tag tag-violet">材料索引</span>
+          <ul class="doc-links">
+            <li><a href="#run">运行说明 <span>README.md</span></a></li>
+            <li><a href="#evidence">验证样例 <span>docs/verification_sample.md</span></a></li>
+            <li><a href="#record">开发记录 <span>docs/qoder_dev_record.md</span></a></li>
+            <li><a href="#tech">技术说明 <span>docs/technical_note.md</span></a></li>
+            <li><a href="#usage">使用效果 <span>docs/usage_report.md</span></a></li>
+          </ul>
+          <p class="repo-note">配置使用占位值；仓库不包含真实 API Key、密码或本地运行数据。</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-main">
+      <a class="brand footer-brand" href="#top"><span class="brand-mark">温</span><span class="brand-copy"><strong>温故</strong><small>复习教练</small></span></a>
+      <p>把错题变成下一次的题目。</p>
+    </div>
+    <div class="footer-meta">
+      <span>2026 OceanBase 数据库大赛 · Qoder 生态赛道</span>
+      <span>seekdb v1.4.0 · PowerContext 1.5.0</span>
+      <span>Built with Qoder Sites</span>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="查看截图" hidden>
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭截图">×</button>
+    <figure>
+      <img id="lightbox-image" src="" alt="">
+      <figcaption id="lightbox-caption"></figcaption>
+    </figure>
+  </div>
+
+  <button class="back-top" id="back-top" type="button" aria-label="回到顶部">↑</button>
+
+  <script src="data/usage.js"></script>
+  <script src="data/verification.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

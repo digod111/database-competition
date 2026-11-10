@@ -1,0 +1,115 @@
+{
+  "session_id": "ses_4235664ef26b",
+  "answered": 6,
+  "correct": 6,
+  "accuracy": 1.0,
+  "weak_points": [
+    {
+      "knowledge_point": "B+树插入与分裂",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "wrong": 1,
+      "total": 2,
+      "mastery": 0.4912,
+      "question_ids": [
+        "Q-DS-006"
+      ]
+    },
+    {
+      "knowledge_point": "哈希冲突处理",
+      "course": "数据结构",
+      "chapter": "哈希表",
+      "wrong": 0,
+      "total": 1,
+      "mastery": 0.605,
+      "question_ids": [
+        "Q-DS-005"
+      ]
+    },
+    {
+      "knowledge_point": "快速排序",
+      "course": "数据结构",
+      "chapter": "排序",
+      "wrong": 0,
+      "total": 4,
+      "mastery": 0.6732,
+      "question_ids": [
+        "Q-DS-002",
+        "Q-DS-001"
+      ]
+    },
+    {
+      "knowledge_point": "B+树范围查询",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "wrong": 0,
+      "total": 1,
+      "mastery": 0.605,
+      "question_ids": [
+        "Q-DS-008"
+      ]
+    },
+    {
+      "knowledge_point": "B+树与B树的区别",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "wrong": 0,
+      "total": 1,
+      "mastery": 0.605,
+      "question_ids": [
+        "Q-DS-007"
+      ]
+    }
+  ],
+  "remaining": [],
+  "summary": "本轮完成 6 题，答对 6 题。仍需关注：B+树插入与分裂。",
+  "memory": {
+    "session": {
+      "artifact_id": "art_fa6d0c922b814999bc5d770c7fc73c42",
+      "response": {
+        "changed": true,
+        "records": [
+          {
+            "artifact": {
+              "family": "atomic-memory",
+              "artifact_id": "art_fa6d0c922b814999bc5d770c7fc73c42",
+              "revision": 1
+            },
+            "kind": "session_summary",
+            "text": "SESSION {\"session_id\": \"ses_4235664ef26b\", \"finished_at\": \"2026-11-10T17:44:49+08:00\", \"answered\": 6, \"correct\": 6, \"accuracy\": 1.0, \"weak_points\": [\"B+树插入与分裂\"], \"summary\": \"本轮完成 6 题，答对 6 题。仍需关注：B+树插入与分裂。\"}",
+            "state": "active",
+            "state_version": 0,
+            "merged_into_id": null
+          }
+        ]
+      }
+    },
+    "weak_points": [
+      {
+        "knowledge_point": "B+树插入与分裂",
+        "artifact_id": "art_04f9641d8212434681948856c211a8e0"
+      }
+    ],
+    "handoff": {
+      "artifact_id": "art_87fa7a66f68a40e89decd340900eb221",
+      "response": {
+        "changed": true,
+        "records": [
+          {
+            "artifact": {
+              "family": "atomic-memory",
+              "artifact_id": "art_87fa7a66f68a40e89decd340900eb221",
+              "revision": 1
+            },
+            "kind": "handoff",
+            "text": "HANDOFF {\"session_id\": \"ses_4235664ef26b\", \"remaining\": [], \"next_focus\": \"\", \"status\": \"completed\", \"created_at\": \"2026-11-10T17:44:49+08:00\"}",
+            "state": "active",
+            "state_version": 0,
+            "merged_into_id": null
+          }
+        ]
+      }
+    }
+  },
+  "finished_at": "2026-11-10T17:44:49+08:00"
+}

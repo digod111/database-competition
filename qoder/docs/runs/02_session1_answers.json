@@ -1,0 +1,91 @@
+{
+  "session_id": "ses_6f32aae40ec9",
+  "skipped": "Q-DS-005",
+  "answers": [
+    {
+      "question_id": "Q-DS-001",
+      "selected": 1,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:33",
+      "evidence_query_id": "q_13b6554a6d28",
+      "evidence": [
+        {
+          "id": "mat_ba306a6c3dbe",
+          "title": "排序算法对比 / 三种排序的取舍",
+          "score": 7.8007
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-002",
+      "selected": 2,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:33",
+      "evidence_query_id": "q_f9a6b655dbe1",
+      "evidence": [
+        {
+          "id": "mat_915b987f2c05",
+          "title": "排序算法对比 / 快速排序",
+          "score": 14.3189
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-003",
+      "selected": 2,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:33",
+      "evidence_query_id": "q_75fd922229cf",
+      "evidence": [
+        {
+          "id": "mat_5e45621d43f1",
+          "title": "排序算法对比 / 归并排序",
+          "score": 4.8207
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-004",
+      "selected": 2,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:33",
+      "evidence_query_id": "q_44987b316a60",
+      "evidence": [
+        {
+          "id": "mat_7e253803699d",
+          "title": "排序算法对比 / 堆排序",
+          "score": 8.5204
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-006",
+      "selected": 2,
+      "correct": false,
+      "quality": 0,
+      "quality_label": "错误",
+      "mastery": 0.325,
+      "next_due": "2026-11-11 17:44:34",
+      "evidence_query_id": "q_45cbbccbead4",
+      "evidence": [
+        {
+          "id": "mat_f2ad6b5e6096",
+          "title": "B+树 / B+树的插入与分裂",
+          "score": 10.3492
+        }
+      ]
+    }
+  ]
+}

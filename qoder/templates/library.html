@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}资料库 · 温故{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <span class="eyebrow">资料库</span>
+    <h1>先找到原文，再谈理解。</h1>
+    <p class="muted">笔记按章节切块存入 seekdb；检索使用 ngram 全文索引、相关度排序和课程/章节过滤。</p>
+  </div>
+  <span class="tag tag-green">FULLTEXT · ngram</span>
+</section>
+
+<section class="search-panel card">
+  <form method="get" action="/library" class="search-form">
+    <input type="search" name="q" value="{{ query }}" placeholder="例如：B+树 插入 分裂、进程 地址空间、TCP 拥塞控制" autocomplete="off">
+    <select name="course">
+      <option value="">全部课程</option>
+      {% for item in catalog %}
+        <option value="{{ item.course }}" {{ 'selected' if course == item.course else '' }}>{{ item.course }}</option>
+      {% endfor %}
+    </select>
+    <input type="text" name="chapter" value="{{ chapter or '' }}" placeholder="章节（可选）" class="chapter-input">
+    <button class="btn primary" type="submit">检索</button>
+  </form>
+  <div class="example-row">
+    <span>试试：</span>
+    <button class="example-query" data-query="B+树 插入 分裂">B+树 插入 分裂</button>
+    <button class="example-query" data-query="进程 线程 地址空间">进程 线程 地址空间</button>
+    <button class="example-query" data-query="TCP 拥塞控制 慢启动">TCP 拥塞控制 慢启动</button>
+  </div>
+</section>
+
+{% if search_result %}
+  <section class="result-head">
+    <h2>检索结果 <small>{{ search_result.results|length }} 条</small></h2>
+    <span class="mono">query_id: {{ search_result.query_id }}</span>
+  </section>
+  {% if search_result.results %}
+    <section class="result-list">
+      {% for item in search_result.results %}
+        <article class="card result-card">
+          <div class="result-top">
+            <div>
+              <h3>{{ item.title }}</h3>
+              <p class="muted">{{ item.course }} · {{ item.chapter }} · <code>{{ item.source_path }}</code></p>
+            </div>
+            <div class="score-badge">
+              <span>相关度</span>
+              <strong>{{ "%.3f"|format(item.score) }}</strong>
+            </div>
+          </div>
+          <p class="snippet">{{ item.snippet_html|safe }}</p>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <section class="card empty-state">
+      <h3>没有找到匹配的笔记</h3>
+      <p class="muted">换一个关键词，或去掉课程/章节过滤。全文检索失败时会自动回退到 LIKE 匹配。</p>
+    </section>
+  {% endif %}
+{% else %}
+  <section class="library-grid">
+    <div>
+      {% for course_name, course_materials in materials|groupby("course") %}
+        <article class="course-block">
+          <div class="course-head">
+            <h2>{{ course_name }}</h2>
+            <span class="tag">{{ course_materials|length }} 段笔记</span>
+          </div>
+          <div class="material-grid">
+            {% for material in course_materials %}
+              <article class="card material-card">
+                <span class="material-chapter">{{ material.chapter }}</span>
+                <h3>{{ material.title }}</h3>
+                <p class="muted">{{ material.content|truncate(120) }}</p>
+                <p class="material-keywords">{{ material.keywords }}</p>
+              </article>
+            {% endfor %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+    <aside class="card how-card">
+      <h3>seekdb 在这里做了什么</h3>
+      <ol class="steps">
+        <li>导入时按 Markdown 的 <code>##</code> 标题切块，保留课程、章节、知识点和来源路径。</li>
+        <li>为每块建立 <code>FULLTEXT ... WITH PARSER ngram</code> 全文索引，中文无需额外分词服务。</li>
+        <li>查询时用 <code>MATCH ... AGAINST</code> 计算相关度，同时叠加课程、章节、知识点过滤。</li>
+        <li>每次查询写入 <code>docs/runs/db_queries.jsonl</code>，可在技术证据页核对 SQL、参数和 query_id。</li>
+      </ol>
+      <pre class="code-block">SELECT title, content,
+  MATCH(search_text)
+    AGAINST (%s IN NATURAL LANGUAGE MODE) AS score
+FROM materials
+WHERE MATCH(search_text)
+        AGAINST (%s IN NATURAL LANGUAGE MODE)
+  AND course = %s
+ORDER BY score DESC
+LIMIT 10;</pre>
+    </aside>
+  </section>
+{% endif %}
+{% endblock %}

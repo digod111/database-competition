@@ -1,0 +1,2 @@
+# 仅用于重新生成 docs/screenshots（需要本机 Chrome/Edge）
+playwright>=1.40

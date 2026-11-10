@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}温故 · 复习教练{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-mark">温</span>
+      <span class="brand-text"><strong>温故</strong><small>复习教练</small></span>
+    </a>
+    <nav class="nav">
+      <a href="/" class="{{ 'active' if current_path == '/' else '' }}">今日</a>
+      <a href="/library" class="{{ 'active' if current_path.startswith('/library') else '' }}">资料库</a>
+      <a href="/memory" class="{{ 'active' if current_path.startswith('/memory') else '' }}">教练记忆</a>
+      <a href="/stats" class="{{ 'active' if current_path.startswith('/stats') else '' }}">使用统计</a>
+      <a href="/evidence" class="{{ 'active' if current_path.startswith('/evidence') else '' }}">技术证据</a>
+    </nav>
+    <div class="user-chip">
+      {% if user %}
+        <span class="dot"></span>
+        <span>{{ user.display_name }}</span>
+        <a href="/logout">切换</a>
+      {% else %}
+        <a href="/welcome">进入</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <span>温故 · 复习教练</span>
+    <span class="sep">/</span>
+    <span>seekdb 提供检索与学习记录</span>
+    <span class="sep">/</span>
+    <span>PowerContext 提供跨会话记忆</span>
+    <span class="sep">/</span>
+    <span>Qoder 开发</span>
+  </footer>
+
+  <script src="/static/app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

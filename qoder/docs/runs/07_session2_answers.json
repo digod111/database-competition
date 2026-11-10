@@ -1,0 +1,107 @@
+{
+  "session_id": "ses_4235664ef26b",
+  "answers": [
+    {
+      "question_id": "Q-DS-006",
+      "selected": 1,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.4912,
+      "next_due": "2026-11-11 17:44:47",
+      "evidence_query_id": "q_30a960105fdf",
+      "evidence": [
+        {
+          "id": "mat_f2ad6b5e6096",
+          "title": "B+树 / B+树的插入与分裂",
+          "score": 10.3492
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-005",
+      "selected": 1,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:47",
+      "evidence_query_id": "q_59c81ace1c89",
+      "evidence": [
+        {
+          "id": "mat_80d8e5e98d48",
+          "title": "哈希表与冲突处理 / 开放定址法",
+          "score": 12.076
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-007",
+      "selected": 1,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:48",
+      "evidence_query_id": "q_162d178cb99c",
+      "evidence": [
+        {
+          "id": "mat_1bb1e8f94245",
+          "title": "B+树 / B+树的范围查询",
+          "score": 11.4367
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-008",
+      "selected": 1,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.605,
+      "next_due": "2026-11-11 17:44:48",
+      "evidence_query_id": "q_f190cde58dd7",
+      "evidence": [
+        {
+          "id": "mat_1bb1e8f94245",
+          "title": "B+树 / B+树的范围查询",
+          "score": 4.2113
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-001",
+      "selected": 1,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.6732,
+      "next_due": "2026-11-13 17:44:48",
+      "evidence_query_id": "q_c1089e447094",
+      "evidence": [
+        {
+          "id": "mat_ba306a6c3dbe",
+          "title": "排序算法对比 / 三种排序的取舍",
+          "score": 7.8007
+        }
+      ]
+    },
+    {
+      "question_id": "Q-DS-002",
+      "selected": 2,
+      "correct": true,
+      "quality": 4,
+      "quality_label": "正确",
+      "mastery": 0.6732,
+      "next_due": "2026-11-13 17:44:48",
+      "evidence_query_id": "q_a3cf2250f93d",
+      "evidence": [
+        {
+          "id": "mat_915b987f2c05",
+          "title": "排序算法对比 / 快速排序",
+          "score": 14.3189
+        }
+      ]
+    }
+  ]
+}

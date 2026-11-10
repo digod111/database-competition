@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}技术证据 · 温故{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <span class="eyebrow">技术证据</span>
+    <h1>把“用了 seekdb / PowerContext”变成可核对的事实。</h1>
+    <p class="muted">本页直接读取运行日志。完整文件位于 <code>{{ runs_dir }}</code>。</p>
+  </div>
+  <span class="tag tag-green">运行日志</span>
+</section>
+
+<section class="evidence-status">
+  <article class="card status-card">
+    <div class="card-head"><h2>seekdb</h2><span class="tag tag-green">{{ '已连接' if counts else '未连接' }}</span></div>
+    <p class="muted">MySQL 协议 · 数据库 <code>qoder_app</code></p>
+    <div class="count-grid">
+      {% for table, count in counts.items() %}
+        <div><span>{{ table }}</span><strong>{{ count }}</strong></div>
+      {% endfor %}
+    </div>
+  </article>
+  <article class="card status-card">
+    <div class="card-head"><h2>PowerContext</h2><span class="tag tag-violet">{{ '健康' if status.healthy else '不可用' }}</span></div>
+    <p class="muted"><code>{{ status.url }}</code></p>
+    <ul class="kv-list">
+      <li><span>pid</span><code>{{ status.pid or status.port_pid or '—' }}</code></li>
+      <li><span>home</span><code>{{ status.home }}</code></li>
+      <li><span>重启后记忆</span><span>仍可召回（见下方 restart 记录）</span></li>
+    </ul>
+  </article>
+</section>
+
+<section class="card evidence-block">
+  <div class="card-head">
+    <h2>seekdb 查询证据</h2>
+    <span class="tag tag-green">db_queries.jsonl</span>
+  </div>
+  {% if queries %}
+    <div class="query-list">
+      {% for query in queries %}
+        <details class="query-item">
+          <summary>
+            <span class="query-purpose">{{ query.purpose }}</span>
+            {% if query.is_fulltext %}<span class="tag tag-green">FULLTEXT</span>{% endif %}
+            <span class="query-stats">{{ query.row_count }} 行 · {{ query.elapsed_ms }} ms</span>
+            <code>{{ query.query_id }}</code>
+          </summary>
+          <div class="query-body">
+            <p class="muted">{{ query.time }}</p>
+            <pre class="code-block">{{ query.sql }}</pre>
+            <p><strong>参数：</strong><code>{{ query.params|join(' | ') }}</code></p>
+            {% if query.scores %}<p><strong>相关度：</strong><code>{{ query.scores|join(', ') }}</code></p>{% endif %}
+            {% if query.ids %}<p><strong>返回 ID：</strong><code>{{ query.ids|join(', ') }}</code></p>{% endif %}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">还没有查询记录。</p>
+  {% endif %}
+</section>
+
+<section class="card evidence-block">
+  <div class="card-head">
+    <h2>最近 PowerContext 记忆读写</h2>
+    <span class="tag tag-violet">powercontext_memory.jsonl</span>
+  </div>
+  {% if memory_log %}
+    <div class="memory-log">
+      {% for item in memory_log %}
+        <details class="memory-log-item">
+          <summary>
+            <span class="query-purpose">{{ item.action }}</span>
+            {% if item.kind %}<span class="tag">{{ item.kind }}</span>{% endif %}
+            {% if item.counts %}<span class="query-stats">命中 {{ item.counts }}</span>{% endif %}
+            <span class="query-stats">{{ item.time|fmt_time }}</span>
+          </summary>
+          <div class="query-body">
+            {% if item.artifact_id %}<p><strong>artifact：</strong><code>{{ item.artifact_id }}</code></p>{% endif %}
+            {% if item.reason %}<p><strong>reason：</strong>{{ item.reason }}</p>{% endif %}
+            {% if item.text %}<pre class="code-block">{{ item.text }}</pre>{% endif %}
+            {% if item.profile %}<p><strong>召回偏好：</strong><code>{{ item.profile }}</code></p>{% endif %}
+            {% if item.weak_points %}<p><strong>召回薄弱点：</strong><code>{{ item.weak_points }}</code></p>{% endif %}
+            {% if item.prepared %}<p><strong>context/prepare：</strong><code>{{ item.prepared }}</code></p>{% endif %}
+            {% if item.prepared_citations %}
+              <p><strong>citation：</strong></p>
+              {% for citation in item.prepared_citations %}
+                <p class="citation"><code>{{ citation.artifact_id }}</code> {{ citation.content }}</p>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">还没有记忆记录。</p>
+  {% endif %}
+</section>
+
+<section class="card evidence-block">
+  <div class="card-head">
+    <h2>重启记录</h2>
+    <span class="tag tag-blue">powercontext_restart.jsonl</span>
+  </div>
+  {% if restart_log %}
+    <table class="data-table">
+      <thead><tr><th>时间</th><th>动作</th><th>结果</th></tr></thead>
+      <tbody>
+        {% for entry in restart_log %}
+          <tr>
+            <td>{{ entry.time|fmt_time }}</td>
+            <td>{{ entry.action }}</td>
+            <td>
+              {% if entry.action == 'restart' %}
+                重启前 {{ entry.before.healthy }} → 重启后 {{ entry.after.healthy }} · pid {{ entry.after.pid }}
+              {% elif entry.action == 'stop' %}
+                停止 pid {{ entry.pid }} · 停止后健康 {{ entry.healthy_after }}
+              {% else %}
+                启动 pid {{ entry.pid }} · 健康 {{ 'true' if entry.started else 'already_running' }}
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">还没有重启记录。运行 <code>python -m wengu demo</code> 或 <code>python -m wengu pc restart</code> 生成。</p>
+  {% endif %}
+</section>
+
+<section class="card evidence-block">
+  <div class="card-head"><h2>如何核对</h2><span class="tag">评审指引</span></div>
+  <ol class="steps">
+    <li>在“资料库”搜索任意知识点，记下 query_id；在上方查询记录中找到同一条，核对 SQL 中的 <code>MATCH ... AGAINST</code>、参数、返回行数和相关度。</li>
+    <li>完成一轮复习并故意答错一题；在“教练记忆”页看到 weak_point 记忆；答错后的解析会带上 seekdb 检索出的原文片段。</li>
+    <li>重启应用或执行 <code>python -m wengu pc restart</code>；再开始新一轮，答题页的计划影响区会引用重启前写入的记忆。</li>
+    <li>上述过程也会写入 <code>docs/runs/db_queries.jsonl</code>、<code>docs/runs/powercontext_memory.jsonl</code>、<code>docs/runs/coach_plans.jsonl</code> 和 <code>docs/runs/powercontext_restart.jsonl</code>。</li>
+  </ol>
+</section>
+{% endblock %}
