@@ -8,11 +8,11 @@
 | 材料 | 内容 | 状态 |
 | --- | --- | --- |
 | 项目网站网址 | https://wengu-review-coach-qia8h1pwid5.qoder.zone | ✅ 已发布，public，无痕验证通过 |
-| 代码仓库 | 大赛私有仓库 `powercontext` 的 `qoder/` 目录（评审平台可见）；基础仓库 https://github.com/oceanbase/powercontext | ⏳ 由你提交/推送 |
+| 代码仓库 | https://github.com/digod111/database-competition（分支 `2026-competition-ecosystem`，作品位于 `qoder/`） | ✅ 已推送 |
 | Qoder 账号 UID | 1661591978811838 | ✅ 已写入开发记录 |
 | 运行说明 | 仓库根目录 `README.md` | ✅ |
 | 验证样例 | `docs/verification_sample.md` | ✅ |
-| Qoder 开发记录 | `docs/qoder_dev_record.md`（含截图点 S1–S10） | ✅（UID 待填） |
+| Qoder 开发记录 | `docs/qoder_dev_record.md`（含截图点 S1–S10） | ✅ |
 | 使用效果材料 | `docs/usage_report.md`；当前真实用户 0，演示证据单独列出 | ⏳ 建议使用后更新 |
 
 ## 二、资产路径（复制到 `powercontext/qoder/` 后）
@@ -74,6 +74,6 @@ qoder/
 ## 五、提交平台字段建议
 
 - 项目网站网址：`https://wengu-review-coach-qia8h1pwid5.qoder.zone`
-- 代码仓库：填写你推送后的私有仓库地址（分支 `2026-competition-ecosystem`）
+- 代码仓库：`https://github.com/digod111/database-competition`（分支 `2026-competition-ecosystem`，作品位于 `qoder/`）
 - Qoder 账号 UID：1661591978811838
 - 其余材料：上传/指向 `powercontext/qoder/docs/` 下的文件；验证证据在 `docs/runs/`，截图在 `docs/screenshots/`

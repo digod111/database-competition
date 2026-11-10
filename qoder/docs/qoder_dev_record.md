@@ -196,7 +196,8 @@ Qoder 完成：
   **https://wengu-review-coach-qia8h1pwid5.qoder.zone**
 - 可见范围从 private 改为 **public**（`get_site_access` → `update_access_policy`，`confirmPublic=true`）。
 - 用全新无痕浏览器上下文打开公网 URL 验证：HTTP 200、未登录、标题/正文/图片正常、无控制台错误。截图：`docs/screenshots/public-site-incognito-final.png`。
-- 二次发布补充公开基础仓库链接（`oceanbase/powercontext`），保留 private 仓库 `qoder/` 的评审访问说明；重新发布后再次无痕验证通过。
+- 二次发布补充公开基础仓库链接（`oceanbase/powercontext`），说明参赛作品位于 `qoder/`；重新发布后再次无痕验证通过。
+- 将作品推送到参赛仓库 `https://github.com/digod111/database-competition` 的 `2026-competition-ecosystem` 分支；网站仓库卡片同步更新为参赛仓库并重新发布。
 
 **[截图点 S9]** Qoder Sites 创建与发布界面（对应 action `de525455-…`）。
 
@@ -207,7 +208,7 @@ Qoder 完成：
 - 已将 `qoder作答/wengu/` 的源码、种子、文档、截图、证据、网站工程复制到 `powercontext/qoder/`。
 - 保留：`README.md`、`requirements.txt`、`requirements-dev.txt`、`.env.example`、`.gitignore`、`wengu/`、`templates/`、`static/`、`seed/`、`tests/`、`tools/`、`docs/`、`website/`（含 `index.html`、`styles.css`、`app.js`、`assets/`、`data/`、`dist/`）。
 - 排除：`.env`、`.powercontext/`、`.runtime/`、`__pycache__/`、`.pytest_cache/`、`docs/runs/archive_*/`、网站本地 `.qoder.site` 描述文件、`jieba.cache`、`pc-migration-bundle-*`。
-- 目标目录共约 130 个文件、12MB；未执行 `git commit` / `git push`，提交由参赛者完成。
+- 目标目录共约 130 个文件、12MB；已推送到参赛仓库的 `2026-competition-ecosystem` 分支。
 - 提交清单见 `docs/submission_checklist.md`。
 
 ## 12. 提交清单
@@ -215,7 +216,8 @@ Qoder 完成：
 | 项目 | 内容 |
 | --- | --- |
 | 项目网站 URL | https://wengu-review-coach-qia8h1pwid5.qoder.zone |
-| 代码仓库 | 大赛私有仓库 `powercontext/qoder/`（评审可见）；基础仓库 https://github.com/oceanbase/powercontext |
+| 代码仓库 | https://github.com/digod111/database-competition（分支 `2026-competition-ecosystem`，作品位于 `qoder/`） |
+| 基础仓库 | https://github.com/oceanbase/powercontext |
 | Qoder 账号 UID | 1661591978811838 |
 | 运行说明 | `powercontext/qoder/README.md` |
 | 验证样例 | `powercontext/qoder/docs/verification_sample.md` |

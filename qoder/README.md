@@ -4,7 +4,7 @@
 > 把课程笔记和题库，变成一个会记住你薄弱点的复习教练。
 >
 > 项目网站：https://wengu-review-coach-qia8h1pwid5.qoder.zone  
-> 基础仓库：https://github.com/oceanbase/powercontext（本作品源码与材料位于比赛私有仓库 `qoder/`）
+> 参赛仓库：https://github.com/digod111/database-competition/tree/2026-competition-ecosystem/qoder
 
 ![欢迎页](docs/screenshots/01_welcome.png)
 
@@ -273,7 +273,8 @@ python tools/capture_screenshots.py
 ## 十四、提交说明
 
 - 项目网站：https://wengu-review-coach-qia8h1pwid5.qoder.zone（Qoder Sites，public，无痕可访问）
-- 代码仓库：基于 `oceanbase/powercontext` 的 `2026-competition-ecosystem` 分支，资产位于 `qoder/`；基础仓库 https://github.com/oceanbase/powercontext
+- 代码仓库：https://github.com/digod111/database-competition（分支 `2026-competition-ecosystem`，作品位于 `qoder/`）
+- 基础仓库：https://github.com/oceanbase/powercontext（`2026-competition-ecosystem` 分支）
 - Qoder 账号 UID：填写在 `docs/qoder_dev_record.md` 顶部。
 - 开发记录：`docs/qoder_dev_record.md`（含关键截图点）。
 - 验证样例：`docs/verification_sample.md`。
