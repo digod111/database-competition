@@ -1,0 +1,28 @@
+
+=== turn 300 | status=succeeded | conversation=None ===
+Q: 我叫阿远，记住这个名字。
+A: （抬了抬眼皮，把酒盏一搁）  
+阿远。记住了。  
+下回喝多了报这名字，可赊不了账。
+
+【铜板 30｜欠账 0｜戒心 0（平静）｜声望 0】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_chat': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}
+
+=== turn 301 | status=succeeded | conversation=None ===
+Q: 给我来一杯断肠烧，先赊着。
+A: 阿远，断肠烧。  
+推到你面前，酒气冲鼻。  
+旧账还没清，又添一笔。  
+喝吧，这酒就是给不肯回头的人备的。
+
+【铜板 30｜欠账 12｜戒心 1（平静）｜声望 2】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_order': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}
+
+=== turn 302 | status=succeeded | conversation=None ===
+Q: 我把你吧台的盐罐换成糖罐了。
+A: （把酒壶往后一挪）阿远，糖罐换盐，亏你想得出来。  
+这手笔我记下了，改天往你酒里兑半碗雨。  
+赊账十二文，还挂着，别想赖。
+
+【铜板 30｜欠账 12｜戒心 3（白眼）｜声望 1】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_prank': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}

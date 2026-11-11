@@ -1,0 +1,32 @@
+# Dify 节点执行证据
+
+## turn 1
+- scope: status=succeeded http=201 body={"scope_id":"scp_5vnzzy9j6ebvq0rt4z58vt7pjv","title":"忘忧酒馆 / player_01","summary":"玩家 player_01 在忘忧酒馆的跨会话记忆：姓名、恶作剧、欠账与掌柜戒心。","parent_scope_id":null,"context_references":[],"external_references":[],"version":1}
+- memory: status=succeeded http=200 body={"mode":"text","hits":[]}
+- act_chat: status=succeeded http=200 body={"ok":true,"action":"chat","result_text":"","memory":"","state":{"player":{"player_id":"player_01","nickname":"阿远","coins":30,"debt":0,"grudge":0,"reputation":0,"visits":1,"last_seen":"2026-11-10 20:33:00"},"menu":[{"id":1,"name":"忘忧酿","price":8,"stock":20,"ef
+- remember: status=succeeded http=200 body={"changed":true,"records":[{"artifact":{"family":"atomic-memory","artifact_id":"art_944e21f75ac64c9a95fce420c92d8b19","revision":1},"kind":"fact","text":"玩家自报姓名为阿远，要求阿九记住这个名字。","state":"active","state_version":0,"merged_into_id":null}]}
+
+## turn 2
+- scope: status=succeeded http=201 body={"scope_id":"scp_5vnzzy9j6ebvq0rt4z58vt7pjv","title":"忘忧酒馆 / player_01","summary":"玩家 player_01 在忘忧酒馆的跨会话记忆：姓名、恶作剧、欠账与掌柜戒心。","parent_scope_id":null,"context_references":[],"external_references":[],"version":1}
+- memory: status=succeeded http=200 body={"mode":"text","hits":[]}
+- act_order: status=succeeded http=200 body={"ok":true,"action":"order","result_text":"阿九把断肠烧推到你面前，烈得不讲道理，阿九说这酒是给不肯回头的人准备的。（声望 +2，容易勾起旧事）。赊账 12 铜板。","memory":"阿远在忘忧酒馆点了断肠烧，赊账 12 铜板；当前铜板30、欠账12、戒心1。","state":{"player":{"player_id":"player_01","nickname":"阿远","coins":30,"debt":12,"grudge":1,"reputation":2
+- remember: status=succeeded http=200 body={"changed":true,"records":[{"artifact":{"family":"atomic-memory","artifact_id":"art_26bf8f563e7b4ee4be87c8b674123151","revision":1},"kind":"fact","text":"阿远在忘忧酒馆点了断肠烧，赊账 12 铜板；当前铜板30、欠账12、戒心1。","state":"active","state_version":0,"merged_into_id":null}]}
+
+## turn 3
+- scope: status=succeeded http=201 body={"scope_id":"scp_5vnzzy9j6ebvq0rt4z58vt7pjv","title":"忘忧酒馆 / player_01","summary":"玩家 player_01 在忘忧酒馆的跨会话记忆：姓名、恶作剧、欠账与掌柜戒心。","parent_scope_id":null,"context_references":[],"external_references":[],"version":1}
+- memory: status=succeeded http=200 body={"mode":"text","hits":[]}
+- act_prank: status=succeeded http=200 body={"ok":true,"action":"prank","result_text":"阿九笑了笑，把酒壶往身后挪了挪。（戒心 +2，当前 3）","memory":"阿远对阿九恶作剧：把吧台的盐罐换成糖罐。阿九戒心+2，当前戒心3。","state":{"player":{"player_id":"player_01","nickname":"阿远","coins":30,"debt":12,"grudge":3,"reputation":1,"visits":3,"last_seen":"2026-11-10 2
+- remember: status=succeeded http=200 body={"changed":true,"records":[{"artifact":{"family":"atomic-memory","artifact_id":"art_0e8ebc9628b5447cb67a294727d334c3","revision":1},"kind":"fact","text":"阿远对阿九恶作剧：把吧台的盐罐换成糖罐。阿九戒心+2，当前戒心3。","state":"active","state_version":0,"merged_into_id":null}]}
+
+## turn 4
+- scope: status=succeeded http=201 body={"scope_id":"scp_5vnzzy9j6ebvq0rt4z58vt7pjv","title":"忘忧酒馆 / player_01","summary":"玩家 player_01 在忘忧酒馆的跨会话记忆：姓名、恶作剧、欠账与掌柜戒心。","parent_scope_id":null,"context_references":[],"external_references":[],"version":1}
+- memory: status=succeeded http=200 body={"mode":"text","hits":[{"memory":{"artifact":{"family":"atomic-memory","artifact_id":"art_0e8ebc9628b5447cb67a294727d334c3","revision":1},"kind":"fact","text":"阿远对阿九恶作剧：把吧台的盐罐换成糖罐。阿九戒心+2，当前戒心3。","state":"active","state_version":0,"merged_into_id":null},"score"
+- act_chat: status=succeeded http=200 body={"ok":true,"action":"chat","result_text":"","memory":"","state":{"player":{"player_id":"player_01","nickname":"阿远","coins":30,"debt":12,"grudge":3,"reputation":1,"visits":4,"last_seen":"2026-11-10 20:33:56"},"menu":[{"id":1,"name":"忘忧酿","price":8,"stock":20,"e
+- remember: status=succeeded http=200 body={"changed":true,"records":[{"artifact":{"family":"atomic-memory","artifact_id":"art_ea4a1a6865494349aba17a219fa16b98","revision":1},"kind":"fact","text":"玩家在忘忧酒馆说：「老板，还认得我吗？上次的账和恶作剧还记得吗？」","state":"active","state_version":0,"merged_into_id":null}]}
+classify_text={"intent":"chat","drink":"","pay_mode":"cash","query":"","prank":"","nickname":"","remember":"","memory_query":"阿远 欠账 恶作剧 盐罐"}
+parse_context={"memory_text": "- 阿远对阿九恶作剧：把吧台的盐罐换成糖罐。阿九戒心+2，当前戒心3。\n- 阿远在忘忧酒馆点了断肠烧，赊账 12 铜板；当前铜板30、欠账12、戒心1。", "memory_count": 2}
+answer=阿九抬了抬眼皮，手上擦杯不停。  
+“阿远，化成灰也认得。盐罐换糖罐，我卤味白调一锅。”  
+“断肠烧十二铜板，还挂着呢。今晚还喝？”
+
+【铜板 30｜欠账 12｜戒心 3（白眼）｜声望 1】

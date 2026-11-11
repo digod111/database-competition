@@ -1,0 +1,60 @@
+CREATE DATABASE IF NOT EXISTS dify_app DEFAULT CHARACTER SET utf8mb4;
+USE dify_app;
+
+DROP TABLE IF EXISTS pranks;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS rumors;
+DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS drinks;
+
+CREATE TABLE drinks (
+  id INT PRIMARY KEY,
+  name VARCHAR(64) NOT NULL,
+  price INT NOT NULL,
+  stock INT NOT NULL DEFAULT 0,
+  effect VARCHAR(255) NOT NULL,
+  description VARCHAR(512) NOT NULL,
+  hidden TINYINT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_drinks_name (name)
+) DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE players (
+  player_id VARCHAR(64) PRIMARY KEY,
+  nickname VARCHAR(64) NOT NULL DEFAULT '无名客',
+  coins INT NOT NULL DEFAULT 30,
+  debt INT NOT NULL DEFAULT 0,
+  grudge INT NOT NULL DEFAULT 0,
+  reputation INT NOT NULL DEFAULT 0,
+  visits INT NOT NULL DEFAULT 0,
+  last_session_id VARCHAR(128) DEFAULT NULL,
+  last_seen DATETIME DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE rumors (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(128) NOT NULL,
+  content TEXT NOT NULL,
+  tags VARCHAR(255) NOT NULL DEFAULT '',
+  heat INT NOT NULL DEFAULT 0,
+  FULLTEXT INDEX ft_rumors (title, content, tags) WITH PARSER ik
+) DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE events (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  player_id VARCHAR(64) NOT NULL,
+  session_id VARCHAR(128) DEFAULT NULL,
+  event_type VARCHAR(32) NOT NULL,
+  detail TEXT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_events_player_time (player_id, created_at)
+) DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE pranks (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  player_id VARCHAR(64) NOT NULL,
+  description VARCHAR(512) NOT NULL,
+  grudge_delta INT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_pranks_player (player_id)
+) DEFAULT CHARSET = utf8mb4;

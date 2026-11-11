@@ -1,0 +1,9 @@
+
+=== turn 303 | status=succeeded | conversation=None ===
+Q: 上次我干了什么恶作剧？还记得吗？
+A: 阿远，你还有脸问。  
+把吧台的盐罐换成糖罐，害我卤味里撒错了料。  
+账本上可记着呢，戒心加二。
+
+【铜板 30｜欠账 0｜戒心 0（平静）｜声望 0】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_chat': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}

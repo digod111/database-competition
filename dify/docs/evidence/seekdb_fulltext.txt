@@ -1,0 +1,25 @@
+seekdb v1.4.0.0 全文检索实测
+==============================
+
+索引 DDL（data/schema.sql）：
+  FULLTEXT INDEX ft_rumors (title, content, tags) WITH PARSER ik
+
+实测查询（Python + PyMySQL，charset=utf8mb4）：
+  SELECT id,title,heat,ROUND(MATCH(title,content,tags) AGAINST(%s),4)
+  FROM rumors
+  WHERE MATCH(title,content,tags) AGAINST(%s)
+  ORDER BY 4 DESC LIMIT 3;
+
+结果：
+  后巷 歌声 -> ((1, '后巷鬼歌', 12, 3.596),)
+  账本 名字 -> ((8, '前任账本', 10, 4.0522),)
+  忘忧酿 白狐 -> ((3, '忘忧酿的方子', 15, 5.0821), (9, '断肠烧的来历', 5, 0.7048))
+  不存在的东西 -> 低分凑数条目（0.30 左右）
+
+后端在 backend/app.py 设置 RUMOR_MIN_SCORE=0.5（可由环境变量覆盖），
+低于阈值的命中会被丢弃，再回退到分词 LIKE 检索（fallback=true）。
+
+说明：
+- 全文检索服务于 /api/gossip（Dify 工具节点“工具·打听传闻”）。
+- 本作品的核心验证样例使用 seekdb 的账本/恶作剧/事件表；谣言表为扩展玩法。
+- 实际数据行见 seekdb_state.txt。

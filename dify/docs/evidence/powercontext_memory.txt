@@ -1,0 +1,93 @@
+# PowerContext scope 与记忆检索
+
+## scopes
+[
+  {
+    "scope_id": "scp_35r5hg33g2dxc2zz9mm6t3gkdw",
+    "title": "Default",
+    "summary": "Default context",
+    "parent_scope_id": null,
+    "context_references": [],
+    "external_references": [],
+    "version": 1
+  },
+  {
+    "scope_id": "scp_5vnzzy9j6ebvq0rt4z58vt7pjv",
+    "title": "忘忧酒馆 / player_01",
+    "summary": "玩家 player_01 在忘忧酒馆的跨会话记忆：姓名、恶作剧、欠账与掌柜戒心。",
+    "parent_scope_id": null,
+    "context_references": [],
+    "external_references": [],
+    "version": 1
+  }
+]
+
+selected_scope: scp_5vnzzy9j6ebvq0rt4z58vt7pjv
+
+## search: 阿远 欠账 恶作剧 盐罐
+{
+  "mode": "text",
+  "hits": [
+    {
+      "memory": {
+        "artifact": {
+          "family": "atomic-memory",
+          "artifact_id": "art_26bf8f563e7b4ee4be87c8b674123151",
+          "revision": 1
+        },
+        "kind": "fact",
+        "text": "阿远在忘忧酒馆点了断肠烧，赊账 12 铜板；当前铜板30、欠账12、戒心1。",
+        "state": "active",
+        "state_version": 0,
+        "merged_into_id": null
+      },
+      "score": 0.01639344262295082,
+      "matched_by": [
+        "text"
+      ]
+    },
+    {
+      "memory": {
+        "artifact": {
+          "family": "atomic-memory",
+          "artifact_id": "art_0e8ebc9628b5447cb67a294727d334c3",
+          "revision": 1
+        },
+        "kind": "fact",
+        "text": "阿远对阿九恶作剧：把吧台的盐罐换成糖罐。阿九戒心+2，当前戒心3。",
+        "state": "active",
+        "state_version": 0,
+        "merged_into_id": null
+      },
+      "score": 0.016129032258064516,
+      "matched_by": [
+        "text"
+      ]
+    }
+  ]
+}
+
+## search: 盐罐 糖罐
+{
+  "mode": "text",
+  "hits": [
+    {
+      "memory": {
+        "artifact": {
+          "family": "atomic-memory",
+          "artifact_id": "art_0e8ebc9628b5447cb67a294727d334c3",
+          "revision": 1
+        },
+        "kind": "fact",
+        "text": "阿远对阿九恶作剧：把吧台的盐罐换成糖罐。阿九戒心+2，当前戒心3。",
+        "state": "active",
+        "state_version": 0,
+        "merged_into_id": null
+      },
+      "score": 0.01639344262295082,
+      "matched_by": [
+        "text"
+      ]
+    }
+  ]
+}

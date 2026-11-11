@@ -1,0 +1,1020 @@
+app:
+  description: 雨夜酒馆，掌柜阿九会记住你的每一笔账和每一次恶作剧。
+  icon: 🍶
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  mode: advanced-chat
+  name: 忘忧酒馆 · 记仇掌柜
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.26@bdf47cb41e9062bba00d26625d2a795c1874011d8ce64bff738c44b5a31787ea
+    version: null
+kind: app
+site:
+  chat_color_theme: light
+  chat_color_theme_inverted: false
+  copyright: null
+  custom_disclaimer: ''
+  default_language: zh-Hans
+  description: 一个会记住你恶作剧的 NPC。
+  icon: 🍶
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  input_placeholder: 雨夜推门，和阿九说点什么……
+  privacy_policy: null
+  show_workflow_steps: true
+  title: 忘忧酒馆 · 记仇掌柜
+  use_icon_as_answer_icon: false
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload: {}
+    opening_statement: 雨夜，忘忧酒馆的门被风推开。柜台后的阿九抬了抬眼：「又是你？坐吧，酒钱先记着。」
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - 来一杯忘忧酿
+    - 后巷最近有什么传闻？
+    - 老板，我把你吧台的盐罐换成糖了
+    - 我还欠你多少？
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - id: start-source-clean_input
+      source: start
+      sourceHandle: source
+      target: clean_input
+      targetHandle: target
+    - id: clean_input-source-scope
+      source: clean_input
+      sourceHandle: source
+      target: scope
+      targetHandle: target
+    - id: scope-source-parse_scope
+      source: scope
+      sourceHandle: source
+      target: parse_scope
+      targetHandle: target
+    - id: parse_scope-source-state
+      source: parse_scope
+      sourceHandle: source
+      target: state
+      targetHandle: target
+    - id: state-source-parse_state
+      source: state
+      sourceHandle: source
+      target: parse_state
+      targetHandle: target
+    - id: parse_state-source-classify
+      source: parse_state
+      sourceHandle: source
+      target: classify
+      targetHandle: target
+    - id: classify-source-parse_intent
+      source: classify
+      sourceHandle: source
+      target: parse_intent
+      targetHandle: target
+    - id: parse_intent-source-memory
+      source: parse_intent
+      sourceHandle: source
+      target: memory
+      targetHandle: target
+    - id: memory-source-parse_context
+      source: memory
+      sourceHandle: source
+      target: parse_context
+      targetHandle: target
+    - id: parse_context-source-branch
+      source: parse_context
+      sourceHandle: source
+      target: branch
+      targetHandle: target
+    - id: branch-order-act_order
+      source: branch
+      sourceHandle: order
+      target: act_order
+      targetHandle: target
+    - id: branch-gossip-act_gossip
+      source: branch
+      sourceHandle: gossip
+      target: act_gossip
+      targetHandle: target
+    - id: branch-prank-act_prank
+      source: branch
+      sourceHandle: prank
+      target: act_prank
+      targetHandle: target
+    - id: branch-settle-act_settle
+      source: branch
+      sourceHandle: settle
+      target: act_settle
+      targetHandle: target
+    - id: branch-false-act_chat
+      source: branch
+      sourceHandle: 'false'
+      target: act_chat
+      targetHandle: target
+    - id: act_order-source-aggregate
+      source: act_order
+      sourceHandle: source
+      target: aggregate
+      targetHandle: target
+    - id: act_gossip-source-aggregate
+      source: act_gossip
+      sourceHandle: source
+      target: aggregate
+      targetHandle: target
+    - id: act_prank-source-aggregate
+      source: act_prank
+      sourceHandle: source
+      target: aggregate
+      targetHandle: target
+    - id: act_settle-source-aggregate
+      source: act_settle
+      sourceHandle: source
+      target: aggregate
+      targetHandle: target
+    - id: act_chat-source-aggregate
+      source: act_chat
+      sourceHandle: source
+      target: aggregate
+      targetHandle: target
+    - id: aggregate-source-parse_action
+      source: aggregate
+      sourceHandle: source
+      target: parse_action
+      targetHandle: target
+    - id: parse_action-source-reply
+      source: parse_action
+      sourceHandle: source
+      target: reply
+      targetHandle: target
+    - id: reply-source-clean_reply
+      source: reply
+      sourceHandle: source
+      target: clean_reply
+      targetHandle: target
+    - id: clean_reply-source-remember
+      source: clean_reply
+      sourceHandle: source
+      target: remember
+      targetHandle: target
+    - id: remember-source-answer
+      source: remember
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+    nodes:
+    - data:
+        desc: ''
+        title: 开始
+        type: start
+        variables:
+        - default: player_01
+          label: 玩家存档 ID
+          max_length: 64
+          options: []
+          required: true
+          type: text-input
+          variable: player_id
+      id: start
+      position:
+        x: 60
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import re\n\n\ndef main(q: str, pid: str) -> dict:\n    text = re.sub(r\"\
+          [\\r\\n]+\", \" \", (q or \"\").strip())\n    text = text.replace('\"',\
+          \ \"'\").replace(\"\\\\\", \"／\")[:500]\n    player_id = re.sub(r\"[^A-Za-z0-9_-]\"\
+          , \"\", (pid or \"\").strip())[:64] or \"player_01\"\n    return {\"query\"\
+          : text, \"player_id\": player_id}\n"
+        code_language: python3
+        desc: 去掉会破坏 JSON 的字符，并规范 player_id
+        outputs:
+          player_id:
+            children: null
+            type: string
+          query:
+            children: null
+            type: string
+        title: 清洗输入
+        type: code
+        variables:
+        - value_selector:
+          - sys
+          - query
+          variable: q
+        - value_selector:
+          - start
+          - player_id
+          variable: pid
+      id: clean_input
+      position:
+        x: 280
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"title":"忘忧酒馆 / {{#clean_input.player_id#}}","summary":"玩家 {{#clean_input.player_id#}}
+            在忘忧酒馆的跨会话记忆：姓名、恶作剧、欠账与掌柜戒心。","idempotency_key":"tavern-{{#clean_input.player_id#}}-v2"}'
+          type: json
+        desc: 相同 player_id 返回同一个 PowerContext scope
+        headers: 'Authorization: Bearer tavern-demo-token
+
+          Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 确保记忆 Scope
+        type: http-request
+        url: http://host.docker.internal:18082/v1/scopes
+      id: scope
+      position:
+        x: 500
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import json\n\n\ndef _obj(value):\n    if isinstance(value, dict):\n\
+          \        return value\n    if isinstance(value, str):\n        try:\n  \
+          \          return json.loads(value)\n        except Exception:\n       \
+          \     return {}\n    return {}\n\n\ndef main(scope_body: str) -> dict:\n\
+          \    data = _obj(scope_body)\n    scope_id = data.get(\"scope_id\") or data.get(\"\
+          id\") or \"\"\n    return {\"scope_id\": str(scope_id)}\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          scope_id:
+            children: null
+            type: string
+        title: 解析 Scope
+        type: code
+        variables:
+        - value_selector:
+          - scope
+          - body
+          variable: scope_body
+      id: parse_scope
+      position:
+        x: 720
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: ''
+          type: none
+        desc: seekdb：玩家账本、酒单、最近事件
+        headers: 'Content-Type: application/json'
+        method: GET
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 读取酒馆状态
+        type: http-request
+        url: http://host.docker.internal:8010/api/state?player_id={{#clean_input.player_id#}}&session_id={{#sys.conversation_id#}}
+      id: state
+      position:
+        x: 940
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import json\n\n\ndef _obj(value):\n    if isinstance(value, dict):\n\
+          \        return value\n    if isinstance(value, str):\n        try:\n  \
+          \          return json.loads(value)\n        except Exception:\n       \
+          \     return {}\n    return {}\n\n\ndef main(state_body: str) -> dict:\n\
+          \    state = _obj(state_body).get(\"state\", {}) or {}\n    player = state.get(\"\
+          player\", {}) or {}\n    compact = {\n        \"player\": player,\n    \
+          \    \"menu\": state.get(\"menu\", []),\n        \"recent_events\": state.get(\"\
+          recent_events\", []),\n        \"grudge_level\": state.get(\"grudge_level\"\
+          , \"\"),\n    }\n    return {\n        \"state_json\": json.dumps(compact,\
+          \ ensure_ascii=False),\n        \"status_bar\": state.get(\"status_bar\"\
+          , \"\") or \"\",\n        \"player_name\": player.get(\"nickname\", \"无名客\"\
+          ) or \"无名客\",\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          player_name:
+            children: null
+            type: string
+          state_json:
+            children: null
+            type: string
+          status_bar:
+            children: null
+            type: string
+        title: 解析玩家状态
+        type: code
+        variables:
+        - value_selector:
+          - state
+          - body
+          variable: state_body
+      id: parse_state
+      position:
+        x: 1160
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 300
+            temperature: 0.1
+          mode: chat
+          name: deepseek-flash
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - role: system
+          text: '你是忘忧酒馆的意图解析器。只输出一个 JSON 对象，不要解释，不要输出 <think> 标签。
+
+            JSON 字段：
+
+            {"intent":"order|gossip|prank|settle|chat","drink":"酒名或空字符串","pay_mode":"cash|credit","query":"传闻关键词或空字符串","prank":"恶作剧描述或空字符串","nickname":"玩家自报的名字或空字符串","remember":"值得阿九记住的玩家信息或空字符串","memory_query":"用于检索玩家旧记忆的
+            1-4 个关键词"}
+
+
+            规则：
+
+            - 点酒/要酒，或明确说想喝某种酒 → order；drink 必须是菜单里的名字；仅表达口味偏好时也用 chat，不要擅自下单。没说付款方式默认
+            cash。
+
+            - 打听传闻/问后巷/问八卦 → gossip；query 提取 1-3 个关键词。
+
+            - 对酒馆或掌柜恶作剧 → prank；prank 用一句话描述。
+
+            - 还钱/结账/还债 → settle。
+
+            - 其他闲聊 → chat。
+
+            - 玩家自报姓名时填 nickname；玩家透露喜好、秘密或承诺时填 remember（第三人称，60 字以内）。
+
+            - memory_query 不要用整句。玩家问“还记得我吗/上次/旧账/恶作剧”时，应包含 阿远、欠账、恶作剧、盐罐 等词；点酒时包含 酒、铜板；打听传闻时包含
+            传闻、后巷；没有特别话题时用“账 酒 恶作剧”。
+
+            - 不要编造菜单之外的酒；不确定时 intent 用 chat。'
+        - role: user
+          text: '当前状态：{{#parse_state.state_json#}}
+
+            玩家消息：{{#clean_input.query#}}'
+        reasoning_format: separated
+        selected: true
+        title: 意图与槽位
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      id: classify
+      position:
+        x: 1380
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import json\nimport re\n\nALLOWED = {\"order\", \"gossip\", \"prank\"\
+          , \"settle\", \"chat\"}\n\n\ndef main(llm_text: str) -> dict:\n    text\
+          \ = llm_text or \"\"\n    text = re.sub(r\"(?is)<think.*?</think>\", \"\
+          \ \", text)\n    text = text.replace(\"<think>\", \" \").replace(\"</think>\"\
+          , \" \").strip()\n    if text.startswith(\"```\"):\n        text = re.sub(r\"\
+          ^```[a-zA-Z]*\\s*\", \"\", text)\n        text = re.sub(r\"\\s*```$\", \"\
+          \", text)\n    start = text.find(\"{\")\n    end = text.rfind(\"}\")\n \
+          \   obj = {}\n    if start >= 0 and end > start:\n        try:\n       \
+          \     obj = json.loads(text[start:end + 1])\n        except Exception:\n\
+          \            obj = {}\n    if not isinstance(obj, dict):\n        obj =\
+          \ {}\n\n    def clean(key, limit):\n        value = obj.get(key, \"\")\n\
+          \        if not isinstance(value, str):\n            value = str(value)\n\
+          \        value = re.sub(r\"[\\r\\n]+\", \" \", value).replace('\"', \"'\"\
+          ).replace(\"\\\\\", \"／\").strip()\n        return value[:limit]\n\n   \
+          \ intent = clean(\"intent\", 20).lower()\n    if intent not in ALLOWED:\n\
+          \        intent = \"chat\"\n    pay_mode = clean(\"pay_mode\", 10).lower()\n\
+          \    if pay_mode not in (\"cash\", \"credit\"):\n        pay_mode = \"cash\"\
+          \n    memory_query = clean(\"memory_query\", 80)\n    if not memory_query:\n\
+          \        memory_query = \"账 酒 恶作剧 传闻\"\n    return {\n        \"intent\"\
+          : intent,\n        \"drink\": clean(\"drink\", 30),\n        \"pay_mode\"\
+          : pay_mode,\n        \"query\": clean(\"query\", 60),\n        \"prank\"\
+          : clean(\"prank\", 120),\n        \"nickname\": clean(\"nickname\", 16),\n\
+          \        \"remember\": clean(\"remember\", 120),\n        \"memory_query\"\
+          : memory_query,\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          drink:
+            children: null
+            type: string
+          intent:
+            children: null
+            type: string
+          memory_query:
+            children: null
+            type: string
+          nickname:
+            children: null
+            type: string
+          pay_mode:
+            children: null
+            type: string
+          prank:
+            children: null
+            type: string
+          query:
+            children: null
+            type: string
+          remember:
+            children: null
+            type: string
+        title: 解析意图 JSON
+        type: code
+        variables:
+        - value_selector:
+          - classify
+          - text
+          variable: llm_text
+      id: parse_intent
+      position:
+        x: 1600
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"scope_id":"{{#parse_scope.scope_id#}}","query":"{{#parse_intent.memory_query#}}","limit":8,"mode":"fts"}'
+          type: json
+        desc: PowerContext FTS 检索玩家的跨会话记忆
+        headers: 'Authorization: Bearer tavern-demo-token
+
+          Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 检索长期记忆
+        type: http-request
+        url: http://host.docker.internal:18082/v1/memory/search
+      id: memory
+      position:
+        x: 1820
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import json\n\n\ndef _obj(value):\n    if isinstance(value, dict):\n\
+          \        return value\n    if isinstance(value, str):\n        try:\n  \
+          \          return json.loads(value)\n        except Exception:\n       \
+          \     return {}\n    return {}\n\n\ndef main(memory_body: str) -> dict:\n\
+          \    data = _obj(memory_body)\n    hits = data.get(\"hits\", []) or []\n\
+          \    lines = []\n    for hit in hits[:8]:\n        memory = hit.get(\"memory\"\
+          , {}) or {}\n        if memory.get(\"state\") not in (None, \"active\"):\n\
+          \            continue\n        text = (memory.get(\"text\") or \"\").strip()\n\
+          \        if text:\n            lines.append(\"- \" + text)\n    if not lines\
+          \ and data.get(\"content\"):\n        lines.append(str(data[\"content\"\
+          ])[:4000])\n    return {\"memory_text\": \"\\n\".join(lines), \"memory_count\"\
+          : len(lines)}\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          memory_count:
+            children: null
+            type: number
+          memory_text:
+            children: null
+            type: string
+        title: 整理召回记忆
+        type: code
+        variables:
+        - value_selector:
+          - memory
+          - body
+          variable: memory_body
+      id: parse_context
+      position:
+        x: 2040
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        _targetBranches:
+        - id: order
+          name: 点酒
+        - id: gossip
+          name: 打听传闻
+        - id: prank
+          name: 恶作剧
+        - id: settle
+          name: 结账
+        - id: 'false'
+          name: ELSE
+        cases:
+        - case_id: order
+          conditions:
+          - comparison_operator: is
+            id: cond_order
+            value: order
+            varType: string
+            variable_selector:
+            - parse_intent
+            - intent
+          logical_operator: and
+        - case_id: gossip
+          conditions:
+          - comparison_operator: is
+            id: cond_gossip
+            value: gossip
+            varType: string
+            variable_selector:
+            - parse_intent
+            - intent
+          logical_operator: and
+        - case_id: prank
+          conditions:
+          - comparison_operator: is
+            id: cond_prank
+            value: prank
+            varType: string
+            variable_selector:
+            - parse_intent
+            - intent
+          logical_operator: and
+        - case_id: settle
+          conditions:
+          - comparison_operator: is
+            id: cond_settle
+            value: settle
+            varType: string
+            variable_selector:
+            - parse_intent
+            - intent
+          logical_operator: and
+        desc: Dify 条件判断：不同意图走不同工具节点
+        isInIteration: false
+        isInLoop: false
+        title: 按意图分流
+        type: if-else
+      id: branch
+      position:
+        x: 2260
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"player_id":"{{#clean_input.player_id#}}","session_id":"{{#sys.conversation_id#}}","drink":"{{#parse_intent.drink#}}","pay_mode":"{{#parse_intent.pay_mode#}}","nickname":"{{#parse_intent.nickname#}}"}'
+          type: json
+        desc: ''
+        headers: 'Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 工具·点酒
+        type: http-request
+        url: http://host.docker.internal:8010/api/order
+      id: act_order
+      position:
+        x: 2480
+        y: 80
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"player_id":"{{#clean_input.player_id#}}","session_id":"{{#sys.conversation_id#}}","query":"{{#parse_intent.query#}}","nickname":"{{#parse_intent.nickname#}}"}'
+          type: json
+        desc: ''
+        headers: 'Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 工具·打听传闻
+        type: http-request
+        url: http://host.docker.internal:8010/api/gossip
+      id: act_gossip
+      position:
+        x: 2480
+        y: 220
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"player_id":"{{#clean_input.player_id#}}","session_id":"{{#sys.conversation_id#}}","description":"{{#parse_intent.prank#}}","nickname":"{{#parse_intent.nickname#}}"}'
+          type: json
+        desc: ''
+        headers: 'Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 工具·恶作剧
+        type: http-request
+        url: http://host.docker.internal:8010/api/prank
+      id: act_prank
+      position:
+        x: 2480
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"player_id":"{{#clean_input.player_id#}}","session_id":"{{#sys.conversation_id#}}","nickname":"{{#parse_intent.nickname#}}"}'
+          type: json
+        desc: ''
+        headers: 'Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 工具·结账
+        type: http-request
+        url: http://host.docker.internal:8010/api/settle
+      id: act_settle
+      position:
+        x: 2480
+        y: 500
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"player_id":"{{#clean_input.player_id#}}","session_id":"{{#sys.conversation_id#}}","message":"{{#clean_input.query#}}","nickname":"{{#parse_intent.nickname#}}"}'
+          type: json
+        desc: ''
+        headers: 'Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 工具·闲聊记录
+        type: http-request
+        url: http://host.docker.internal:8010/api/chat
+      id: act_chat
+      position:
+        x: 2480
+        y: 640
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        advanced_settings:
+          group_enabled: false
+          groups: []
+        desc: 只保留实际执行的那条分支
+        output_type: string
+        title: 合并动作结果
+        type: variable-aggregator
+        variables:
+        - - act_order
+          - body
+        - - act_gossip
+          - body
+        - - act_prank
+          - body
+        - - act_settle
+          - body
+        - - act_chat
+          - body
+      id: aggregate
+      position:
+        x: 2700
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import json\nimport re\n\n\ndef _obj(value):\n    if isinstance(value,\
+          \ dict):\n        return value\n    if isinstance(value, str):\n       \
+          \ try:\n            return json.loads(value)\n        except Exception:\n\
+          \            return {}\n    return {}\n\n\ndef main(action_body: str, remember:\
+          \ str, message: str) -> dict:\n    data = _obj(action_body)\n    ok = bool(data.get(\"\
+          ok\", False))\n    state = data.get(\"state\", {}) or {}\n    player = state.get(\"\
+          player\", {}) or {}\n    error = data.get(\"error\", {}) or {}\n    result_text\
+          \ = data.get(\"result_text\", \"\") or \"\"\n    memory = data.get(\"memory\"\
+          , \"\") or \"\"\n    if not memory:\n        memory = remember or f\"玩家在忘忧酒馆说：「{message[:120]}」\"\
+          \n    memory = re.sub(r\"[\\r\\n]+\", \" \", memory).replace('\"', \"'\"\
+          ).replace(\"\\\\\", \"／\").strip()[:400]\n    action_fact = result_text\
+          \ if ok else error.get(\"message\", \"阿九没有回应。\")\n    compact = {\n    \
+          \    \"player\": player,\n        \"menu\": state.get(\"menu\", []),\n \
+          \       \"recent_events\": state.get(\"recent_events\", []),\n        \"\
+          grudge_level\": state.get(\"grudge_level\", \"\"),\n    }\n    return {\n\
+          \        \"ok\": ok,\n        \"action_name\": data.get(\"action\", \"\"\
+          ) or \"\",\n        \"action_fact\": str(action_fact)[:600],\n        \"\
+          error_message\": str(error.get(\"message\", \"\") or \"\")[:300],\n    \
+          \    \"status_bar\": state.get(\"status_bar\", \"\") or \"\",\n        \"\
+          player_name\": player.get(\"nickname\", \"无名客\") or \"无名客\",\n        \"\
+          memory_text\": memory,\n        \"state_json\": json.dumps(compact, ensure_ascii=False),\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          action_fact:
+            children: null
+            type: string
+          action_name:
+            children: null
+            type: string
+          error_message:
+            children: null
+            type: string
+          memory_text:
+            children: null
+            type: string
+          ok:
+            children: null
+            type: boolean
+          player_name:
+            children: null
+            type: string
+          state_json:
+            children: null
+            type: string
+          status_bar:
+            children: null
+            type: string
+        title: 解析动作结果
+        type: code
+        variables:
+        - value_selector:
+          - aggregate
+          - output
+          variable: action_body
+        - value_selector:
+          - parse_intent
+          - remember
+          variable: remember
+        - value_selector:
+          - clean_input
+          - query
+          variable: message
+      id: parse_action
+      position:
+        x: 2920
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 1500
+            temperature: 0.8
+          mode: chat
+          name: deepseek-v4-pro
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - role: system
+          text: '你是忘忧酒馆的掌柜阿九，一只活了很久的半妖狐狸。雨夜开店，嘴硬心软，记性极好，尤其记仇。
+
+            说话风格：江湖气、冷幽默、短句，偶尔称对方“客官”。不要长篇大论，不要解释设定。
+
+
+            必须遵守：
+
+            1. 只输出阿九的台词和少量动作描写，2-5 句；不要输出思考过程、<think>、JSON、状态栏或“作为 AI”。
+
+            2. 必须优先利用【召回记忆】中的旧事。玩家问“还记得我吗/上次/旧账/恶作剧”时，要具体说出记忆里的名字、恶作剧或欠账，让玩家知道你记得。不要编造记忆里没有的具体旧事。
+
+            3. 本轮动作以【本轮动作】为准；若失败，按失败原因回应，不要假装成功。
+
+            4. 玩家有名字时用名字称呼，否则称“客官”。
+
+            5. 不要重复状态栏数字，系统会自动追加。
+
+            6. 以【当前状态】的欠账/铜板为准：欠账大于 0 时绝不能说“账清了/不欠了”；记忆里的旧账只作旧事引用。'
+        - role: user
+          text: '【当前状态】{{#parse_action.state_json#}}
+
+            【召回记忆】{{#parse_context.memory_text#}}
+
+            【本轮动作】{{#parse_action.action_fact#}}
+
+            【动作是否成功】{{#parse_action.ok#}}
+
+            【玩家消息】{{#clean_input.query#}}'
+        reasoning_format: separated
+        selected: true
+        title: 阿九回复
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      id: reply
+      position:
+        x: 3140
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        code: "import re\n\n\ndef main(reply_text: str) -> dict:\n    text = reply_text\
+          \ or \"\"\n    text = re.sub(r\"(?is)<think.*?</think>\", \"\", text)\n\
+          \    text = text.replace(\"<think>\", \"\").replace(\"</think>\", \"\")\n\
+          \    text = text.strip()\n    text = re.sub(r\"^```[a-zA-Z]*\\s*\", \"\"\
+          , text)\n    text = re.sub(r\"\\s*```$\", \"\", text)\n    if not text:\n\
+          \        text = \"（阿九把抹布往肩上一搭，没接话，只把账本翻到了你那一页。）\"\n    return {\"reply\"\
+          : text[:1500]}\n"
+        code_language: python3
+        desc: 去掉模型可能带出的 <think> 推理块
+        outputs:
+          reply:
+            children: null
+            type: string
+        title: 清理回复
+        type: code
+        variables:
+        - value_selector:
+          - reply
+          - text
+          variable: reply_text
+      id: clean_reply
+      position:
+        x: 3360
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        authorization:
+          type: no-auth
+        body:
+          data: '{"scope_id":"{{#parse_scope.scope_id#}}","kind":"fact","text":"{{#parse_action.memory_text#}}","reason":"玩家在忘忧酒馆的一轮互动","description":"忘忧酒馆互动"}'
+          type: json
+        desc: 保存本轮动作/对话，供下次会话召回
+        headers: 'Authorization: Bearer tavern-demo-token
+
+          Content-Type: application/json'
+        method: POST
+        params: ''
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        timeout:
+          connect: 10
+          read: 60
+          write: 30
+        title: 写入长期记忆
+        type: http-request
+        url: http://host.docker.internal:18082/v1/memory/remember
+      id: remember
+      position:
+        x: 3580
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+    - data:
+        answer: '{{#clean_reply.reply#}}
+
+
+          {{#parse_action.status_bar#}}'
+        desc: ''
+        title: 输出
+        type: answer
+        variables: []
+      id: answer
+      position:
+        x: 3800
+        y: 360
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+  rag_pipeline_variables: []

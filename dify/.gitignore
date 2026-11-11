@@ -1,0 +1,14 @@
+.env
+backend/.env
+deploy/.env
+deploy/dify/
+deploy/dify-1.19.0.tar.gz
+deploy/volumes/
+.runtime/
+__pycache__/
+*.pyc
+.venv/
+logs/
+runlogs/
+backend/*.log
+data/*.log

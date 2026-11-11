@@ -1,0 +1,36 @@
+
+=== turn 1 | status=succeeded | conversation=None ===
+Q: 我叫阿远，记住这个名字。
+A: 阿远？  
+（拿布擦着杯子，没抬头）记住了。  
+名字进了这扇门，想赖都赖不掉。
+
+【铜板 30｜欠账 0｜戒心 0（平静）｜声望 0】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_chat': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}
+
+=== turn 2 | status=succeeded | conversation=None ===
+Q: 给我来一杯断肠烧，先赊着，回头一起结。
+A: （把断肠烧“咚”地一放，酒液晃了晃）  
+阿远，上次那杯断肠烧的账还热乎着呢。  
+又赊？你当酒馆是善堂？
+
+【铜板 30｜欠账 12｜戒心 1（平静）｜声望 2】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_order': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}
+
+=== turn 3 | status=succeeded | conversation=None ===
+Q: 我把你吧台的盐罐换成糖罐了。
+A: 阿九笑了笑，把酒壶往身后挪了挪。  
+“你当掌柜的鼻子是摆设？盐罐换糖罐，那晚卤味都带甜。”  
+“断肠烧的账还挂着，阿远，你倒敢再来。”
+
+【铜板 30｜欠账 12｜戒心 3（白眼）｜声望 1】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_prank': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}
+
+=== turn 4 | status=succeeded | conversation=None ===
+Q: 老板，还认得我吗？上次的账和恶作剧还记得吗？
+A: 阿九抬了抬眼皮，手上擦杯不停。  
+“阿远，化成灰也认得。盐罐换糖罐，我卤味白调一锅。”  
+“断肠烧十二铜板，还挂着呢。今晚还喝？”
+
+【铜板 30｜欠账 12｜戒心 3（白眼）｜声望 1】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_chat': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}

@@ -1,0 +1,9 @@
+
+=== turn 100 | status=succeeded | conversation=None ===
+Q: 来一杯忘忧酿
+A: 阿九把忘忧酿推到你手边，杯底星屑沉着一线光。  
+“新客？第一杯算你识货。”  
+他靠回柜边，眼神往雨里一瞥：“苦在头，甜在后。别急着咽。”
+
+【铜板 22｜欠账 0｜戒心 0（平静）｜声望 1】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_order': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}

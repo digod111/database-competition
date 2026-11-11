@@ -1,0 +1,10 @@
+
+=== turn 101 | status=succeeded | conversation=None ===
+Q: 老板，还认得我吗？上次的账和恶作剧还记得吗？
+A: 擦着杯子，抬眼看你一眼。  
+客官面生，头回来就装熟？  
+账本上没你的名，恶作剧更没记。  
+要喝酒坐下，不喝别挡门。
+
+【铜板 30｜欠账 0｜戒心 0（平静）｜声望 0】
+nodes: {'start': 'succeeded', 'clean_input': 'succeeded', 'scope': 'succeeded', 'parse_scope': 'succeeded', 'state': 'succeeded', 'parse_state': 'succeeded', 'classify': 'succeeded', 'parse_intent': 'succeeded', 'memory': 'succeeded', 'parse_context': 'succeeded', 'branch': 'succeeded', 'act_chat': 'succeeded', 'aggregate': 'succeeded', 'parse_action': 'succeeded', 'reply': 'succeeded', 'clean_reply': 'succeeded', 'remember': 'succeeded', 'answer': 'succeeded'}

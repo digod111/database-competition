@@ -1,0 +1,4 @@
+fastapi==0.162.1
+uvicorn==0.54.0
+pymysql>=2.2.0,<3
+python-dotenv>=1.0,<2

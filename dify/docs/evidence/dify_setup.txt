@@ -1,0 +1,32 @@
+Dify 1.19.0 实测配置摘要（不含任何真实 Key）
+================================================
+
+Dify 版本
+- 1.19.0（HTTP 响应头 X-Version: 1.19.0）
+- 官方 docker compose，使用 deploy/.env.example 的
+  COMPOSE_PROFILES=postgresql,pgvector
+  VECTOR_STORE=pgvector
+- docker compose ps 共 15 个服务：api、worker、worker_beat、web、db_postgres、redis、
+  pgvector、sandbox、plugin_daemon、agent_backend、local_sandbox、ssrf_proxy、
+  agent_ssrf_proxy、nginx、init_permissions(Exited 0)。
+
+模型
+- 插件：DeepSeek 0.0.26
+  plugin_unique_identifier=langgenius/deepseek:0.0.26@bdf47cb41e9062bba00d26625d2a795c1874011d8ce64bff738c44b5a31787ea
+  安装任务状态：success
+- Provider：langgenius/deepseek/deepseek
+- 已启用模型：deepseek-flash（意图/槽位，JSON 输出）、deepseek-v4-pro（阿九角色回复）
+- API Key 仅保存在 Dify 工作区数据库；本仓库材料不含真实 Key。
+
+网络
+- Dify HTTP Request 节点通过 ssrf_proxy 访问 host.docker.internal:8010 / :18082
+- SSRF_PROXY_ALLOW_PRIVATE_DOMAINS=host.docker.internal
+- 容器访问宿主机成功记录（worker 日志）：
+  GET http://host.docker.internal:8010/api/state -> 200
+  POST http://host.docker.internal:18082/v1/memory/search -> 200
+  POST http://host.docker.internal:8010/api/chat -> 200
+  POST http://host.docker.internal:18082/v1/memory/remember -> 200
+
+证据
+- 节点执行：docs/evidence/dify_node_evidence.txt
+- Web App 快照：docs/evidence/chat_ui_snapshot.txt
