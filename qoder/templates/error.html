@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}出错了 · 温故{% endblock %}
+{% block content %}
+<section class="card error-card">
+  <span class="eyebrow">暂时走不通</span>
+  <h1>这里出了点问题。</h1>
+  <p class="error-message">{{ message }}</p>
+  <div class="actions">
+    <a class="btn primary" href="/">回到今日</a>
+    <a class="btn ghost" href="/welcome">回到入口</a>
+  </div>
+  <p class="hint">如果是连接错误，请确认 seekdb 容器和 PowerContext Server 已启动。运行说明见项目 README。</p>
+</section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{
+  "before": {
+    "url": "http://127.0.0.1:18081",
+    "healthy": true,
+    "pid": "35612",
+    "port_pid": "32884",
+    "home": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\.powercontext",
+    "log": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\docs\\runs\\powercontext_server.log"
+  },
+  "stopped": {
+    "stopped": true,
+    "pid": "35612",
+    "url": "http://127.0.0.1:18081",
+    "healthy_after": false
+  },
+  "started": {
+    "started": true,
+    "url": "http://127.0.0.1:18081",
+    "pid": 8376,
+    "home": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\.powercontext",
+    "log": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\docs\\runs\\powercontext_server.log"
+  },
+  "after": {
+    "url": "http://127.0.0.1:18081",
+    "healthy": true,
+    "pid": "8376",
+    "port_pid": "12672",
+    "home": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\.powercontext",
+    "log": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\docs\\runs\\powercontext_server.log"
+  },
+  "home": "D:\\projects\\新建文件夹\\qoder作答\\wengu\\.powercontext",
+  "health": true,
+  "restarted_at": "2026-11-10T17:44:46+08:00"
+}

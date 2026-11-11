@@ -1,0 +1,106 @@
+{
+  "session_id": "ses_6f32aae40ec9",
+  "answered": 5,
+  "correct": 4,
+  "accuracy": 0.8,
+  "weak_points": [
+    {
+      "knowledge_point": "快速排序",
+      "course": "数据结构",
+      "chapter": "排序",
+      "wrong": 0,
+      "total": 2,
+      "mastery": 0.605,
+      "question_ids": [
+        "Q-DS-002",
+        "Q-DS-001"
+      ]
+    },
+    {
+      "knowledge_point": "归并排序",
+      "course": "数据结构",
+      "chapter": "排序",
+      "wrong": 0,
+      "total": 1,
+      "mastery": 0.605,
+      "question_ids": [
+        "Q-DS-003"
+      ]
+    },
+    {
+      "knowledge_point": "B+树插入与分裂",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "wrong": 1,
+      "total": 1,
+      "mastery": 0.325,
+      "question_ids": [
+        "Q-DS-006"
+      ]
+    },
+    {
+      "knowledge_point": "堆排序",
+      "course": "数据结构",
+      "chapter": "排序",
+      "wrong": 0,
+      "total": 1,
+      "mastery": 0.605,
+      "question_ids": [
+        "Q-DS-004"
+      ]
+    }
+  ],
+  "remaining": [
+    "Q-DS-005"
+  ],
+  "summary": "本轮完成 5 题，答对 4 题。仍需关注：B+树插入与分裂。 还有 1 题未完成。",
+  "memory": {
+    "session": {
+      "artifact_id": "art_48eba156d7034f5d8880644206fc4c94",
+      "response": {
+        "changed": true,
+        "records": [
+          {
+            "artifact": {
+              "family": "atomic-memory",
+              "artifact_id": "art_48eba156d7034f5d8880644206fc4c94",
+              "revision": 1
+            },
+            "kind": "session_summary",
+            "text": "SESSION {\"session_id\": \"ses_6f32aae40ec9\", \"finished_at\": \"2026-11-10T17:44:34+08:00\", \"answered\": 5, \"correct\": 4, \"accuracy\": 0.8, \"weak_points\": [\"B+树插入与分裂\"], \"summary\": \"本轮完成 5 题，答对 4 题。仍需关注：B+树插入与分裂。 还有 1 题未完成。\"}",
+            "state": "active",
+            "state_version": 0,
+            "merged_into_id": null
+          }
+        ]
+      }
+    },
+    "weak_points": [
+      {
+        "knowledge_point": "B+树插入与分裂",
+        "artifact_id": "art_ef8fd8d314fa4404b0bef0120e447758"
+      }
+    ],
+    "handoff": {
+      "artifact_id": "art_c31bcf4dbee74387ad46f29d9d30f4b4",
+      "response": {
+        "changed": true,
+        "records": [
+          {
+            "artifact": {
+              "family": "atomic-memory",
+              "artifact_id": "art_c31bcf4dbee74387ad46f29d9d30f4b4",
+              "revision": 1
+            },
+            "kind": "handoff",
+            "text": "HANDOFF {\"session_id\": \"ses_6f32aae40ec9\", \"remaining\": [\"Q-DS-005\"], \"next_focus\": \"哈希冲突处理\", \"status\": \"open\", \"created_at\": \"2026-11-10T17:44:34+08:00\"}",
+            "state": "active",
+            "state_version": 0,
+            "merged_into_id": null
+          }
+        ]
+      }
+    }
+  },
+  "finished_at": "2026-11-10T17:44:34+08:00"
+}

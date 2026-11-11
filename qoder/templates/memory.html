@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}教练记忆 · 温故{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <span class="eyebrow">教练记忆</span>
+    <h1>它记得你错过什么，也记得你喜欢怎样学。</h1>
+    <p class="muted">这些记忆存放在 PowerContext 的 Scope 中，不依赖浏览器，也不依赖应用进程。重启后仍然可以召回。</p>
+  </div>
+  <span class="tag tag-violet">PowerContext</span>
+</section>
+
+<section class="memory-status card">
+  <div>
+    <span class="stat-label">Scope</span>
+    <code class="scope-id">{{ data.evidence.scope_id }}</code>
+  </div>
+  <div>
+    <span class="stat-label">代际</span>
+    <strong>{{ data.scope.generation if data.scope else 1 }}</strong>
+  </div>
+  <div>
+    <span class="stat-label">最近召回</span>
+    <strong>{{ data.recall.recalled_at|fmt_time }}</strong>
+  </div>
+  <div>
+    <span class="stat-label">记忆计数</span>
+    <span>偏好 {{ data.evidence.counts.profile }} · 薄弱 {{ data.evidence.counts.weak_point }} · 摘要 {{ data.evidence.counts.session_summary }} · 交接 {{ data.evidence.counts.handoff }}</span>
+  </div>
+</section>
+
+<section class="memory-grid">
+  <article class="card memory-type">
+    <div class="card-head"><h2>学习偏好</h2><span class="tag tag-violet">profile</span></div>
+    {% if data.recall.profile %}
+      <p>每日目标 <strong>{{ data.recall.profile.payload.daily_goal }}</strong> 题 · 解析风格 <strong>{{ STYLE_LABELS.get(data.recall.profile.payload.explanation_style, '简洁') }}</strong></p>
+      <p class="muted">显示名：{{ data.recall.profile.payload.display_name or '—' }}</p>
+      <code class="artifact">{{ data.recall.profile.artifact_id }}</code>
+    {% else %}
+      <p class="muted">还没有偏好记忆。保存一次设置即可写入。</p>
+    {% endif %}
+  </article>
+
+  <article class="card memory-type">
+    <div class="card-head"><h2>薄弱点</h2><span class="tag tag-amber">weak_point</span></div>
+    {% if data.recall.weak_points %}
+      <ul class="memory-points">
+        {% for hit in data.recall.weak_points %}
+          <li>
+            <div><strong>{{ hit.payload.knowledge_point }}</strong><span class="muted">{{ hit.payload.course }} · 错 {{ hit.payload.wrong }}/{{ hit.payload.total }}</span></div>
+            <div class="mastery-track"><span style="width: {{ (hit.payload.mastery * 100) | round(0) }}%"></span></div>
+            <code class="artifact">{{ hit.artifact_id }}</code>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">还没有薄弱点。答错一道题后，这里会出现第一条记忆。</p>
+    {% endif %}
+  </article>
+
+  <article class="card memory-type">
+    <div class="card-head"><h2>会话摘要</h2><span class="tag tag-violet">session_summary</span></div>
+    {% if data.recall.sessions %}
+      <ul class="session-memories">
+        {% for hit in data.recall.sessions %}
+          <li>
+            <p>{{ hit.payload.summary }}</p>
+            <small class="muted">{{ hit.payload.finished_at|fmt_time }} · 答对 {{ hit.payload.correct }}/{{ hit.payload.answered }} · 正确率 {{ (hit.payload.accuracy * 100) | round(0) }}%</small>
+            <code class="artifact">{{ hit.artifact_id }}</code>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">还没有会话摘要。完成一轮复习后写入。</p>
+    {% endif %}
+  </article>
+
+  <article class="card memory-type">
+    <div class="card-head"><h2>未完成交接</h2><span class="tag tag-blue">handoff</span></div>
+    {% if data.recall.handoff %}
+      <p>状态：<strong>{{ '待完成' if data.recall.handoff.payload.status == 'open' else '已完成' }}</strong></p>
+      {% if data.recall.handoff.payload.remaining %}
+        <div class="chip-row">
+          {% for qid in data.recall.handoff.payload.remaining %}<span class="chip">{{ qid }}</span>{% endfor %}
+        </div>
+      {% else %}
+        <p class="muted">没有剩余题目。</p>
+      {% endif %}
+      {% if data.recall.handoff.payload.next_focus %}<p class="muted">下次重点：{{ data.recall.handoff.payload.next_focus }}</p>{% endif %}
+      <code class="artifact">{{ data.recall.handoff.artifact_id }}</code>
+    {% else %}
+      <p class="muted">还没有交接记忆。</p>
+    {% endif %}
+  </article>
+</section>
+
+<section class="card prepared-card">
+  <div class="card-head">
+    <h2>上下文包（context/prepare）</h2>
+    <span class="tag tag-green">{{ data.recall.prepared.status }}</span>
+  </div>
+  <p class="muted">查询：<code>{{ data.recall.prepared.query }}</code> · {{ data.recall.prepared.content_bytes }} bytes · receipt <code>{{ data.recall.prepared.receipt_id or '—' }}</code></p>
+  {% if data.recall.prepared.citations %}
+    <div class="prepared-list">
+      {% for item in data.recall.prepared.citations %}
+        <article class="prepared-item">
+          <div class="prepared-top">
+            <span class="tag">{{ item.kind }}</span>
+            <code class="artifact">{{ item.artifact_id }}</code>
+          </div>
+          <p>{{ item.content|truncate(240) }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">当前查询没有组装出上下文。通常是因为还没有与该查询匹配的记忆。</p>
+  {% endif %}
+</section>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head"><h2>偏好设置</h2><span class="tag">写入后会重启仍生效</span></div>
+    <form id="preference-form" class="pref-form">
+      <label>每日目标题量
+        <input type="number" name="daily_goal" min="3" max="12" value="{{ data.recall.profile.payload.daily_goal if data.recall.profile else 6 }}">
+      </label>
+      <label>解析风格
+        <select name="explanation_style">
+          <option value="concise" {{ 'selected' if data.recall.profile and data.recall.profile.payload.explanation_style == 'concise' else '' }}>简洁（首句 + 1 条出处）</option>
+          <option value="detailed" {{ 'selected' if data.recall.profile and data.recall.profile.payload.explanation_style == 'detailed' else '' }}>详细（完整解析 + 2 条出处）</option>
+        </select>
+      </label>
+      <button class="btn primary" type="submit">保存偏好</button>
+      <span class="hint" id="pref-status"></span>
+    </form>
+    <hr class="rule">
+    <h3>清空我的学习数据与记忆</h3>
+    <p class="muted">会删除当前用户在 seekdb 中的答题记录、会话和统计，并切换到新的 PowerContext Scope。旧记忆仍留在磁盘上，但不会再被召回。此操作不可撤销。</p>
+    <button class="btn danger" id="reset-memory" type="button">清空并重新开始</button>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>最近记忆写入</h2><span class="tag tag-violet">JSONL 证据</span></div>
+    <ul class="log-list">
+      {% for item in data.log %}
+        {% if item.action in ('remember', 'reset_scope') %}
+          <li>
+            <div class="log-main">
+              <span class="log-purpose">{{ item.action }}</span>
+              <span class="log-detail">{{ item.kind or '—' }} · {{ item.artifact_id or item.scope_id or '—' }}</span>
+            </div>
+            <div class="log-meta">{{ item.time|fmt_time }}
+              {% if item.counts %} · 命中 {{ item.counts }}{% endif %}
+              {% if item.reason %} · {{ item.reason }}{% endif %}
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <p class="hint">完整记录：<code>docs/runs/powercontext_memory.jsonl</code></p>
+  </article>
+</section>
+{% endblock %}

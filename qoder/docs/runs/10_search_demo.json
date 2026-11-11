@@ -1,0 +1,81 @@
+{
+  "query": "B+树 插入 分裂",
+  "results": [
+    {
+      "id": "mat_f2ad6b5e6096",
+      "title": "B+树 / B+树的插入与分裂",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "source_path": "notes/ds/03_btree.md",
+      "score": 2.6944,
+      "snippet_html": "<mark>插入</mark>时先沿内部节点定位到目标叶子，把键按顺序<mark>插入</mark>叶子。\n\n- 如果叶子节点未满，直接<mark>插入</mark>并保持有序。\n- 如果叶子节点溢出，把它<mark>分裂</mark>成左右两个叶子；中间位置的键复制一份上移到父节点，原来的键仍保留在叶子中。\n- 如果父节点也溢出，继续向上<mark>分裂</mark>；内部节点<mark>分裂</mark>时，中间键上移后不再保留在原节点。\n- 根节点<mark>分裂</mark>会生成新的根，树高增加一层。\n\n注意叶子<mark>分裂</mark>是“复制上移”，内部节点<mark>分裂</mark>是“移动上移”，这是 <mark>B+树</mark><mark>插入</mark>题最容易混淆的细节。"
+    },
+    {
+      "id": "mat_5ada497f7524",
+      "title": "B+树 / B+树的结构",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "source_path": "notes/ds/03_btree.md",
+      "score": 1.2216,
+      "snippet_html": "<mark>B+树</mark>是一种平衡的多路搜索树，常用于数据库和文件系统索引。\n\n- 内部节点只保存键和指向子节点的指针，不保存完整记录。\n- 所有键和记录都出现在叶子节点，叶子节点按大小顺序用链表连接。\n- 每条从根到叶子的路径长度相同，因此查找、<mark>插入</mark>、删除的复杂度稳定在 O(log n)。\n- 内部节点不存记录，扇出更大，树高更低，磁盘 I/O 次数更少。"
+    },
+    {
+      "id": "mat_1bb1e8f94245",
+      "title": "B+树 / B+树的范围查询",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "source_path": "notes/ds/03_btree.md",
+      "score": 1.1353,
+      "snippet_html": "范围查询先通过内部节点找到下界所在的叶子，然后沿着叶子链表顺序扫描，直到超过上界。\n\n- 叶子链表让范围扫描不需要回到上层做中序遍历。\n- 所有数据都在叶子同一层，扫描的 I/O 更连续。\n- 这是 <mark>B+树</mark>比 B树更适合数据库范围查询和全表顺序扫描的主要原因。"
+    },
+    {
+      "id": "mat_82e64466140a",
+      "title": "B+树 / B+树与B树的区别",
+      "course": "数据结构",
+      "chapter": "索引结构",
+      "source_path": "notes/ds/03_btree.md",
+      "score": 0.9147,
+      "snippet_html": "| 对比项 | B树 | <mark>B+树</mark> |\n| --- | --- | --- |\n| 记录存放位置 | 所有节点都可能存记录 | 只有叶子节点存记录 |\n| 内部节点内容 | 键 + 记录 + 子指针 | 键 + 子指针 |\n| 叶子节点 | 不要求链表连接 | 叶子链表连接 |\n| 范围查询 | 需要中序遍历 | 定位下界后顺序扫描 |\n| 查找路径 | 可能在内部节点命中 | 总是走到叶子 |\n| 扇出与树高 | 扇出较小，树可能更高 | 扇出更大，树更矮 |\n\n因此 <mark>B+树</mark>通常更适合磁盘上的索引结构，尤其是范围查询和顺序扫描较多的数据库场景。"
+    },
+    {
+      "id": "mat_9f1266dc9a2a",
+      "title": "哈希表与冲突处理 / 负载因子与扩容",
+      "course": "数据结构",
+      "chapter": "哈希表",
+      "source_path": "notes/ds/02_hash.md",
+      "score": 0.2919,
+      "snippet_html": "负载因子 = 已存元素数 / 桶数量。它衡量哈希表的拥挤程度。\n\n- 负载因子过高：冲突概率上升，平均查找长度变长。\n- 负载因子过低：空间浪费。\n- 常见做法是设置阈值（例如 0.75），超过后扩容并重新哈希所有元素。\n- 扩容的代价是 O(n)，但摊还到每次<mark>插入</mark>仍是常数级。"
+    }
+  ],
+  "query_id": "q_6dcefb1de7c2",
+  "meta": {
+    "query_id": "q_6dcefb1de7c2",
+    "time": "2026-11-10T17:44:50+08:00",
+    "purpose": "library_search",
+    "sql": "SELECT id, course, chapter, title, heading, content, keywords, knowledge_points, source_path, MATCH(search_text) AGAINST (%s IN NATURAL LANGUAGE MODE) AS score FROM materials WHERE MATCH(search_text) AGAINST (%s IN NATURAL LANGUAGE MODE) AND course = %s ORDER BY score DESC, course, title LIMIT %s",
+    "params": [
+      "B+树 插入 分裂",
+      "B+树 插入 分裂",
+      "数据结构",
+      "10"
+    ],
+    "row_count": 5,
+    "affected_rows": 5,
+    "ids": [
+      "mat_f2ad6b5e6096",
+      "mat_5ada497f7524",
+      "mat_1bb1e8f94245",
+      "mat_82e64466140a",
+      "mat_9f1266dc9a2a"
+    ],
+    "scores": [
+      2.69445,
+      1.221584,
+      1.135339,
+      0.914722,
+      0.29191
+    ],
+    "elapsed_ms": 41.782,
+    "database": "qoder_app"
+  }
+}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}本轮总结 · 温故{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <span class="eyebrow">本轮总结</span>
+    <h1>这一轮，教练记住了什么？</h1>
+    <p class="muted">{{ summary.summary }}</p>
+  </div>
+  <span class="tag tag-violet">PowerContext 已写入</span>
+</section>
+
+<section class="summary-hero card">
+  <div class="accuracy-ring">
+    <strong>{{ (summary.accuracy * 100) | round(0) }}<small>%</small></strong>
+    <span>正确率</span>
+  </div>
+  <div class="summary-stats">
+    <div><span>作答</span><strong>{{ summary.answered }}</strong></div>
+    <div><span>答对</span><strong>{{ summary.correct }}</strong></div>
+    <div><span>未完成</span><strong>{{ summary.remaining|length }}</strong></div>
+  </div>
+  <div class="summary-actions">
+    <a class="btn primary" href="/practice/start{{ ('?course=' ~ plan.focus_course) if plan and plan.focus_course else '' }}">开始下一轮</a>
+    <a class="btn ghost" href="/">回到今日</a>
+  </div>
+</section>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head">
+      <h2>本轮知识点</h2>
+      <span class="tag">掌握度</span>
+    </div>
+    {% if summary.weak_points %}
+      <ul class="weak-list">
+        {% for point in summary.weak_points %}
+          <li>
+            <div class="weak-top">
+              <strong>{{ point.knowledge_point }}</strong>
+              <span class="muted">本轮 {{ point.total }} 次作答 · 错 {{ point.wrong }} 次</span>
+            </div>
+            <div class="mastery-track"><span style="width: {{ (point.mastery * 100) | round(0) }}%"></span></div>
+            <small class="muted">掌握度 {{ (point.mastery * 100) | round(0) }}%</small>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">本轮没有产生知识点状态。</p>
+    {% endif %}
+  </article>
+
+  <article class="card">
+    <div class="card-head">
+      <h2>写入的记忆</h2>
+      <a class="link" href="/memory">查看全部 →</a>
+    </div>
+    <ul class="memory-artifacts">
+      {% if summary.memory and summary.memory.session %}
+        <li><span class="tag tag-violet">会话摘要</span><code>{{ summary.memory.session.artifact_id }}</code></li>
+      {% endif %}
+      {% if summary.memory and summary.memory.weak_points %}
+        {% for item in summary.memory.weak_points %}
+          <li><span class="tag tag-amber">薄弱点</span><span>{{ item.knowledge_point }}</span><code>{{ item.artifact_id }}</code></li>
+        {% endfor %}
+      {% endif %}
+      {% if summary.memory and summary.memory.handoff %}
+        <li><span class="tag tag-blue">交接</span><code>{{ summary.memory.handoff.artifact_id }}</code></li>
+      {% endif %}
+      {% if not summary.memory %}
+        <li class="muted">本次会话没有可展示的记忆记录。</li>
+      {% endif %}
+    </ul>
+    {% if summary.remaining %}
+      <div class="handoff-note">
+        <strong>下次先补：</strong>
+        <div class="chip-row">
+          {% for qid in summary.remaining %}<span class="chip">{{ qid }}</span>{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </article>
+</section>
+
+<section class="card next-card">
+  <div class="card-head">
+    <h2>下一轮会发生什么</h2>
+    <span class="tag tag-violet">重启后依然有效</span>
+  </div>
+  <ol class="steps">
+    <li>打开新一轮时，温故先从 PowerContext 召回学习偏好、薄弱点、会话摘要和交接。</li>
+    <li>薄弱知识点及其同章节题目会获得更高选题权重；未完成题目会优先补做。</li>
+    <li>解析详略按你保存的偏好展示；每日题量按偏好控制。</li>
+    <li>所有召回和加权原因都会显示在答题页的“本轮计划如何被记忆影响”区域。</li>
+  </ol>
+</section>
+{% endblock %}

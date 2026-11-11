@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}使用统计 · 温故{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <span class="eyebrow">使用统计</span>
+    <h1>真实使用日志，不做估算。</h1>
+    <p class="muted">统计来自 seekdb 的 <code>usage_events</code>、<code>attempts</code>、<code>sessions</code> 和 <code>feedback</code> 表。当前页面累计值包含本机演示账号；“导出 JSON”与网站使用数据默认排除 <code>demo-</code> / <code>pytest-</code> 验证账号。网站访问量请以 Qoder Sites 的访问统计为准。</p>
+  </div>
+  <a class="btn ghost" href="/stats/export">导出 JSON</a>
+</section>
+
+<section class="stat-row">
+  <div class="stat">
+    <span class="stat-label">累计学习者</span>
+    <strong>{{ aggregate.users }}<small>人</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">复习会话</span>
+    <strong>{{ aggregate.sessions }}<small>轮</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">累计答题</span>
+    <strong>{{ aggregate.attempts }}<small>题</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">整体正确率</span>
+    <strong>{{ (aggregate.accuracy * 100) | round(0) }}<small>%</small></strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">活跃天数</span>
+    <strong>{{ aggregate.active_days }}<small>天</small></strong>
+  </div>
+</section>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head"><h2>近 7 天答题量</h2><span class="tag tag-green">seekdb attempts</span></div>
+    {% if aggregate.recent_days %}
+      <div class="bar-chart">
+        {% for day in aggregate.recent_days %}
+          <div class="bar-item">
+            <div class="bar-wrap">
+              <div class="bar" style="height: {{ (day.attempts / max_attempts * 100) | round(0) }}%"></div>
+            </div>
+            <strong>{{ day.attempts }}</strong>
+            <small>{{ day.day[5:] }}</small>
+            <span class="bar-accuracy">{{ (day.accuracy * 100) | round(0) }}%</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">还没有答题记录。</p>
+    {% endif %}
+    <div class="usage-events">
+      {% for event in events %}
+        <span class="chip">{{ event.event }} · {{ event.count }}</span>
+      {% endfor %}
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>我的进度</h2><span class="tag">个人</span></div>
+    <div class="progress-block">
+      <div class="weak-top"><strong>已练题目</strong><span>{{ progress.seen }}/{{ progress.total }}</span></div>
+      <div class="mastery-track"><span style="width: {{ (progress.seen / progress.total * 100) if progress.total else 0 }}%"></span></div>
+    </div>
+    <div class="progress-block">
+      <div class="weak-top"><strong>平均掌握度</strong><span>{{ (progress.avg_mastery * 100) | round(0) }}%</span></div>
+      <div class="mastery-track"><span style="width: {{ (progress.avg_mastery * 100) | round(0) }}%"></span></div>
+    </div>
+    <p class="muted">当前薄弱知识点 {{ progress.weak }} 个；个人累计答题 {{ personal.attempts }} 道，正确率 {{ (personal.accuracy * 100) | round(0) }}%。</p>
+    <p class="hint">数据来源：seekdb <code>question_state</code> / <code>attempts</code> 表。</p>
+  </article>
+</section>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head"><h2>高频薄弱点</h2><span class="tag tag-amber">错题聚合</span></div>
+    {% if aggregate.weak_points %}
+      <table class="data-table">
+        <thead><tr><th>知识点</th><th>错误次数</th><th>涉及学习者</th></tr></thead>
+        <tbody>
+          {% for row in aggregate.weak_points %}
+            <tr><td>{{ row.knowledge_point }}</td><td>{{ row.wrong_count }}</td><td>{{ row.users }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="muted">还没有错题数据。</p>
+    {% endif %}
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>学习者</h2><span class="tag">本机</span></div>
+    {% if users %}
+      <ul class="user-list">
+        {% for item in users %}
+          <li>
+            <span class="avatar">{{ item.display_name[:1] }}</span>
+            <div><strong>{{ item.display_name }}</strong><small class="muted">最近使用 {{ item.last_seen_at|fmt_time }}</small></div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">还没有学习者。</p>
+    {% endif %}
+  </article>
+</section>
+
+<section class="card feedback-card">
+  <div class="card-head"><h2>使用反馈</h2><span class="tag">匿名展示</span></div>
+  <form id="feedback-form" class="feedback-form">
+    <label>评分
+      <select name="rating">
+        <option value="5">5 · 很有帮助</option>
+        <option value="4">4 · 有帮助</option>
+        <option value="3">3 · 一般</option>
+        <option value="2">2 · 不太好用</option>
+        <option value="1">1 · 需要大改</option>
+      </select>
+    </label>
+    <label class="grow">想说的话
+      <textarea name="comment" rows="3" maxlength="500" placeholder="例如：错题解析引用原文很有用；希望增加导出复习卡片。"></textarea>
+    </label>
+    <button class="btn primary" type="submit">提交反馈</button>
+    <span class="hint" id="feedback-status"></span>
+  </form>
+  <div class="feedback-list">
+    {% if feedback %}
+      {% for item in feedback %}
+        <article class="feedback-item">
+          <div class="feedback-top">
+            <strong>同学 #{{ loop.index }}</strong>
+            <span class="stars">{% for i in range(5) %}{{ '★' if i < item.rating else '☆' }}{% endfor %}</span>
+            <small class="muted">{{ item.created_at|fmt_time }}</small>
+          </div>
+          <p>{{ item.comment or '（没有填写文字）' }}</p>
+        </article>
+      {% endfor %}
+    {% else %}
+      <p class="muted">还没有反馈。把你或同学的真实评价留在这里，会作为使用效果材料的一部分。</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

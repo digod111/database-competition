@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}温故 · 一个会记住你薄弱点的复习教练{% endblock %}
+{% block content %}
+<section class="welcome-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">温故而知新</span>
+    <h1>把错题，<br>变成下一次的题目。</h1>
+    <p class="lead">导入课程笔记和题库，温故用 seekdb 找到对应原文，用 PowerContext 记住你错过什么、偏好怎样复习。重启之后，它仍然记得。</p>
+    <div class="hero-actions">
+      {% if current %}
+        <a class="btn primary" href="/">继续以 {{ current.display_name }} 进入</a>
+        <a class="btn ghost" href="/logout">换一个人</a>
+      {% endif %}
+    </div>
+    <form class="enter-form" method="get" action="/enter">
+      <label for="name">你叫什么？<small>用唯一昵称，方便本机多位同学区分</small></label>
+      <div class="enter-row">
+        <input id="name" name="name" maxlength="24" placeholder="例如：小林" autocomplete="off" required>
+        <button class="btn primary" type="submit">开始复习</button>
+      </div>
+    </form>
+    {% if users %}
+      <div class="existing-users">
+        <span>本机已有学习者：</span>
+        {% for item in users[:8] %}
+          <a class="user-pill" href="/switch/{{ item.id }}">{{ item.display_name }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="hero-panel">
+    <div class="memory-loop">
+      <div class="loop-step">
+        <span class="loop-index">01</span>
+        <div><strong>检索原文</strong><small>seekdb 中文全文 + 课程过滤</small></div>
+      </div>
+      <div class="loop-arrow">↓</div>
+      <div class="loop-step">
+        <span class="loop-index">02</span>
+        <div><strong>练习判分</strong><small>到期队列、薄弱点加权、SM-2 轻量调度</small></div>
+      </div>
+      <div class="loop-arrow">↓</div>
+      <div class="loop-step accent">
+        <span class="loop-index">03</span>
+        <div><strong>写入记忆</strong><small>PowerContext 保存偏好、薄弱点、会话摘要、交接</small></div>
+      </div>
+      <div class="loop-arrow">↓</div>
+      <div class="loop-step accent">
+        <span class="loop-index">04</span>
+        <div><strong>重启后召回</strong><small>下一轮计划被记忆改变，而不是每次从零开始</small></div>
+      </div>
+    </div>
+    <div class="hero-note">所有数据保存在本机 seekdb 与 PowerContext；不需要云端账号。</div>
+  </div>
+</section>
+
+<section class="feature-grid">
+  <article class="feature-card">
+    <span class="tag tag-green">seekdb</span>
+    <h3>找得到，也说得清出处</h3>
+    <p>笔记按章节切块入库，使用 ngram 全文索引和相关度排序；课程、章节、知识点作为结构化过滤条件。每条解析都带着原文片段和来源路径。</p>
+  </article>
+  <article class="feature-card">
+    <span class="tag tag-violet">PowerContext</span>
+    <h3>记得住，还说得明原因</h3>
+    <p>每轮结束写入四类记忆：学习偏好、薄弱点、会话摘要、未完成交接。下一轮计划会显示“哪条记忆影响了哪道题”。</p>
+  </article>
+  <article class="feature-card">
+    <span class="tag tag-amber">可核对</span>
+    <h3>每一次检索和记忆都有记录</h3>
+    <p>技术证据页展示 seekdb 的 SQL、参数、返回行数和 query_id，以及 PowerContext 的记忆写入、召回和重启记录。</p>
+  </article>
+</section>
+{% endblock %}

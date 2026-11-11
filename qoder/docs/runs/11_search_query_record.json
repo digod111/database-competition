@@ -1,0 +1,30 @@
+{
+  "query_id": "q_6dcefb1de7c2",
+  "time": "2026-11-10T17:44:50+08:00",
+  "purpose": "library_search",
+  "sql": "SELECT id, course, chapter, title, heading, content, keywords, knowledge_points, source_path, MATCH(search_text) AGAINST (%s IN NATURAL LANGUAGE MODE) AS score FROM materials WHERE MATCH(search_text) AGAINST (%s IN NATURAL LANGUAGE MODE) AND course = %s ORDER BY score DESC, course, title LIMIT %s",
+  "params": [
+    "B+树 插入 分裂",
+    "B+树 插入 分裂",
+    "数据结构",
+    "10"
+  ],
+  "row_count": 5,
+  "affected_rows": 5,
+  "ids": [
+    "mat_f2ad6b5e6096",
+    "mat_5ada497f7524",
+    "mat_1bb1e8f94245",
+    "mat_82e64466140a",
+    "mat_9f1266dc9a2a"
+  ],
+  "scores": [
+    2.69445,
+    1.221584,
+    1.135339,
+    0.914722,
+    0.29191
+  ],
+  "elapsed_ms": 41.782,
+  "database": "qoder_app"
+}
