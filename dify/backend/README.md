@@ -8,7 +8,8 @@ FastAPI + PyMySQL，向 Dify Chatflow 提供 seekdb 中的玩家账本、酒单�
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # Linux/macOS: source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt          # 仅后端
+# 完整复现（后端 + PowerContext）：pip install -r ../requirements.txt
 cp .env.example .env
 # 按需修改 SEEKDB_* 与 BACKEND_PORT（默认 8010）
 bash start.sh          # Linux/macOS

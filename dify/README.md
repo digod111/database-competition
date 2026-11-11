@@ -77,7 +77,7 @@ Dify 1.19.0 Chatflow（公开 Web App / 控制台预览）
 | 模型 | `deepseek-flash`（意图/槽位）、`deepseek-v4-pro`（角色回复） |
 | seekdb | `oceanbase/seekdb:latest`，实测 `5.7.25-OceanBase seekdb-v1.4.0.0` |
 | PowerContext | `powercontext[cli,server]==1.5.0`，SQLite 后端，HTTP 18082 |
-| 后端 | Python 3.13、FastAPI 0.162.1、uvicorn 0.54.0、PyMySQL 2.x、python-dotenv |
+| 后端 | Python 3.11+（实测 3.13）、FastAPI 0.162.1、uvicorn 0.54.0、PyMySQL 1.2.x、python-dotenv |
 | Dify 内部向量库 | `pgvector/pgvector:pg16`（不使用知识库，无需 embedding） |
 
 ## 五、目录
@@ -86,9 +86,13 @@ Dify 1.19.0 Chatflow（公开 Web App / 控制台预览）
 dify/
 ├── README.md
 ├── .gitignore
+├── requirements.txt            # 完整 Python 依赖（后端 + PowerContext）
 ├── dsl/
 │   ├── tavern-chatflow.yml     # Dify 0.7.0 DSL（可直接导入）
 │   ├── tavern-chatflow.ifpkg   # Dify 应用包（可导入；内含 app.yaml/manifest.yaml）
+│   └── README.md
+├── plugins/                    # DeepSeek 插件离线安装包
+│   ├── deepseek-0.0.26.difypkg
 │   └── README.md
 ├── backend/                    # FastAPI + PyMySQL
 │   ├── app.py  db.py  run.py
@@ -113,10 +117,10 @@ dify/
 
 ### 0. 前置
 
-- Docker（含 Compose v2.35+）、Python 3.10+、Git Bash/PowerShell。
+- Docker（含 Compose v2.35+）、Python 3.11+（推荐 3.13）、Git Bash/PowerShell。
 - 端口：80（Dify）、8010（后端）、18082（PowerContext）、2881（seekdb）。
   如 8000 被占用，本作品默认后端为 8010；改端口时需同步 DSL。
-- 可访问 Dify Marketplace 与 DeepSeek API；国内拉镜像建议配置 registry mirror。
+- 可访问 DeepSeek API；Dify Marketplace 可选（已附离线插件包），国内拉镜像建议配置 registry mirror。
 - 宿主机内存建议 ≥ 8GB 可用给 Docker；Dify 1.19 默认栈约 3-4GB。
 
 ### 1. 启动 seekdb 并初始化 `dify_app`
@@ -130,7 +134,7 @@ docker run -d --name seekdb-tavern -p 2881:2881 oceanbase/seekdb:latest
 cd powercontext/dify
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 cp backend/.env.example backend/.env
 # 按需修改 SEEKDB_HOST/PORT/USER/PASSWORD/DATABASE（默认 127.0.0.1:2881 root 空密码 dify_app）
 python data/init_db.py
@@ -151,7 +155,7 @@ bash start.sh        # Linux/macOS/Git Bash
 ### 3. 启动 PowerContext
 
 ```bash
-pip install "powercontext[cli,server]==1.5.0"
+# powercontext[cli,server]==1.5.0 已包含在根 requirements.txt
 python scripts/powercontext_ctl.py start
 ```
 
@@ -169,8 +173,8 @@ token `tavern-demo-token`。验证：`curl http://127.0.0.1:18082/health/live` �
 2. 复制 `deploy/.env.example` → `deploy/dify/.env`，生成 `DIFY_AGENT_LOCAL_SANDBOX_AUTH_TOKEN`；
 3. `docker compose -f docker-compose.yaml -f ../docker-compose.override.yaml up -d`；
 4. 打开 `http://localhost/install` 创建管理员；
-5. 安装 DeepSeek 插件 **0.0.26**，填入**你自己的** DeepSeek API Key，
-   启用 `deepseek-flash` 与 `deepseek-v4-pro`；
+5. 安装 DeepSeek 插件 **0.0.26**（Marketplace 或 `plugins/deepseek-0.0.26.difypkg` 离线包），
+   填入**你自己的** DeepSeek API Key，启用 `deepseek-flash` 与 `deepseek-v4-pro`；
 6. Studio → 导入 DSL 文件 → `dsl/tavern-chatflow.yml`（或 `.ifpkg`）→ 打开应用 → **发布**；
 7. 在应用 Web App 页面获取公开链接 `http://localhost/chat/<webapp-code>`。
 

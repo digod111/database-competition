@@ -10,7 +10,7 @@
 ## 导入顺序
 
 1. 先完成 Dify 1.19.0 部署（`../deploy/README.md`）。
-2. 安装 DeepSeek 插件 0.0.26，填入你自己的 DeepSeek API Key，启用 `deepseek-flash`、`deepseek-v4-pro`。
+2. 安装 DeepSeek 插件 0.0.26（Marketplace，或 `../plugins/deepseek-0.0.26.difypkg` 离线包），填入你自己的 DeepSeek API Key，启用 `deepseek-flash`、`deepseek-v4-pro`。
 3. 导入 DSL。
 4. 打开应用 → 发布。
 5. 在 Web App 页面获取 `http://localhost/chat/<webapp-code>`；短码是导入后新生成的。

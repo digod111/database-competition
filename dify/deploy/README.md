@@ -47,9 +47,9 @@ docker compose ps --all
 ## 3. 首次安装 Dify
 
 1. 打开 `http://localhost/install`，创建管理员账号（自己设置，材料中不提供真实密码）。
-2. 登录后进入 **Plugins / 插件**，从 Marketplace 安装 **DeepSeek** 插件，版本 **0.0.26**（插件标识：`langgenius/deepseek:0.0.26@bdf47cb41e9062bba00d26625d2a795c1874011d8ce64bff738c44b5a31787ea`）。
+2. 登录后进入 **Plugins / 插件**，从 Marketplace 安装 **DeepSeek** 插件，版本 **0.0.26**（插件标识：`langgenius/deepseek:0.0.26@bdf47cb41e9062bba00d26625d2a795c1874011d8ce64bff738c44b5a31787ea`）。若 Marketplace 不可达，改用 `../plugins/deepseek-0.0.26.difypkg` 本地安装。
    - DSL 的 `dependencies` 已声明该插件；导入 DSL 时若提示缺少依赖，也可在提示中安装。
-   - 插件安装由容器访问 `https://marketplace.dify.ai`，需要外网。安装依赖 Python 包时如很慢，可在 `.env` 设置 `PIP_MIRROR_URL=https://pypi.tuna.tsinghua.edu.cn/simple` 后 `docker compose up -d` 重建插件容器。
+   - 插件安装默认由容器访问 `https://marketplace.dify.ai`；无外网时改用本地包。安装依赖 Python 包时如很慢，可在 `.env` 设置 `PIP_MIRROR_URL=https://pypi.tuna.tsinghua.edu.cn/simple` 后 `docker compose up -d` 重建插件容器。
 3. **Settings → Model Provider → DeepSeek**，填入你自己的 DeepSeek API Key。
 4. 在 DeepSeek 模型列表中**启用** `deepseek-flash` 和 `deepseek-v4-pro`（本作品分别用于意图解析/角色回复）。
    - 如果导入 DSL 后 LLM 节点显示模型不可用，回到这里检查插件版本、API Key 和两个模型的启用状态。

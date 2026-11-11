@@ -1,4 +1,5 @@
 fastapi==0.162.1
 uvicorn==0.54.0
-pymysql>=2.2.0,<3
+# PowerContext 1.5.0 server extra requires pymysql>=1.2,<1.2.1
+pymysql>=1.2,<1.2.1
 python-dotenv>=1.0,<2
