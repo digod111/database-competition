@@ -1,0 +1,219 @@
+[
+  {
+    "id": "6c9f74b492d07fe4",
+    "kind": "spec",
+    "path": "specs/compatibility.md",
+    "symbol": "兼容性约束",
+    "content_hash": "d0c2e306286c9fec0817391126dcefdbd64a83eea8589bea6c90e2d7ffdd5579"
+  },
+  {
+    "id": "6896b855fe226bfc",
+    "kind": "spec",
+    "path": "specs/compatibility.md",
+    "symbol": "REQ-COMPAT-001",
+    "content_hash": "ad120cfa0b84a696b30a72c9e4da38ffd02c2eed4522825d0c8ff963346e02d2"
+  },
+  {
+    "id": "843b19af2532ce55",
+    "kind": "spec",
+    "path": "specs/compatibility.md",
+    "symbol": "REQ-COMPAT-002",
+    "content_hash": "aaf51b82a21925c55c69927b4d04c86a8991d59e40a1517d8986c78a3e4ba7fb"
+  },
+  {
+    "id": "ac22bbe3f2d7bc0c",
+    "kind": "spec",
+    "path": "specs/compatibility.md",
+    "symbol": "REQ-COMPAT-003",
+    "content_hash": "b0c8b8bd45dfea3031de7d549c8432b6ac0ae2eecd50320fab7e553e6e650f37"
+  },
+  {
+    "id": "9a506c338c80b5ea",
+    "kind": "spec",
+    "path": "specs/compatibility.md",
+    "symbol": "回归测试",
+    "content_hash": "51d69dd30144fa817c8d006a0cd03df973279f3f2ece7b116b1cb7599ad18ecb"
+  },
+  {
+    "id": "c0ff6e2688cf978b",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "任务列表筛选规格",
+    "content_hash": "6d2f80f27e087508dc789140578ad1197f74cdfc3ebd13f7c486f1b70211402e"
+  },
+  {
+    "id": "b72a114890f39938",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "REQ-FILTER-001",
+    "content_hash": "b5378ee64e6d0287a6ee5a27e10811fa39c2834d08dfdf07f7596815586d8e21"
+  },
+  {
+    "id": "76300fce953737b1",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "REQ-FILTER-002",
+    "content_hash": "87a3c809594bdc5670f9efbd6d559555d65ca9bc46b921e5d3a25adaefff3a8d"
+  },
+  {
+    "id": "146239377688af6e",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "REQ-FILTER-003",
+    "content_hash": "942a65d555cb13f92381b1c4f1df19318de0034100293a058b704c6a215c29fb"
+  },
+  {
+    "id": "78a5ea26a5382408",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "REQ-FILTER-004",
+    "content_hash": "c3253215002bdc4b4e421d42b605d858aaa241015dc9bad0c3ce5e3e67963f6e"
+  },
+  {
+    "id": "ec6ee4688018d0fa",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "适用代码",
+    "content_hash": "d140c8f560b5e7ab547d0f9635430506012e0c0763de9e131681da2ae65a65a0"
+  },
+  {
+    "id": "28c0c4fe37ab1b93",
+    "kind": "spec",
+    "path": "specs/task_filter.md",
+    "symbol": "验证测试",
+    "content_hash": "b3ef1b7fcab58cecfce7e0178e70dece47156215763f94022383c9faa02c2551"
+  },
+  {
+    "id": "f7ecd1a10e9e0186",
+    "kind": "code",
+    "path": "src/taskboard/__init__.py",
+    "symbol": "__module__",
+    "content_hash": "bd22b72ad007bc886c70a2a0cf3885267ac201e25a1ae557ac1533dc2f2736b2"
+  },
+  {
+    "id": "8079070ca9b44f5a",
+    "kind": "code",
+    "path": "src/taskboard/models.py",
+    "symbol": "__module__",
+    "content_hash": "2878e34e34d82e78f6bd5e907110581e594ca7443a497ef43c2b643fbb8d7163"
+  },
+  {
+    "id": "83c0bddfe4e8260c",
+    "kind": "code",
+    "path": "src/taskboard/models.py",
+    "symbol": "Priority",
+    "content_hash": "47c0fa9709cee0a48e497db768844d505099db98a1bac534b2e7fbae30829ba8"
+  },
+  {
+    "id": "d93622aaa300473c",
+    "kind": "code",
+    "path": "src/taskboard/models.py",
+    "symbol": "Task",
+    "content_hash": "e00e2190fd5765d4495b181adaa3361363c8360db926dd9f7e20b59f13d9606f"
+  },
+  {
+    "id": "931280c27547d0b4",
+    "kind": "code",
+    "path": "src/taskboard/service.py",
+    "symbol": "__module__",
+    "content_hash": "a3b4cb8ba29c022fa787d5b8168c892c4b9a61c350fceb59db12052d006eb2e7"
+  },
+  {
+    "id": "ce8ca0e984f63227",
+    "kind": "code",
+    "path": "src/taskboard/service.py",
+    "symbol": "TaskService",
+    "content_hash": "d3e774fe7bb6ae2b5aa2ac132683e547a86291230db3532094cee373a410027a"
+  },
+  {
+    "id": "fb1628375b1ca61a",
+    "kind": "code",
+    "path": "src/taskboard/service.py",
+    "symbol": "TaskService.__init__",
+    "content_hash": "56cf6c3e33a2846d684ae322aca48fe4d101afaca97039664a75254e7b7e6785"
+  },
+  {
+    "id": "4b4b8ebb07eb18d3",
+    "kind": "code",
+    "path": "src/taskboard/service.py",
+    "symbol": "TaskService.list_tasks",
+    "content_hash": "d134de0f93bc3fa42b22002652072fe0d27888f96c87742c983de6f7cc31dafc"
+  },
+  {
+    "id": "8669651548232b96",
+    "kind": "test",
+    "path": "tests/test_task_filter.py",
+    "symbol": "__header__",
+    "content_hash": "92d0e18684dae0078c48c4d2f10b171798d323fd8b78ad8ef6b5228ad7ca13cd"
+  },
+  {
+    "id": "2cfb8375c876bef8",
+    "kind": "test",
+    "path": "tests/test_task_filter.py",
+    "symbol": "test_filter_by_min_priority_only",
+    "content_hash": "baa8ea524b3f62926be09f8972e1f5c82446aa00c48f77b1bdbf92abba7e7019"
+  },
+  {
+    "id": "fd06c4d9a2ccae15",
+    "kind": "test",
+    "path": "tests/test_task_filter.py",
+    "symbol": "test_filter_combines_status_and_min_priority",
+    "content_hash": "18bf1716daedb53caa3889cd46e730f384cf974d51d21b599b7a0fd96066cdff"
+  },
+  {
+    "id": "9e30611001b50d5d",
+    "kind": "test",
+    "path": "tests/test_task_filter.py",
+    "symbol": "test_min_priority_boundary_is_inclusive",
+    "content_hash": "3d8cbd70a1737b49dda909ff829aa7d612cd7a1a5f3f3a0af16779864ec195bb"
+  },
+  {
+    "id": "15a29ca756a5832c",
+    "kind": "test",
+    "path": "tests/test_task_filter.py",
+    "symbol": "test_min_priority_out_of_range_raises",
+    "content_hash": "a45d98317782e469c3322a7221e7977f080a1f14ef73bff41f828dec54ddf5a4"
+  },
+  {
+    "id": "94840c35b93ed1d7",
+    "kind": "test",
+    "path": "tests/test_task_filter.py",
+    "symbol": "test_min_priority_none_keeps_all_tasks",
+    "content_hash": "25d4395110e41c3697668945b9daa14e48d18e3013ad5dba03f5d048b711fbd6"
+  },
+  {
+    "id": "4a5f780084a1601b",
+    "kind": "test",
+    "path": "tests/test_task_service_regression.py",
+    "symbol": "__header__",
+    "content_hash": "d3285555bdfe84466dc2d8688ece1c92f98bb2690dbc454e2856eb5298d057a8"
+  },
+  {
+    "id": "b6b3b93543533b87",
+    "kind": "test",
+    "path": "tests/test_task_service_regression.py",
+    "symbol": "test_list_all_returns_every_task_in_input_order",
+    "content_hash": "75331943b5e87f9a6f1489e014f06903883b6313406550376c9f98849c19b778"
+  },
+  {
+    "id": "fb9fe57c31b32cfa",
+    "kind": "test",
+    "path": "tests/test_task_service_regression.py",
+    "symbol": "test_filter_by_status_preserves_existing_behavior",
+    "content_hash": "9ae9d9addd14326e232c6057a25efde552a4bff8a74f5ab2b12051f06d73d727"
+  },
+  {
+    "id": "6c6ed499e70bc348",
+    "kind": "test",
+    "path": "tests/test_task_service_regression.py",
+    "symbol": "test_list_returns_a_copy_not_internal_storage",
+    "content_hash": "dcd2167066b96b510cb5df9455fdb79b1ae5c6a5948887935f9dcc9192fc11b8"
+  },
+  {
+    "id": "fb9c7a1902d2f04c",
+    "kind": "test",
+    "path": "tests/test_task_service_regression.py",
+    "symbol": "test_priority_enum_values_unchanged",
+    "content_hash": "b750a3413b133a6fc59ee85d1a0ce0573a5834bef2fb00dacfbe39c3e48a8eb6"
+  }
+]

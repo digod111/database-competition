@@ -1,0 +1,41 @@
+{
+  "status_code": 200,
+  "body": {
+    "id": "074399c3e81ddcf9de923d85131e8d3a",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "<think>We need answer strict JSON object only. Need formulate exact search current file snippet, replacement. Only service.py. Need ensure search unique exact substring including indentation. Need likely replace method. Need consider behavior validation even empty tasks, None. Signature exact min_priority: int | None = None. Could implement:\n\n    def list_tasks(\n        self, status: str | None = None, min_priority: int | None = None\n    ) -> list[Task]:\n        \"\"\"Return tasks in input order, optionally filtered by status and priority.\"\"\"\n        if min_priority is not None and not 1 <= min_priority <= 5:\n            raise ValueError(\"min_priority must be between 1 and 5\")\n        tasks = list(self._tasks)\n        if status is not None:\n            tasks = [task for task in tasks if task.status == status]\n        if min_priority is not None:\n            tasks = [task for task in tasks if task.priority >= min_priority]\n        return tasks\n\nMinimal perhaps signature one line:\n    def list_tasks(\n        self, status: str | None = None, min_priority: int | None = None\n    ) -> list[Task]:\n...\nCould retain style. Requirement exact current fragment. Need ensure source context indicates only snippet but actual file perhaps imports etc. Search should be exact unique. Use whole method as current exact snippet. JSON escaped newlines. summary one Chinese sentence. Ensure no Markdown.\n\nCould optimize one-pass filtering AND:\ntasks = list(self._tasks)\nif status is None and min_priority is None return tasks\nreturn [task for task in tasks if (status is None or task.status == status) and (min_priority is None or task.priority >= min_priority)]\nValidation first. Existing return new list. Fine.\n\nQuestion \"做最小修改\". Modify method only. Search exact original method fragment. Replace full method. Need potentially line length? Signature likely formatter. One line may exceed? `def list_tasks(self, status: str | None = None, min_priority: int | None = None) -> list[Task]:` length count around 91 perhaps Black splits. Better multi-line. Is multiline signature considered compatible positional? Existing status positional remains first; min second. Yes.\n\nCould write:\n    def list_tasks(\n        self, status: str | None = None, min_priority: int | None = None\n    ) -> list[Task]:\n        \"\"\"Return tasks in input order, optionally filtered by status and priority.\"\"\"\n        if min_priority is not None and not 1 <= min_priority <= 5:\n            raise ValueError(\"min_priority must be between 1 and 5\")\n\n        tasks = list(self._tasks)\n        if status is not None:\n            tasks = [task for task in tasks if task.status == status]\n        if min_priority is not None:\n            tasks = [task for task in tasks if task.priority >= min_priority]\n        return tasks\n\nWould status filtering make intermediate list; no issue. Order preserved. Validation before copy and filter. Could use one list comprehension. Must return copy even filtered; list comprehensions new. no status and no min returns copy. Great.\n\nDo they expect no bool weirdness? min_priority bool is int subclass and e.g True=1 accepted, likely okay since annotated int. No need validate type. Range only.\n\nCould perhaps preserve docstring says status and minimum priority. Fine.\n\nStrict JSON valid, quote escapes. Search exact:\n\"    def list_tasks(self, status: str | None = None) -> list[Task]:\\n        \\\"\\\"\\\"Return tasks in input order, optionally filtered by status.\\\"\\\"\\\"\\n        tasks = list(self._tasks)\\n        if status is None:\\n            return tasks\\n        return [task for task in tasks if task.status == status]\"\nThis likely occurs once. Requirement exact current file. Yes.\n\nNeed output only object. Ensure summary sentence. Let's prepare.</think>\n\n{\"summary\":\"为 list_tasks 增加可选的最低优先级筛选、范围校验，并与状态筛选按 AND 组合。\",\"edits\":[{\"path\":\"src/taskboard/service.py\",\"search\":\"    def list_tasks(self, status: str | None = None) -> list[Task]:\\n        \\\"\\\"\\\"Return tasks in input order, optionally filtered by status.\\\"\\\"\\\"\\n        tasks = list(self._tasks)\\n        if status is None:\\n            return tasks\\n        return [task for task in tasks if task.status == status]\",\"replace\":\"    def list_tasks(\\n        self, status: str | None = None, min_priority: int | None = None\\n    ) -> list[Task]:\\n        \\\"\\\"\\\"Return tasks in input order, optionally filtered by status and priority.\\\"\\\"\\\"\\n        if min_priority is not None and not 1 <= min_priority <= 5:\\n            raise ValueError(\\\"min_priority must be between 1 and 5\\\")\\n\\n        tasks = list(self._tasks)\\n        if status is not None:\\n            tasks = [task for task in tasks if task.status == status]\\n        if min_priority is not None:\\n            tasks = [task for task in tasks if task.priority >= min_priority]\\n        return tasks\"}]}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1794401988,
+    "model": "MiniMax-M3",
+    "object": "chat.completion",
+    "usage": {
+      "total_tokens": 4150,
+      "total_characters": 0,
+      "prompt_tokens": 3072,
+      "completion_tokens": 1078,
+      "completion_tokens_details": {
+        "reasoning_tokens": 800
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      }
+    },
+    "input_sensitive": false,
+    "output_sensitive": false,
+    "input_sensitive_type": 0,
+    "output_sensitive_type": 0,
+    "output_sensitive_int": 0,
+    "service_tier": "standard",
+    "base_resp": {
+      "status_code": 0,
+      "status_msg": ""
+    }
+  }
+}

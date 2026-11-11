@@ -1,0 +1,10 @@
+$ python -m pytest -q -p no:cacheprovider tests/test_task_filter.py
+cwd: workspace/taskboard
+exit_code: 0
+elapsed_ms: 768.7
+--- stdout ---
+.......                                                                  [100%]
+7 passed in 0.03s
+
+--- stderr ---
+

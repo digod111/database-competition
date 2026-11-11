@@ -1,0 +1,5 @@
+powercontext[cli,server]==1.5.0
+pymysql==1.2.0
+requests==2.34.2
+python-dotenv==1.2.4
+pytest==9.2.0

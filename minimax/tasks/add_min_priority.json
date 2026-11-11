@@ -1,0 +1,27 @@
+{
+  "id": "TASK-001",
+  "title": "为任务列表增加最低优先级筛选",
+  "description": "在 TaskService.list_tasks 中增加可选参数 min_priority，按 priority >= min_priority 过滤任务；该条件需要与已有 status 筛选按 AND 组合，并保持输入顺序。min_priority 合法范围为 1 到 5，越界时抛出 ValueError，异常消息包含 min_priority。",
+  "acceptance": [
+    "REQ-FILTER-001",
+    "REQ-FILTER-002",
+    "REQ-FILTER-003",
+    "REQ-FILTER-004"
+  ],
+  "must_keep": [
+    "REQ-COMPAT-001",
+    "REQ-COMPAT-002",
+    "REQ-COMPAT-003"
+  ],
+  "code_targets": [
+    "TaskService.list_tasks"
+  ],
+  "tests": [
+    "tests/test_task_filter.py::test_filter_by_min_priority_only",
+    "tests/test_task_filter.py::test_filter_combines_status_and_min_priority",
+    "tests/test_task_filter.py::test_min_priority_boundary_is_inclusive",
+    "tests/test_task_filter.py::test_min_priority_out_of_range_raises",
+    "tests/test_task_filter.py::test_min_priority_none_keeps_all_tasks"
+  ],
+  "next_step": "调用 MiniMax 生成最小代码修改，然后运行目标测试与回归测试。"
+}

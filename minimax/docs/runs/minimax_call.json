@@ -1,0 +1,59 @@
+{
+  "time": "2026-11-11T13:00:02+00:00",
+  "mode": "live",
+  "task_id": "TASK-001",
+  "task_title": "为任务列表增加最低优先级筛选",
+  "context_pack_id": "ctx_24773ab7018d4d6f",
+  "context_sources": {
+    "specs": [
+      "REQ-FILTER-003",
+      "REQ-COMPAT-001",
+      "REQ-FILTER-002",
+      "REQ-FILTER-004",
+      "REQ-COMPAT-002",
+      "REQ-COMPAT-003",
+      "REQ-FILTER-001",
+      "验证测试",
+      "适用代码",
+      "回归测试",
+      "任务列表筛选规格",
+      "兼容性约束"
+    ],
+    "code": [
+      "TaskService.list_tasks",
+      "TaskService.__init__",
+      "Task",
+      "Priority",
+      "TaskService",
+      "__module__"
+    ],
+    "tests": [
+      "test_filter_by_min_priority_only",
+      "test_filter_combines_status_and_min_priority",
+      "test_min_priority_boundary_is_inclusive",
+      "test_min_priority_out_of_range_raises",
+      "test_min_priority_none_keeps_all_tasks",
+      "__header__",
+      "test_filter_by_status_preserves_existing_behavior",
+      "test_priority_enum_values_unchanged",
+      "test_list_all_returns_every_task_in_input_order",
+      "__header__",
+      "test_list_returns_a_copy_not_internal_storage"
+    ]
+  },
+  "model": "MiniMax-M3",
+  "endpoint": "https://api.minimaxi.com/v1/chat/completions",
+  "request": "D:\\projects\\新建文件夹\\powercontext\\minimax\\docs\\runs\\minimax_request_20261111T125950+0000.json",
+  "response": "D:\\projects\\新建文件夹\\powercontext\\minimax\\docs\\runs\\minimax_response_20261111T125950+0000.json",
+  "summary": "为 list_tasks 增加可选的最低优先级筛选、范围校验，并与状态筛选按 AND 组合。",
+  "edits": [
+    {
+      "path": "src/taskboard/service.py",
+      "search": "    def list_tasks(self, status: str | None = None) -> list[Task]:\n        \"\"\"Return tasks in input order, optionally filtered by status.\"\"\"\n        tasks = list(self._tasks)\n        if status is None:\n            return tasks\n        return [task for task in tasks if task.status == status]",
+      "replace": "    def list_tasks(\n        self, status: str | None = None, min_priority: int | None = None\n    ) -> list[Task]:\n        \"\"\"Return tasks in input order, optionally filtered by status and priority.\"\"\"\n        if min_priority is not None and not 1 <= min_priority <= 5:\n            raise ValueError(\"min_priority must be between 1 and 5\")\n\n        tasks = list(self._tasks)\n        if status is not None:\n            tasks = [task for task in tasks if task.status == status]\n        if min_priority is not None:\n            tasks = [task for task in tasks if task.priority >= min_priority]\n        return tasks"
+    }
+  ],
+  "changed_files": [
+    "src/taskboard/service.py"
+  ]
+}

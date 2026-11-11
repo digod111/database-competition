@@ -1,0 +1,186 @@
+{
+  "time": "2026-11-11T13:00:05+00:00",
+  "task_id": "TASK-001",
+  "mode": "live",
+  "seekdb_schema": {
+    "version": "5.7.25-OceanBase seekdb-v1.4.0.0",
+    "query_id": "q_abb72214beaa4c10"
+  },
+  "ingest": {
+    "time": "2026-11-11T12:59:47+00:00",
+    "root": "D:\\projects\\新建文件夹\\powercontext\\minimax\\workspace\\taskboard",
+    "reset": true,
+    "chunks": 31,
+    "by_kind": {
+      "code": 8,
+      "spec": 12,
+      "test": 11
+    },
+    "inserted": {
+      "count": 31,
+      "query_id": "q_95010379cb0d4484",
+      "elapsed_ms": 110.482
+    },
+    "schema_query_id": "q_60b674c4948a46f6",
+    "files": [
+      "specs/compatibility.md",
+      "specs/task_filter.md",
+      "src/taskboard/__init__.py",
+      "src/taskboard/models.py",
+      "src/taskboard/service.py",
+      "tests/test_task_filter.py",
+      "tests/test_task_service_regression.py"
+    ],
+    "chunk_ids": [
+      "6c9f74b492d07fe4",
+      "6896b855fe226bfc",
+      "843b19af2532ce55",
+      "ac22bbe3f2d7bc0c",
+      "9a506c338c80b5ea",
+      "c0ff6e2688cf978b",
+      "b72a114890f39938",
+      "76300fce953737b1",
+      "146239377688af6e",
+      "78a5ea26a5382408",
+      "ec6ee4688018d0fa",
+      "28c0c4fe37ab1b93",
+      "f7ecd1a10e9e0186",
+      "8079070ca9b44f5a",
+      "83c0bddfe4e8260c",
+      "d93622aaa300473c",
+      "931280c27547d0b4",
+      "ce8ca0e984f63227",
+      "fb1628375b1ca61a",
+      "4b4b8ebb07eb18d3",
+      "8669651548232b96",
+      "2cfb8375c876bef8",
+      "fd06c4d9a2ccae15",
+      "9e30611001b50d5d",
+      "15a29ca756a5832c",
+      "94840c35b93ed1d7",
+      "4a5f780084a1601b",
+      "b6b3b93543533b87",
+      "fb9fe57c31b32cfa",
+      "6c6ed499e70bc348",
+      "fb9c7a1902d2f04c"
+    ]
+  },
+  "server": {
+    "started": true,
+    "url": "http://127.0.0.1:18080",
+    "pid": 9760,
+    "home": "D:\\projects\\新建文件夹\\powercontext\\minimax\\.powercontext",
+    "log": "D:\\projects\\新建文件夹\\powercontext\\minimax\\docs\\runs\\powercontext_server.log"
+  },
+  "context_empty_pack_id": "ctx_cd81f919d74c48e0",
+  "context_resumed_pack_id": "ctx_24773ab7018d4d6f",
+  "powercontext_state_found_after_restart": true,
+  "powercontext_scope_id": "scp_0n2qv92na3q0vce2v010bnvm9y",
+  "modification": {
+    "mode": "live",
+    "summary": "为 list_tasks 增加可选的最低优先级筛选、范围校验，并与状态筛选按 AND 组合。",
+    "changed_files": [
+      "src/taskboard/service.py"
+    ]
+  },
+  "tests": [
+    {
+      "name": "before_target_tests",
+      "command": "python -m pytest -q -p no:cacheprovider tests/test_task_filter.py",
+      "exit_code": 1,
+      "log": "docs/runs/01_before_target_tests.log"
+    },
+    {
+      "name": "before_regression_tests",
+      "command": "python -m pytest -q -p no:cacheprovider tests/test_task_service_regression.py",
+      "exit_code": 0,
+      "log": "docs/runs/02_before_regression_tests.log"
+    },
+    {
+      "name": "after_target_tests",
+      "command": "python -m pytest -q -p no:cacheprovider tests/test_task_filter.py",
+      "exit_code": 0,
+      "log": "docs/runs/06_after_target_tests.log"
+    },
+    {
+      "name": "after_regression_tests",
+      "command": "python -m pytest -q -p no:cacheprovider tests/test_task_service_regression.py",
+      "exit_code": 0,
+      "log": "docs/runs/07_after_regression_tests.log"
+    },
+    {
+      "name": "after_all_tests",
+      "command": "python -m pytest -q -p no:cacheprovider",
+      "exit_code": 0,
+      "log": "docs/runs/08_after_all_tests.log"
+    }
+  ],
+  "diff": {
+    "changed_files": [
+      "src/taskboard/service.py"
+    ],
+    "diff_path": "D:\\projects\\新建文件夹\\powercontext\\minimax\\artifacts\\changes.diff",
+    "files": 9
+  },
+  "spec_update_check": {
+    "new_requirement": "REQ-FILTER-005",
+    "found": true,
+    "spec_symbols": [
+      "REQ-FILTER-003",
+      "REQ-COMPAT-001",
+      "REQ-FILTER-002",
+      "REQ-FILTER-004",
+      "REQ-COMPAT-002",
+      "REQ-COMPAT-003",
+      "REQ-FILTER-001",
+      "验证测试",
+      "REQ-FILTER-005",
+      "适用代码",
+      "回归测试",
+      "任务列表筛选规格"
+    ],
+    "context_pack_id": "ctx_e5fce9558b264422",
+    "query_terms": [
+      "test_filter_combines_status_and_min_priority",
+      "test_min_priority_boundary_is_inclusive",
+      "test_min_priority_none_keeps_all_tasks",
+      "test_min_priority_out_of_range_raises",
+      "test_filter_by_min_priority_only",
+      "test_task_filter",
+      "req-compat-001",
+      "req-compat-002",
+      "req-compat-003",
+      "req-filter-001",
+      "req-filter-002",
+      "req-filter-003",
+      "req-filter-004",
+      "为任务列表增加最低优先级筛选",
+      "min_priority",
+      "taskservice",
+      "list_tasks",
+      "valueerror",
+      "inclusive",
+      "boundary",
+      "combines",
+      "priority",
+      "该条件需要与已有",
+      "中增加可选参数",
+      "并保持输入顺序",
+      "compat",
+      "filter",
+      "raises",
+      "status",
+      "异常消息包含",
+      "error",
+      "keeps",
+      "order",
+      "raise",
+      "range",
+      "tests",
+      "value",
+      "合法范围为",
+      "越界时抛出",
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+# 可选：嵌入式 seekdb（Linux/macOS）。Windows 下 pylibseekdb 运行时不可用。
+pylibseekdb==1.4.0.post2
+pymysql==1.2.0

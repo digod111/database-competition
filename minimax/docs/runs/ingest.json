@@ -1,0 +1,59 @@
+{
+  "time": "2026-11-11T13:00:05+00:00",
+  "root": "D:\\projects\\新建文件夹\\powercontext\\minimax\\workspace\\taskboard",
+  "reset": true,
+  "chunks": 31,
+  "by_kind": {
+    "code": 8,
+    "spec": 12,
+    "test": 11
+  },
+  "inserted": {
+    "count": 31,
+    "query_id": "q_db0b03da60324266",
+    "elapsed_ms": 81.692
+  },
+  "schema_query_id": "q_7cf04a67acb0441f",
+  "files": [
+    "specs/compatibility.md",
+    "specs/task_filter.md",
+    "src/taskboard/__init__.py",
+    "src/taskboard/models.py",
+    "src/taskboard/service.py",
+    "tests/test_task_filter.py",
+    "tests/test_task_service_regression.py"
+  ],
+  "chunk_ids": [
+    "6c9f74b492d07fe4",
+    "6896b855fe226bfc",
+    "843b19af2532ce55",
+    "ac22bbe3f2d7bc0c",
+    "9a506c338c80b5ea",
+    "c0ff6e2688cf978b",
+    "b72a114890f39938",
+    "76300fce953737b1",
+    "146239377688af6e",
+    "78a5ea26a5382408",
+    "ec6ee4688018d0fa",
+    "28c0c4fe37ab1b93",
+    "f7ecd1a10e9e0186",
+    "8079070ca9b44f5a",
+    "83c0bddfe4e8260c",
+    "d93622aaa300473c",
+    "931280c27547d0b4",
+    "ce8ca0e984f63227",
+    "fb1628375b1ca61a",
+    "4b4b8ebb07eb18d3",
+    "8669651548232b96",
+    "2cfb8375c876bef8",
+    "fd06c4d9a2ccae15",
+    "9e30611001b50d5d",
+    "15a29ca756a5832c",
+    "94840c35b93ed1d7",
+    "4a5f780084a1601b",
+    "b6b3b93543533b87",
+    "fb9fe57c31b32cfa",
+    "6c6ed499e70bc348",
+    "fb9c7a1902d2f04c"
+  ]
+}

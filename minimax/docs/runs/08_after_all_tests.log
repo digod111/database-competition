@@ -1,0 +1,10 @@
+$ python -m pytest -q -p no:cacheprovider
+cwd: workspace/taskboard
+exit_code: 0
+elapsed_ms: 729.3
+--- stdout ---
+...........                                                              [100%]
+11 passed in 0.03s
+
+--- stderr ---
+

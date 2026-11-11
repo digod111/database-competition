@@ -1,0 +1,84 @@
+$ python -m pytest -q -p no:cacheprovider tests/test_task_filter.py
+cwd: workspace/taskboard_before
+exit_code: 1
+elapsed_ms: 961.9
+--- stdout ---
+FFFFFFF                                                                  [100%]
+================================== FAILURES ===================================
+______________________ test_filter_by_min_priority_only _______________________
+
+    def test_filter_by_min_priority_only() -> None:
+>       assert ids(make_service().list_tasks(min_priority=4)) == [2, 3, 5, 6]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:27: TypeError
+________________ test_filter_combines_status_and_min_priority _________________
+
+    def test_filter_combines_status_and_min_priority() -> None:
+>       assert ids(make_service().list_tasks(status="todo", min_priority=3)) == [1, 6]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:31: TypeError
+___________________ test_min_priority_boundary_is_inclusive ___________________
+
+    def test_min_priority_boundary_is_inclusive() -> None:
+>       assert ids(make_service().list_tasks(min_priority=5)) == [2, 5, 6]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:35: TypeError
+__________________ test_min_priority_out_of_range_raises[0] ___________________
+
+value = 0
+
+    @pytest.mark.parametrize("value", [0, 6, -1])
+    def test_min_priority_out_of_range_raises(value: int) -> None:
+        with pytest.raises(ValueError, match="min_priority"):
+>           make_service().list_tasks(min_priority=value)
+E           TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:41: TypeError
+__________________ test_min_priority_out_of_range_raises[6] ___________________
+
+value = 6
+
+    @pytest.mark.parametrize("value", [0, 6, -1])
+    def test_min_priority_out_of_range_raises(value: int) -> None:
+        with pytest.raises(ValueError, match="min_priority"):
+>           make_service().list_tasks(min_priority=value)
+E           TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:41: TypeError
+__________________ test_min_priority_out_of_range_raises[-1] __________________
+
+value = -1
+
+    @pytest.mark.parametrize("value", [0, 6, -1])
+    def test_min_priority_out_of_range_raises(value: int) -> None:
+        with pytest.raises(ValueError, match="min_priority"):
+>           make_service().list_tasks(min_priority=value)
+E           TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:41: TypeError
+___________________ test_min_priority_none_keeps_all_tasks ____________________
+
+    def test_min_priority_none_keeps_all_tasks() -> None:
+>       assert ids(make_service().list_tasks(min_priority=None)) == [1, 2, 3, 4, 5, 6]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TaskService.list_tasks() got an unexpected keyword argument 'min_priority'
+
+tests\test_task_filter.py:45: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_task_filter.py::test_filter_by_min_priority_only - TypeErro...
+FAILED tests/test_task_filter.py::test_filter_combines_status_and_min_priority
+FAILED tests/test_task_filter.py::test_min_priority_boundary_is_inclusive - T...
+FAILED tests/test_task_filter.py::test_min_priority_out_of_range_raises[0] - ...
+FAILED tests/test_task_filter.py::test_min_priority_out_of_range_raises[6] - ...
+FAILED tests/test_task_filter.py::test_min_priority_out_of_range_raises[-1]
+FAILED tests/test_task_filter.py::test_min_priority_none_keeps_all_tasks - Ty...
+7 failed in 0.14s
+
+--- stderr ---
+

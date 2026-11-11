@@ -1,0 +1,56 @@
+[
+  {
+    "path": "README.md",
+    "before_sha256": "1ce11ee9be9e7a71f027f4aa9d5a6b788a4de560b33d57bbe56fdb36a14c7364",
+    "after_sha256": "1ce11ee9be9e7a71f027f4aa9d5a6b788a4de560b33d57bbe56fdb36a14c7364",
+    "changed": false
+  },
+  {
+    "path": "pytest.ini",
+    "before_sha256": "bb7828f3bdc24bf59f08c1eb7786114a213d36f04e7a9a43e3799a80e7ef85b0",
+    "after_sha256": "bb7828f3bdc24bf59f08c1eb7786114a213d36f04e7a9a43e3799a80e7ef85b0",
+    "changed": false
+  },
+  {
+    "path": "specs/compatibility.md",
+    "before_sha256": "f37b523e70bbed12fc2324f47def1acc55fedada4d732e6cfe8d77bf1a58621b",
+    "after_sha256": "f37b523e70bbed12fc2324f47def1acc55fedada4d732e6cfe8d77bf1a58621b",
+    "changed": false
+  },
+  {
+    "path": "specs/task_filter.md",
+    "before_sha256": "9d74ea38fbd71b2b1cc7ba92179a3a49a8ed9980d3a4aa98823e2ee0ed120970",
+    "after_sha256": "9d74ea38fbd71b2b1cc7ba92179a3a49a8ed9980d3a4aa98823e2ee0ed120970",
+    "changed": false
+  },
+  {
+    "path": "src/taskboard/__init__.py",
+    "before_sha256": "11cc19fa2ae0f6f0c5cbeebd90e96efd98d043e7b3d25dce5260f28dd352562c",
+    "after_sha256": "11cc19fa2ae0f6f0c5cbeebd90e96efd98d043e7b3d25dce5260f28dd352562c",
+    "changed": false
+  },
+  {
+    "path": "src/taskboard/models.py",
+    "before_sha256": "5abd4983f8a9dc1295256456c8a661626d15c813490afae096b08c973273d738",
+    "after_sha256": "5abd4983f8a9dc1295256456c8a661626d15c813490afae096b08c973273d738",
+    "changed": false
+  },
+  {
+    "path": "src/taskboard/service.py",
+    "before_sha256": "a868c11cb51288694194bfc0961b98b5d0bace710be79c60cd79017860610490",
+    "after_sha256": "876760eb2448904fee01928d973cace0f412a5218128764df380eb34cd78c8e5",
+    "changed": true
+  },
+  {
+    "path": "tests/test_task_filter.py",
+    "before_sha256": "4974e713985172999d63631bd2ef9fc76ea1e54cba7ec904820f69221a7439ed",
+    "after_sha256": "4974e713985172999d63631bd2ef9fc76ea1e54cba7ec904820f69221a7439ed",
+    "changed": false
+  },
+  {
+    "path": "tests/test_task_service_regression.py",
+    "before_sha256": "4661469fbd782c97d4ee3df9e21b562ba494e7be29e8912ca42e30eb63a7fff3",
+    "after_sha256": "4661469fbd782c97d4ee3df9e21b562ba494e7be29e8912ca42e30eb63a7fff3",
+    "changed": false
+  }
+]

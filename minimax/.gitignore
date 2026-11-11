@@ -1,0 +1,12 @@
+.env
+.venv/
+.powercontext/
+.runtime/
+.seekdb_data/
+__pycache__/
+.pytest_cache/
+*.pyc
+jieba.cache
+pc-migration-bundle-*/
+# evidence logs for competition submission
+!docs/runs/*.log
