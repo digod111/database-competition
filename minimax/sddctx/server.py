@@ -101,7 +101,10 @@ def stop() -> dict:
         if os.name == "nt":
             subprocess.run(["taskkill", "/PID", pid, "/F"], capture_output=True, text=True)
         else:
-            os.kill(int(pid), 15)
+            try:
+                os.kill(int(pid), 15)
+            except ProcessLookupError:
+                pass
     finally:
         pid_path.unlink(missing_ok=True)
     return {"stopped": True, "pid": pid}

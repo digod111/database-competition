@@ -90,14 +90,14 @@ python -m sddctx demo
 # 恢复改前快照 + 清空 seekdb 材料表
 python -m sddctx reset
 
-# 同时删除本地 PowerContext 数据和运行状态
+# 同时停掉本地 PowerContext 并删除运行状态
 python -m sddctx reset --hard
 
 # 再清理旧证据，重新生成一套干净材料
 python -m sddctx reset --hard --clean-logs
 ```
 
-`reset --hard` 只删除 `minimax/.powercontext`、`minimax/.runtime` 和本地回放编辑，不删除 `workspace/taskboard_before` 或 `docs/` 中的源码说明。
+`reset --hard` 只删除 `minimax/.powercontext`、`minimax/.runtime`，保留 `artifacts/minimax_edits.json` 供离线回放，不删除 `workspace/taskboard_before` 或 `docs/` 中的源码说明。
 
 ## 8. 判定口径
 

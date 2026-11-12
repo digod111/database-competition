@@ -55,13 +55,14 @@ def cmd_server(args: argparse.Namespace) -> None:
 
 
 def cmd_reset(args: argparse.Namespace) -> None:
+    server.stop()
     patch.reset_from_before()
     db.init_schema()
     db.clear_materials()
+    # artifacts/minimax_edits.json 是离线回放的输入，reset 不删除
     if args.hard:
         shutil.rmtree(config.RUNTIME_DIR, ignore_errors=True)
         shutil.rmtree(config.POWERCONTEXT_HOME, ignore_errors=True)
-        (config.ARTIFACTS_DIR / "minimax_edits.json").unlink(missing_ok=True)
     if args.clean_logs:
         patterns = [
             "db_queries.jsonl",
@@ -81,7 +82,6 @@ def cmd_reset(args: argparse.Namespace) -> None:
             for path in config.RUNS_DIR.glob(pattern):
                 path.unlink(missing_ok=True)
         (config.DOCS_DIR / "minimax_dev_record.md").unlink(missing_ok=True)
-        (config.ARTIFACTS_DIR / "minimax_edits.json").unlink(missing_ok=True)
     _print(
         {
             "reset": True,

@@ -115,7 +115,8 @@ powercontext server run
 ### 真实 MiniMax 调用（推荐，生成提交证据）
 
 ```bash
-# 从干净状态开始：恢复改前快照、清空 seekdb 材料、删除本地 PowerContext 状态与旧证据
+# 从干净状态开始：恢复改前快照、清空 seekdb 材料、停掉本地 PowerContext 并清理旧日志
+# （保留 artifacts/minimax_edits.json 供离线回放）
 python -m sddctx reset --hard --clean-logs
 
 python -m sddctx demo --live-minimax
@@ -134,6 +135,8 @@ python -m sddctx demo --live-minimax
 ### 离线回放（已有 MiniMax 证据时）
 
 ```bash
+# reset 会保留 artifacts/minimax_edits.json，随后 demo 用它回放
+python -m sddctx reset --hard --clean-logs
 python -m sddctx demo
 ```
 
