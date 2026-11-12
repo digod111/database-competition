@@ -1,0 +1,7 @@
+{
+  "measuredAt": "2026-11-11T17:36:34.036Z",
+  "chrome": "headless Chromium (SwiftShader WebGPU)",
+  "coldMs": 16134,
+  "warmMs": 1207,
+  "speedup": 13.367025683512841
+}

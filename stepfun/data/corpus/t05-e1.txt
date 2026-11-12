@@ -1,0 +1,3 @@
+WebAssembly Runtime
+
+Many machine learning frameworks compile C++ code to WASM to support in-browser inference. WebAssembly, or WASM for short, is a binary instruction format that executes efficiently in browsers. WASM has excellent compatibility and runs in almost all modern browsers.

@@ -1,0 +1,922 @@
+{
+  "t01": {
+    "title_cn": "HNSW 索引算法",
+    "title_en": "The HNSW Index Algorithm",
+    "facts_cn": [
+      "HNSW 全称 Hierarchical Navigable Small World，是一种基于图结构的近似最近邻搜索算法。",
+      "该算法通过多层可导航小世界图组织向量数据，上层节点稀疏、下层节点稠密。",
+      "检索时从最上层开始贪婪搜索，逐层下降，在底层完成细粒度近邻查找。",
+      "HNSW 在召回率和查询速度之间取得了很好的平衡，被众多向量数据库采用。"
+    ],
+    "facts_en": [
+      "HNSW stands for Hierarchical Navigable Small World, an approximate nearest neighbor search algorithm based on graph structures.",
+      "It organizes vector data into a multi-layer navigable small world graph, where upper layers are sparse and lower layers are dense.",
+      "During search it greedily traverses from the top layer downward, finishing with fine-grained neighbor lookup at the bottom.",
+      "HNSW achieves a good trade-off between recall and query speed, and is adopted by many vector databases."
+    ],
+    "query_cn": "HNSW 索引是如何组织向量并完成近邻搜索的？",
+    "synonyms": {
+      "算法": ["方法", "技术"],
+      "组织": ["管理", "存储"],
+      "检索": ["查询", "搜索"],
+      "平衡": ["折中", "均衡"]
+    }
+  },
+  "t02": {
+    "title_cn": "向量数据库",
+    "title_en": "Vector Databases",
+    "facts_cn": [
+      "向量数据库专门存储高维向量，并提供高效的相似度检索能力。",
+      "常见的相似度度量包括欧氏距离、余弦相似度和内积。",
+      "向量数据库通常为向量列建立 HNSW 或 IVF 等近似索引以加速查询。",
+      "许多现代数据库将向量检索与全文检索、标量过滤结合，支持混合查询。"
+    ],
+    "facts_en": [
+      "Vector databases are designed to store high-dimensional vectors and provide efficient similarity search.",
+      "Common similarity metrics include Euclidean distance, cosine similarity, and inner product.",
+      "Vector databases usually build approximate indexes such as HNSW or IVF on vector columns to accelerate queries.",
+      "Many modern databases combine vector search with full-text search and scalar filtering to support hybrid queries."
+    ],
+    "query_en": "How do vector databases combine vector search with full-text search?",
+    "synonyms": {
+      "数据库": ["系统", "引擎"],
+      "提供": ["具备", "拥有"],
+      "检索": ["查询", "搜索"],
+      "结合": ["融合", "混合"]
+    }
+  },
+  "t03": {
+    "title_cn": "IK 中文分词器",
+    "title_en": "The IK Chinese Tokenizer",
+    "facts_cn": [
+      "IK 分词器是面向中文文本的常用分词组件，支持细粒度和智能两种切分模式。",
+      "智能模式会尽量切分出更长的词语，使分词结果更接近自然语义。",
+      "中文全文检索通常先对文本分词，再构建倒排索引。",
+      "在 seekdb 中可以用 WITH PARSER ik 为全文索引指定 IK 分词器。"
+    ],
+    "facts_en": [
+      "The IK tokenizer is a popular tokenization component for Chinese text, supporting fine-grained and smart segmentation modes.",
+      "Smart mode prefers longer words so that the segmentation result is closer to natural semantics.",
+      "Chinese full-text search usually tokenizes the text first and then builds an inverted index.",
+      "In seekdb, WITH PARSER ik specifies the IK tokenizer for a full-text index."
+    ],
+    "query_cn": "IK 分词器的智能模式有什么特点，在 seekdb 中怎么配置？",
+    "synonyms": {
+      "常用": ["广泛使用", "流行"],
+      "支持": ["提供", "具备"],
+      "检索": ["查询", "搜索"],
+      "指定": ["配置", "设置"]
+    }
+  },
+  "t04": {
+    "title_cn": "WebGPU 浏览器加速",
+    "title_en": "WebGPU in Browsers",
+    "facts_cn": [
+      "WebGPU 是新一代浏览器图形与计算 API，可以直接访问 GPU 的并行计算能力。",
+      "与 WebGL 相比，WebGPU 提供了更底层的控制能力和更低的驱动开销。",
+      "在浏览器中运行机器学习推理时，WebGPU 通常比 WASM 更快。",
+      "使用前需要通过 navigator.gpu 检测设备是否支持，并请求适配器。"
+    ],
+    "facts_en": [
+      "WebGPU is a next-generation browser graphics and compute API that gives direct access to GPU parallel computing.",
+      "Compared with WebGL, WebGPU offers lower-level control and reduced driver overhead.",
+      "When running machine learning inference in the browser, WebGPU is usually faster than WASM.",
+      "Before use, check support via navigator.gpu and request an adapter."
+    ],
+    "query_cn": "WebGPU 相比 WASM 在浏览器端推理上有什么优势？",
+    "synonyms": {
+      "支持": ["兼容", "具备"],
+      "通常": ["一般", "往往"],
+      "检测": ["检查", "判断"],
+      "直接": ["立刻", "马上"]
+    }
+  },
+  "t05": {
+    "title_cn": "WebAssembly 运行时",
+    "title_en": "WebAssembly Runtime",
+    "facts_cn": [
+      "WebAssembly 简称 WASM，是一种可在浏览器中高效执行的二进制指令格式。",
+      "WASM 代码在沙箱中运行，具备良好的安全隔离和跨平台能力。",
+      "许多机器学习框架通过将 C++ 代码编译为 WASM 来支持浏览器端推理。",
+      "WASM 的兼容性极好，几乎在所有现代浏览器中都可以运行。"
+    ],
+    "facts_en": [
+      "WebAssembly, or WASM for short, is a binary instruction format that executes efficiently in browsers.",
+      "WASM code runs inside a sandbox, providing good security isolation and cross-platform capability.",
+      "Many machine learning frameworks compile C++ code to WASM to support in-browser inference.",
+      "WASM has excellent compatibility and runs in almost all modern browsers."
+    ],
+    "query_en": "Why is WebAssembly widely used as a fallback for browser inference?",
+    "synonyms": {
+      "高效": ["快速", "高性能"],
+      "提供": ["具备", "拥有"],
+      "支持": ["兼容", "实现"],
+      "运行": ["执行", "工作"]
+    }
+  },
+  "t06": {
+    "title_cn": "模型 INT8 量化",
+    "title_en": "INT8 Model Quantization",
+    "facts_cn": [
+      "INT8 量化把模型权重从 32 位浮点数压缩为 8 位整数，可以大幅缩小模型体积。",
+      "动态量化在推理时根据激活值范围换算比例因子，实现简单且效果好。",
+      "量化通常会带来轻微的精度损失，但检索质量往往几乎不受影响。",
+      "量化后的模型在内存占用和加载速度上都有明显优势。"
+    ],
+    "facts_en": [
+      "INT8 quantization compresses model weights from 32-bit floats to 8-bit integers, greatly reducing model size.",
+      "Dynamic quantization computes scale factors from activation ranges at inference time, which is simple and effective.",
+      "Quantization usually introduces slight precision loss, but retrieval quality is often barely affected.",
+      "Quantized models have clear advantages in memory footprint and loading speed."
+    ],
+    "query_cn": "INT8 动态量化为什么能缩小模型体积且几乎不影响检索质量？",
+    "synonyms": {
+      "压缩": ["缩减", "减小"],
+      "缩小": ["降低", "压缩"],
+      "损失": ["下降", "损耗"],
+      "优势": ["好处", "优点"]
+    }
+  },
+  "t07": {
+    "title_cn": "Transformer 注意力机制",
+    "title_en": "Transformer Attention Mechanism",
+    "facts_cn": [
+      "注意力机制让模型在处理每个词时能够参考输入序列中的其他词。",
+      "自注意力通过查询、键、值三个矩阵计算词与词之间的相关性权重。",
+      "多头注意力把表示空间划分为多个子空间，并行捕捉不同的依赖关系。",
+      "Transformer 架构完全基于注意力机制，摒弃了传统的循环结构。"
+    ],
+    "facts_en": [
+      "The attention mechanism lets the model reference other tokens in the input sequence when processing each token.",
+      "Self-attention computes relevance weights between tokens through query, key, and value matrices.",
+      "Multi-head attention splits the representation space into multiple subspaces to capture different dependencies in parallel.",
+      "The Transformer architecture is entirely based on attention and abandons traditional recurrent structures."
+    ],
+    "query_en": "How does multi-head self-attention work in Transformers?",
+    "synonyms": {
+      "处理": ["计算", "加工"],
+      "捕捉": ["捕获", "提取"],
+      "相关性": ["关联度", "相关程度"],
+      "并行": ["同时", "并发"]
+    }
+  },
+  "t08": {
+    "title_cn": "RAG 检索增强生成",
+    "title_en": "Retrieval-Augmented Generation",
+    "facts_cn": [
+      "RAG 在生成回答之前先检索相关文档，把检索结果作为上下文提供给大模型。",
+      "这种方法可以显著减少大模型产生幻觉的概率。",
+      "检索质量直接决定了 RAG 系统的回答质量上限。",
+      "向量检索与全文检索的混合策略常用于提升召回效果。"
+    ],
+    "facts_en": [
+      "RAG retrieves relevant documents before generation and feeds the results to the large model as context.",
+      "This approach can significantly reduce the probability of hallucinations from large models.",
+      "Retrieval quality directly determines the upper bound of answer quality in a RAG system.",
+      "Hybrid strategies combining vector and full-text search are often used to improve recall."
+    ],
+    "query_cn": "RAG 为什么能减少大模型的幻觉问题？",
+    "synonyms": {
+      "减少": ["降低", "减轻"],
+      "提供": ["供给", "给予"],
+      "提升": ["提高", "改善"],
+      "策略": ["方案", "方法"]
+    }
+  },
+  "t09": {
+    "title_cn": "seekdb 混合检索",
+    "title_en": "seekdb Hybrid Search",
+    "facts_cn": [
+      "seekdb 是 OceanBase 推出的 AI 原生数据库，支持向量、全文和标量数据的统一存储。",
+      "seekdb 兼容 MySQL 协议，支持 VECTOR 列类型和 HNSW 向量索引。",
+      "全文检索可以使用 IK 分词器处理中文文本。",
+      "在一条 SQL 中同时使用 MATCH 与向量距离排序即可完成混合检索。"
+    ],
+    "facts_en": [
+      "seekdb is an AI-native database from OceanBase that stores vector, full-text, and scalar data in one system.",
+      "seekdb is MySQL-compatible and supports the VECTOR column type and HNSW vector indexes.",
+      "Full-text search can use the IK tokenizer for Chinese text.",
+      "Hybrid search can be done in a single SQL statement combining MATCH with vector distance ordering."
+    ],
+    "query_cn": "seekdb 如何用一条 SQL 完成向量与全文的混合检索？",
+    "synonyms": {
+      "支持": ["具备", "提供"],
+      "完成": ["实现", "进行"],
+      "同时": ["一并", "一起"],
+      "统一": ["集中", "一体化"]
+    }
+  },
+  "t10": {
+    "title_cn": "倒排索引",
+    "title_en": "Inverted Index",
+    "facts_cn": [
+      "倒排索引记录每个词出现在哪些文档中，是全文搜索引擎的核心数据结构。",
+      "建立倒排索引前通常需要分词，把文档切分成独立的词项。",
+      "查询时根据词项直接定位候选文档，避免了逐篇扫描。",
+      "倒排索引配合跳表可以高效处理多词项的合并操作。"
+    ],
+    "facts_en": [
+      "An inverted index records which documents each term appears in, and is the core data structure of full-text search engines.",
+      "Tokenization is usually needed before building an inverted index to split documents into terms.",
+      "Queries locate candidate documents directly by term, avoiding a full scan of every document.",
+      "With skip lists, inverted indexes efficiently handle merge operations across multiple terms."
+    ],
+    "query_en": "What is an inverted index and why does it speed up full-text search?",
+    "synonyms": {
+      "记录": ["存储", "保存"],
+      "核心": ["关键", "主要"],
+      "避免": ["省去", "免于"],
+      "高效": ["快速", "高效地"]
+    }
+  },
+  "t11": {
+    "title_cn": "咖啡烘焙",
+    "title_en": "Coffee Roasting",
+    "facts_cn": [
+      "咖啡豆的烘焙程度从浅到深依次分为浅烘、中烘和深烘。",
+      "浅烘咖啡酸度较高，能保留更多花果香气。",
+      "深烘咖啡苦味明显，醇厚度高，适合制作浓缩咖啡。",
+      "烘焙过程中咖啡豆会发生美拉德反应，产生丰富的风味物质。"
+    ],
+    "facts_en": [
+      "Coffee roasting levels range from light to medium to dark.",
+      "Light roasts have higher acidity and retain more floral and fruity aromas.",
+      "Dark roasts are notably bitter with a heavy body, suitable for espresso.",
+      "During roasting, the Maillard reaction produces rich flavor compounds in the beans."
+    ],
+    "query_cn": "浅烘和深烘咖啡在风味上有什么区别？",
+    "synonyms": {
+      "程度": ["深浅", "等级"],
+      "保留": ["保存", "留存"],
+      "适合": ["适用于", "适宜"],
+      "丰富": ["大量", "众多"]
+    }
+  },
+  "t12": {
+    "title_cn": "马拉松训练",
+    "title_en": "Marathon Training",
+    "facts_cn": [
+      "马拉松全程 42.195 公里，对耐力和配速管理要求很高。",
+      "长距离慢跑是马拉松训练的基础，用于提升有氧能力。",
+      "赛前一个月应逐步减少训练量，让身体充分恢复。",
+      "比赛日补给策略包括补水和摄入易消化的碳水化合物。"
+    ],
+    "facts_en": [
+      "A marathon covers 42.195 kilometers and demands strong endurance and pace management.",
+      "Long slow distance runs are the foundation of marathon training for building aerobic capacity.",
+      "Training volume should taper gradually in the month before the race to allow full recovery.",
+      "Race-day fueling includes hydration and easily digestible carbohydrates."
+    ],
+    "query_en": "What does a typical marathon training plan include?",
+    "synonyms": {
+      "提升": ["增强", "提高"],
+      "基础": ["根基", "核心"],
+      "恢复": ["休整", "调整"],
+      "包括": ["包含", "涵盖"]
+    }
+  },
+  "t13": {
+    "title_cn": "地中海饮食",
+    "title_en": "Mediterranean Diet",
+    "facts_cn": [
+      "地中海饮食以橄榄油、全谷物、蔬菜和鱼类为核心食材。",
+      "这种饮食模式强调减少红肉摄入，鼓励适量饮用红酒。",
+      "多项研究表明地中海饮食有助于降低心血管疾病风险。",
+      "地中海饮食还强调与家人共同进餐的社交习惯。"
+    ],
+    "facts_en": [
+      "The Mediterranean diet centers on olive oil, whole grains, vegetables, and fish.",
+      "This eating pattern reduces red meat intake and allows moderate red wine consumption.",
+      "Multiple studies show the Mediterranean diet helps lower cardiovascular disease risk.",
+      "The Mediterranean diet also values the social habit of sharing meals with family."
+    ],
+    "query_cn": "地中海饮食的核心食材和健康益处是什么？",
+    "synonyms": {
+      "核心": ["主要", "关键"],
+      "强调": ["注重", "突出"],
+      "降低": ["减少", "缓解"],
+      "有助于": ["有利于", "帮助"]
+    }
+  },
+  "t14": {
+    "title_cn": "区块链共识机制",
+    "title_en": "Blockchain Consensus",
+    "facts_cn": [
+      "共识机制用于让分布式网络中的节点就账本状态达成一致。",
+      "工作量证明依靠算力竞争获得记账权，能耗较高。",
+      "权益证明根据节点持有的代币数量选择验证者，能耗更低。",
+      "拜占庭容错类协议通过多轮投票保证系统的容错能力。"
+    ],
+    "facts_en": [
+      "Consensus mechanisms let nodes in a distributed network agree on ledger state.",
+      "Proof of work relies on computing power competition and consumes high energy.",
+      "Proof of stake selects validators based on token holdings and is far more energy efficient.",
+      "Byzantine fault tolerant protocols use multiple voting rounds to guarantee fault tolerance."
+    ],
+    "query_en": "How does proof of stake differ from proof of work?",
+    "synonyms": {
+      "一致": ["统一", "共识"],
+      "依靠": ["依赖", "凭借"],
+      "能耗": ["能源消耗", "耗电量"],
+      "保证": ["确保", "保障"]
+    }
+  },
+  "t15": {
+    "title_cn": "火星探测",
+    "title_en": "Mars Exploration",
+    "facts_cn": [
+      "火星是太阳系中与地球环境最相似的行星之一。",
+      "祝融号是中国首辆火星车，于 2021 年成功着陆乌托邦平原。",
+      "火星表面存在干涸的河床，表明远古时期可能有液态水。",
+      "科学家希望通过探测火星大气与土壤寻找生命痕迹。"
+    ],
+    "facts_en": [
+      "Mars is one of the most Earth-like planets in the solar system.",
+      "Zhurong is China's first Mars rover, which landed on Utopia Planitia in 2021.",
+      "Dried riverbeds on the Martian surface suggest liquid water may have existed in ancient times.",
+      "Scientists hope to find traces of life by studying the Martian atmosphere and soil."
+    ],
+    "query_cn": "祝融号火星车有哪些主要发现？",
+    "synonyms": {
+      "相似": ["接近", "相像"],
+      "表明": ["说明", "显示"],
+      "寻找": ["探寻", "搜寻"],
+      "希望": ["期望", "打算"]
+    }
+  },
+  "t16": {
+    "title_cn": "黑洞",
+    "title_en": "Black Holes",
+    "facts_cn": [
+      "黑洞是时空曲率大到光都无法逃脱的天体。",
+      "事件视界是黑洞的边界，越过它之后任何信息都无法返回。",
+      "恒星级黑洞由大质量恒星坍缩形成。",
+      "2019 年人类首次拍摄到 M87 星系中心黑洞的照片。"
+    ],
+    "facts_en": [
+      "A black hole is a region where spacetime curvature is so extreme that even light cannot escape.",
+      "The event horizon is the boundary of a black hole; beyond it no information can return.",
+      "Stellar-mass black holes form from the collapse of massive stars.",
+      "In 2019, humanity captured the first image of the black hole at the center of galaxy M87."
+    ],
+    "query_en": "What is the event horizon of a black hole?",
+    "synonyms": {
+      "逃脱": ["逃离", "逃逸"],
+      "边界": ["边缘", "界限"],
+      "形成": ["产生", "诞生"],
+      "拍摄": ["捕捉", "记录"]
+    }
+  },
+  "t17": {
+    "title_cn": "光合作用",
+    "title_en": "Photosynthesis",
+    "facts_cn": [
+      "光合作用是绿色植物利用光能把二氧化碳和水转化为有机物的过程。",
+      "叶绿体中的叶绿素负责吸收太阳光能。",
+      "光合作用分为光反应和暗反应两个阶段。",
+      "地球大气中的氧气主要来源于光合作用。"
+    ],
+    "facts_en": [
+      "Photosynthesis is the process by which green plants convert carbon dioxide and water into organic matter using light energy.",
+      "Chlorophyll inside chloroplasts absorbs solar energy.",
+      "Photosynthesis consists of light reactions and dark reactions.",
+      "Most oxygen in Earth's atmosphere comes from photosynthesis."
+    ],
+    "query_cn": "光合作用分为哪两个阶段，各有什么作用？",
+    "synonyms": {
+      "过程": ["流程", "反应"],
+      "负责": ["承担", "主管"],
+      "阶段": ["步骤", "环节"],
+      "来源于": ["来自", "源自"]
+    }
+  },
+  "t18": {
+    "title_cn": "全球变暖",
+    "title_en": "Global Warming",
+    "facts_cn": [
+      "全球变暖主要由人类活动排放的温室气体引起。",
+      "二氧化碳是最主要的温室气体，主要来自化石燃料燃烧。",
+      "全球变暖导致海平面上升和极端天气事件增多。",
+      "国际社会通过巴黎协定推动各国减排承诺。"
+    ],
+    "facts_en": [
+      "Global warming is mainly caused by greenhouse gases emitted from human activities.",
+      "Carbon dioxide is the primary greenhouse gas, mostly from burning fossil fuels.",
+      "Global warming causes rising sea levels and more frequent extreme weather events.",
+      "The international community promotes national emission reduction commitments through the Paris Agreement."
+    ],
+    "query_en": "What are the main causes and consequences of global warming?",
+    "synonyms": {
+      "引起": ["导致", "造成"],
+      "主要": ["首要", "关键"],
+      "导致": ["造成", "引发"],
+      "推动": ["促进", "推进"]
+    }
+  },
+  "t19": {
+    "title_cn": "可再生能源",
+    "title_en": "Renewable Energy",
+    "facts_cn": [
+      "可再生能源包括太阳能、风能、水能和地热能等。",
+      "太阳能光伏板通过光电效应把阳光转化为电能。",
+      "风力发电机利用风轮带动发电机旋转发电。",
+      "储能技术是解决可再生能源波动性的关键。"
+    ],
+    "facts_en": [
+      "Renewable energy includes solar, wind, hydro, and geothermal power.",
+      "Solar panels convert sunlight into electricity through the photovoltaic effect.",
+      "Wind turbines generate electricity by spinning generators with rotor blades.",
+      "Energy storage is the key to solving the intermittency of renewables."
+    ],
+    "query_cn": "太阳能和风能分别是如何发电的？",
+    "synonyms": {
+      "包括": ["包含", "涵盖"],
+      "转化": ["转换", "转变"],
+      "解决": ["应对", "处理"],
+      "关键": ["核心", "要害"]
+    }
+  },
+  "t20": {
+    "title_cn": "中国书法",
+    "title_en": "Chinese Calligraphy",
+    "facts_cn": [
+      "中国书法以汉字为载体，讲究笔法、结构和章法。",
+      "楷书、行书、草书、隶书、篆书是五种主要书体。",
+      "王羲之的兰亭集序被誉为天下第一行书。",
+      "练习书法需要长期临帖，体会古人的用笔韵味。"
+    ],
+    "facts_en": [
+      "Chinese calligraphy uses Chinese characters as its medium, focusing on brushwork, structure, and layout.",
+      "Regular, running, cursive, clerical, and seal scripts are the five major styles.",
+      "Wang Xizhi's Preface to the Orchid Pavilion is hailed as the finest running script ever.",
+      "Practicing calligraphy requires long-term copying of model works to grasp the charm of classical brushwork."
+    ],
+    "query_cn": "中国书法有哪五种主要书体？",
+    "synonyms": {
+      "讲究": ["注重", "重视"],
+      "主要": ["核心", "基本"],
+      "练习": ["学习", "训练"],
+      "体会": ["感受", "领悟"]
+    }
+  },
+  "t21": {
+    "title_cn": "唐诗宋词",
+    "title_en": "Tang Poetry and Song Ci",
+    "facts_cn": [
+      "唐诗以律诗和绝句为代表，讲究平仄和对仗。",
+      "李白被称为诗仙，杜甫被称为诗圣。",
+      "宋词是配合曲调演唱的歌词，分为婉约派和豪放派。",
+      "苏轼的念奴娇赤壁怀古是豪放词的代表作。"
+    ],
+    "facts_en": [
+      "Tang poetry is represented by regulated verse and quatrains with strict tonal and antithesis rules.",
+      "Li Bai is known as the Immortal Poet and Du Fu as the Sage of Poetry.",
+      "Song ci are lyrics sung to melodies, divided into the graceful and bold schools.",
+      "Su Shi's Charm of a Maiden Singer on Red Cliff is a masterpiece of the bold school."
+    ],
+    "query_en": "Who are the most famous poets of the Tang dynasty?",
+    "synonyms": {
+      "讲究": ["注重", "追求"],
+      "分为": ["划分", "分成"],
+      "代表作": ["代表作品", "名篇"],
+      "配合": ["伴随", "跟随"]
+    }
+  },
+  "t22": {
+    "title_cn": "古罗马文明",
+    "title_en": "Ancient Rome",
+    "facts_cn": [
+      "古罗马经历了王政、共和国和帝国三个历史时期。",
+      "罗马法对后世大陆法系产生了深远影响。",
+      "斗兽场和万神殿是古罗马建筑的杰出代表。",
+      "西罗马帝国于公元 476 年灭亡。"
+    ],
+    "facts_en": [
+      "Ancient Rome went through the Kingdom, Republic, and Empire periods.",
+      "Roman law profoundly influenced later civil law systems.",
+      "The Colosseum and the Pantheon are outstanding examples of Roman architecture.",
+      "The Western Roman Empire fell in 476 AD."
+    ],
+    "query_cn": "古罗马文明对后世法律体系有什么影响？",
+    "synonyms": {
+      "经历": ["经过", "历经"],
+      "影响": ["作用", "冲击"],
+      "代表": ["典范", "标志"],
+      "灭亡": ["覆灭", "终结"]
+    }
+  },
+  "t23": {
+    "title_cn": "文艺复兴",
+    "title_en": "The Renaissance",
+    "facts_cn": [
+      "文艺复兴是 14 至 17 世纪起源于意大利的思想文化运动。",
+      "人文主义是文艺复兴的核心思想，强调人的价值与尊严。",
+      "达芬奇、米开朗基罗和拉斐尔被称为文艺复兴三杰。",
+      "文艺复兴推动了近代科学和艺术的蓬勃发展。"
+    ],
+    "facts_en": [
+      "The Renaissance was an intellectual and cultural movement that began in Italy from the 14th to 17th centuries.",
+      "Humanism was the core idea of the Renaissance, emphasizing human value and dignity.",
+      "Leonardo da Vinci, Michelangelo, and Raphael are known as the three giants of the Renaissance.",
+      "The Renaissance propelled the vigorous development of modern science and art."
+    ],
+    "query_en": "What was humanism and why was it central to the Renaissance?",
+    "synonyms": {
+      "起源": ["发源", "兴起"],
+      "核心": ["中心", "根本"],
+      "强调": ["突出", "注重"],
+      "推动": ["促进", "助推"]
+    }
+  },
+  "t24": {
+    "title_cn": "爵士乐",
+    "title_en": "Jazz Music",
+    "facts_cn": [
+      "爵士乐起源于 20 世纪初美国新奥尔良的非裔社区。",
+      "即兴演奏是爵士乐的灵魂，乐手在演奏中自由发挥。",
+      "摇摆节奏和蓝调音阶是爵士乐的标志性元素。",
+      "路易斯阿姆斯特朗是爵士乐史上最具影响力的音乐家之一。"
+    ],
+    "facts_en": [
+      "Jazz originated in the African American communities of New Orleans in the early 20th century.",
+      "Improvisation is the soul of jazz; musicians freely express themselves during performance.",
+      "Swing rhythms and blues scales are signature elements of jazz.",
+      "Louis Armstrong is one of the most influential musicians in jazz history."
+    ],
+    "query_cn": "爵士乐的标志性音乐元素有哪些？",
+    "synonyms": {
+      "起源": ["发源", "诞生"],
+      "灵魂": ["精髓", "核心"],
+      "标志性": ["代表性", "典型"],
+      "影响力": ["影响", "地位"]
+    }
+  },
+  "t25": {
+    "title_cn": "印象派绘画",
+    "title_en": "Impressionist Painting",
+    "facts_cn": [
+      "印象派是 19 世纪下半叶兴起于法国的绘画流派。",
+      "印象派画家注重捕捉光线与色彩的瞬间变化。",
+      "莫奈的日出印象是印象派得名的来源。",
+      "印象派突破了学院派的写实传统，启发现代艺术。"
+    ],
+    "facts_en": [
+      "Impressionism was an art movement that emerged in France in the second half of the 19th century.",
+      "Impressionist painters focused on capturing momentary changes of light and color.",
+      "Monet's Impression, Sunrise gave the movement its name.",
+      "Impressionism broke with academic realism and inspired modern art."
+    ],
+    "query_en": "How did Impressionism get its name?",
+    "synonyms": {
+      "兴起": ["出现", "诞生"],
+      "捕捉": ["抓住", "记录"],
+      "突破": ["打破", "超越"],
+      "启发": ["启迪", "影响"]
+    }
+  },
+  "t26": {
+    "title_cn": "电影蒙太奇",
+    "title_en": "Film Montage",
+    "facts_cn": [
+      "蒙太奇是电影中把不同镜头组接起来创造新含义的剪辑手法。",
+      "苏联导演爱森斯坦系统发展了蒙太奇理论。",
+      "通过镜头组接，观众可以在脑中建立镜头本身不存在的联系。",
+      "交叉蒙太奇常用于表现同时发生的多线情节。"
+    ],
+    "facts_en": [
+      "Montage is an editing technique that joins different shots to create new meaning.",
+      "Soviet director Eisenstein systematically developed montage theory.",
+      "Through shot juxtaposition, audiences build connections in their minds that do not exist in the shots themselves.",
+      "Cross-cutting montage is often used to present multiple simultaneous storylines."
+    ],
+    "query_cn": "蒙太奇剪辑手法如何创造新的含义？",
+    "synonyms": {
+      "组接": ["拼接", "剪辑"],
+      "创造": ["产生", "制造"],
+      "建立": ["构建", "形成"],
+      "表现": ["展示", "呈现"]
+    }
+  },
+  "t27": {
+    "title_cn": "攀岩技巧",
+    "title_en": "Rock Climbing Techniques",
+    "facts_cn": [
+      "攀岩分为抱石、运动攀和传统攀等多种形式。",
+      "重心控制是攀岩的核心技巧，应尽量让重心贴近岩壁。",
+      "脚法是攀岩的基础，多用腿部发力可以节省手臂力量。",
+      "攀岩前必须检查绳索、安全带和保护器的状态。"
+    ],
+    "facts_en": [
+      "Rock climbing includes bouldering, sport climbing, and trad climbing.",
+      "Center-of-gravity control is the core climbing skill; keep your body close to the wall.",
+      "Footwork is the foundation of climbing; using leg strength saves arm endurance.",
+      "Always check ropes, harnesses, and belay devices before climbing."
+    ],
+    "query_en": "What are the basic techniques for beginner rock climbers?",
+    "synonyms": {
+      "形式": ["类型", "种类"],
+      "核心": ["关键", "主要"],
+      "基础": ["根基", "根本"],
+      "检查": ["确认", "查看"]
+    }
+  },
+  "t28": {
+    "title_cn": "滑雪运动",
+    "title_en": "Skiing",
+    "facts_cn": [
+      "滑雪分为高山滑雪、越野滑雪和自由式滑雪等类型。",
+      "犁式转弯是初学者最常用的减速和转向方法。",
+      "雪板长度和硬度应根据身高体重和水平选择。",
+      "滑雪时必须佩戴头盔和护目镜以保障安全。"
+    ],
+    "facts_en": [
+      "Skiing is divided into alpine, cross-country, and freestyle disciplines.",
+      "The snowplow turn is the most common way for beginners to slow down and turn.",
+      "Ski length and stiffness should match your height, weight, and skill level.",
+      "Helmets and goggles are mandatory for safety on the slopes."
+    ],
+    "query_cn": "初学者应该掌握哪些滑雪基本技巧？",
+    "synonyms": {
+      "分为": ["包括", "划分"],
+      "常用": ["普遍", "常见"],
+      "选择": ["挑选", "决定"],
+      "保障": ["保证", "确保"]
+    }
+  },
+  "t29": {
+    "title_cn": "木工入门",
+    "title_en": "Getting Started with Woodworking",
+    "facts_cn": [
+      "木工基础工具包括锯子、刨子、凿子和角尺。",
+      "测量两次再切割一次是木工的基本原则。",
+      "榫卯结构是中国传统木工的精髓，无需钉子即可牢固连接。",
+      "打磨时要顺着木材纹理方向进行，从粗砂纸逐步过渡到细砂纸。"
+    ],
+    "facts_en": [
+      "Basic woodworking tools include saws, planes, chisels, and squares.",
+      "Measure twice and cut once is a fundamental woodworking principle.",
+      "Mortise-and-tenon joints are the essence of traditional Chinese woodworking, connecting wood firmly without nails.",
+      "Sand along the grain, progressing from coarse to fine sandpaper."
+    ],
+    "query_cn": "中国传统木工的榫卯结构有什么特点？",
+    "synonyms": {
+      "包括": ["包含", "涵盖"],
+      "原则": ["准则", "法则"],
+      "精髓": ["核心", "灵魂"],
+      "牢固": ["稳固", "结实"]
+    }
+  },
+  "t30": {
+    "title_cn": "家庭园艺",
+    "title_en": "Home Gardening",
+    "facts_cn": [
+      "家庭园艺的第一步是了解植物的光照和水分需求。",
+      "多肉植物耐旱，浇水应遵循宁干勿湿的原则。",
+      "堆肥可以把厨余垃圾转化为有机肥料。",
+      "轮作可以防止土壤养分失衡和病虫害积累。"
+    ],
+    "facts_en": [
+      "The first step in home gardening is understanding plants' light and water needs.",
+      "Succulents are drought-tolerant; water them only when the soil is dry.",
+      "Composting turns kitchen waste into organic fertilizer.",
+      "Crop rotation prevents nutrient imbalance and pest accumulation in the soil."
+    ],
+    "query_en": "What should beginners know about watering succulents?",
+    "synonyms": {
+      "了解": ["掌握", "熟悉"],
+      "遵循": ["按照", "遵守"],
+      "转化": ["转换", "变成"],
+      "防止": ["避免", "预防"]
+    }
+  },
+  "t31": {
+    "title_cn": "摄影构图",
+    "title_en": "Photography Composition",
+    "facts_cn": [
+      "三分法把画面横竖各分三等份，把主体放在交点附近。",
+      "引导线利用道路、河流等线条把观众视线引向主体。",
+      "留白可以给画面呼吸感，突出主题。",
+      "光线方向决定照片的立体感和氛围。"
+    ],
+    "facts_en": [
+      "The rule of thirds divides the frame into nine equal parts and places the subject near the intersections.",
+      "Leading lines use roads, rivers, and other lines to guide the viewer's eye to the subject.",
+      "Negative space gives the image breathing room and emphasizes the subject.",
+      "Light direction determines a photo's depth and mood."
+    ],
+    "query_cn": "三分法构图的基本原理是什么？",
+    "synonyms": {
+      "放置": ["安排", "摆放"],
+      "引导": ["指引", "带领"],
+      "突出": ["强调", "凸显"],
+      "决定": ["确定", "影响"]
+    }
+  },
+  "t32": {
+    "title_cn": "个人理财",
+    "title_en": "Personal Finance",
+    "facts_cn": [
+      "个人理财的第一步是建立应急基金，一般建议覆盖三到六个月支出。",
+      "记账可以帮助了解消费结构，找到可以削减的开支。",
+      "资产配置应根据风险承受能力分散投资。",
+      "先偿还高息债务往往比投资获得更高回报。"
+    ],
+    "facts_en": [
+      "The first step in personal finance is building an emergency fund covering three to six months of expenses.",
+      "Tracking spending reveals your consumption structure and where to cut.",
+      "Asset allocation should diversify investments according to risk tolerance.",
+      "Paying off high-interest debt often yields higher returns than investing."
+    ],
+    "query_en": "Why should you build an emergency fund first?",
+    "synonyms": {
+      "建立": ["设立", "创建"],
+      "帮助": ["协助", "有助于"],
+      "削减": ["减少", "压缩"],
+      "回报": ["收益", "收获"]
+    }
+  },
+  "t33": {
+    "title_cn": "复利效应",
+    "title_en": "Compound Interest",
+    "facts_cn": [
+      "复利是指利息计入本金后继续产生利息的计算方式。",
+      "复利公式为 A = P(1+r)^n，其中 n 为计息期数。",
+      "时间越长，复利效应越明显，被称为世界第八大奇迹。",
+      "尽早开始定期投资可以显著放大长期收益。"
+    ],
+    "facts_en": [
+      "Compound interest means interest is added to the principal and then earns more interest.",
+      "The compound interest formula is A = P(1+r)^n, where n is the number of periods.",
+      "The longer the horizon, the stronger the compounding effect, dubbed the eighth wonder of the world.",
+      "Starting regular investments early significantly amplifies long-term returns."
+    ],
+    "query_cn": "复利计算的公式是什么，为什么时间越长收益越大？",
+    "synonyms": {
+      "计算": ["运算", "算法"],
+      "明显": ["显著", "突出"],
+      "开始": ["启动", "着手"],
+      "显著": ["大幅", "极大"]
+    }
+  },
+  "t34": {
+    "title_cn": "网络安全",
+    "title_en": "Cybersecurity",
+    "facts_cn": [
+      "钓鱼攻击通过伪装成可信来源诱导用户泄露敏感信息。",
+      "多因素认证在密码之外增加第二重验证，大幅提升账户安全性。",
+      "软件漏洞是攻击者最常用的入侵途径之一。",
+      "定期备份数据是应对勒索软件的有效手段。"
+    ],
+    "facts_en": [
+      "Phishing attacks trick users into revealing sensitive information by impersonating trusted sources.",
+      "Multi-factor authentication adds a second layer beyond passwords, greatly improving account security.",
+      "Software vulnerabilities are one of the most common intrusion paths for attackers.",
+      "Regular data backups are an effective defense against ransomware."
+    ],
+    "query_cn": "多因素认证为什么能显著提升账户安全？",
+    "synonyms": {
+      "伪装": ["冒充", "假扮"],
+      "诱导": ["引诱", "欺骗"],
+      "提升": ["提高", "增强"],
+      "有效": ["有效果", "管用"]
+    }
+  },
+  "t35": {
+    "title_cn": "HTTPS 与 TLS",
+    "title_en": "HTTPS and TLS",
+    "facts_cn": [
+      "HTTPS 在 HTTP 基础上叠加 TLS 协议，对传输数据进行加密。",
+      "TLS 握手阶段使用非对称加密协商出对称会话密钥。",
+      "数字证书由 CA 签发，用于验证服务器身份。",
+      "HTTPS 可以防止中间人窃听和篡改通信内容。"
+    ],
+    "facts_en": [
+      "HTTPS adds the TLS protocol on top of HTTP to encrypt data in transit.",
+      "During the TLS handshake, asymmetric encryption negotiates a symmetric session key.",
+      "Digital certificates issued by CAs verify server identity.",
+      "HTTPS prevents man-in-the-middle eavesdropping and tampering."
+    ],
+    "query_en": "How does the TLS handshake establish a secure connection?",
+    "synonyms": {
+      "叠加": ["增加", "添加"],
+      "协商": ["商定", "确定"],
+      "验证": ["核实", "确认"],
+      "防止": ["阻止", "避免"]
+    }
+  },
+  "t36": {
+    "title_cn": "Linux 内核",
+    "title_en": "The Linux Kernel",
+    "facts_cn": [
+      "Linux 内核是操作系统的核心，负责进程调度和内存管理。",
+      "内核把系统划分为用户态和内核态以保护系统安全。",
+      "设备驱动程序运行在内核态，负责与硬件交互。",
+      "Linux 内核采用模块化设计，支持按需加载驱动模块。"
+    ],
+    "facts_en": [
+      "The Linux kernel is the core of the operating system, handling process scheduling and memory management.",
+      "The kernel separates user space and kernel space to protect the system.",
+      "Device drivers run in kernel space and interact with hardware.",
+      "The Linux kernel uses a modular design and supports loading driver modules on demand."
+    ],
+    "query_cn": "Linux 内核如何划分用户态和内核态？",
+    "synonyms": {
+      "负责": ["承担", "主管"],
+      "划分": ["分隔", "区分"],
+      "保护": ["保障", "维护"],
+      "交互": ["通信", "交流"]
+    }
+  },
+  "t37": {
+    "title_cn": "数据库事务 ACID",
+    "title_en": "Database Transactions and ACID",
+    "facts_cn": [
+      "ACID 是数据库事务的四个特性：原子性、一致性、隔离性和持久性。",
+      "原子性保证事务要么全部成功要么全部回滚。",
+      "隔离性决定并发事务之间的可见性级别。",
+      "持久性保证事务提交后数据不会因故障而丢失。"
+    ],
+    "facts_en": [
+      "ACID are the four properties of database transactions: atomicity, consistency, isolation, and durability.",
+      "Atomicity guarantees a transaction either fully succeeds or fully rolls back.",
+      "Isolation determines the visibility levels between concurrent transactions.",
+      "Durability ensures committed data survives system failures."
+    ],
+    "query_en": "What do the four ACID properties guarantee?",
+    "synonyms": {
+      "保证": ["确保", "保障"],
+      "决定": ["确定", "影响"],
+      "丢失": ["遗失", "消失"],
+      "提交": ["完成", "确认"]
+    }
+  },
+  "t38": {
+    "title_cn": "Python 编程语言",
+    "title_en": "The Python Programming Language",
+    "facts_cn": [
+      "Python 是一种解释型高级语言，以简洁易读著称。",
+      "Python 拥有丰富的第三方库生态，广泛应用于数据科学和人工智能。",
+      "缩进是 Python 语法的一部分，用于划分代码块。",
+      "Python 的包管理工具 pip 可以一键安装依赖。"
+    ],
+    "facts_en": [
+      "Python is an interpreted high-level language known for its simplicity and readability.",
+      "Python has a rich third-party ecosystem and is widely used in data science and AI.",
+      "Indentation is part of Python's syntax and defines code blocks.",
+      "pip, Python's package manager, installs dependencies with one command."
+    ],
+    "query_cn": "Python 语言的主要特点和应用领域是什么？",
+    "synonyms": {
+      "著称": ["闻名", "出名"],
+      "丰富": ["庞大", "海量"],
+      "广泛": ["普遍", "大量"],
+      "安装": ["部署", "配置"]
+    }
+  },
+  "t39": {
+    "title_cn": "图神经网络",
+    "title_en": "Graph Neural Networks",
+    "facts_cn": [
+      "图神经网络专门处理图结构数据，如社交网络和分子结构。",
+      "消息传递是图神经网络的核心，节点通过聚合邻居信息更新表示。",
+      "图神经网络可用于节点分类、链接预测和图分类任务。",
+      "过平滑是深层图神经网络面临的主要挑战之一。"
+    ],
+    "facts_en": [
+      "Graph neural networks process graph-structured data such as social networks and molecular structures.",
+      "Message passing is the core of GNNs: nodes update representations by aggregating neighbor information.",
+      "GNNs handle node classification, link prediction, and graph classification tasks.",
+      "Over-smoothing is a major challenge for deep GNNs."
+    ],
+    "query_en": "How does message passing work in graph neural networks?",
+    "synonyms": {
+      "处理": ["应对", "分析"],
+      "核心": ["关键", "基础"],
+      "更新": ["刷新", "改进"],
+      "挑战": ["难题", "困难"]
+    }
+  },
+  "t40": {
+    "title_cn": "大模型幻觉",
+    "title_en": "LLM Hallucination",
+    "facts_cn": [
+      "大模型幻觉是指模型生成看似合理但与事实不符的内容。",
+      "训练数据中的错误和模型过度自信都可能导致幻觉。",
+      "检索增强、事实核查和提示约束是常见的缓解手段。",
+      "降低温度参数可以减少输出的随机性，但无法根治幻觉。"
+    ],
+    "facts_en": [
+      "LLM hallucination refers to plausible-looking but factually incorrect generated content.",
+      "Errors in training data and model overconfidence can both cause hallucination.",
+      "Retrieval augmentation, fact-checking, and prompt constraints are common mitigations.",
+      "Lowering the temperature parameter reduces output randomness but cannot eliminate hallucination."
+    ],
+    "query_cn": "如何缓解大语言模型的幻觉问题？",
+    "synonyms": {
+      "生成": ["产生", "输出"],
+      "导致": ["造成", "引发"],
+      "缓解": ["减轻", "抑制"],
+      "降低": ["调低", "减小"]
+    }
+  }
+}

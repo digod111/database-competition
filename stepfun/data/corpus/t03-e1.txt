@@ -1,0 +1,3 @@
+The IK Chinese Tokenizer
+
+Chinese full-text search usually tokenizes the text first and then builds an inverted index. The IK tokenizer is a popular tokenization component for Chinese text, supporting fine-grained and smart segmentation modes. Smart mode prefers longer words so that the segmentation result is closer to natural semantics.

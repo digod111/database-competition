@@ -1,0 +1,3 @@
+Cybersecurity
+
+Phishing attacks trick users into revealing sensitive information by impersonating trusted sources. Multi-factor authentication adds a second layer beyond passwords, greatly improving account security. Software vulnerabilities are one of the most common intrusion paths for attackers. Regular data backups are an effective defense against ransomware.

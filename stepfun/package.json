@@ -1,0 +1,17 @@
+{
+  "name": "stepfun-edge-knowledge-base",
+  "version": "1.0.0",
+  "private": true,
+  "description": "seekdb x StepFun track: browser-local embedding + seekdb hybrid retrieval mini knowledge base",
+  "scripts": {
+    "setup": "npm --prefix server install --legacy-peer-deps && npm --prefix app install",
+    "dev": "node scripts/dev.mjs",
+    "server": "npm --prefix server start",
+    "app": "npm --prefix app run dev",
+    "db:init": "bash scripts/init_seekdb.sh",
+    "db:reset": "bash scripts/reset_seekdb.sh",
+    "models:download": "node scripts/download_models.mjs",
+    "corpus:gen": "python scripts/gen_corpus.py",
+    "build": "npm --prefix app run build"
+  }
+}

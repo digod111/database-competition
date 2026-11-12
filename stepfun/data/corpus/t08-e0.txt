@@ -1,0 +1,3 @@
+Retrieval-Augmented Generation
+
+RAG retrieves relevant documents before generation and feeds the results to the large model as context. This approach can significantly reduce the probability of hallucinations from large models. Retrieval quality directly determines the upper bound of answer quality in a RAG system. Hybrid strategies combining vector and full-text search are often used to improve recall.

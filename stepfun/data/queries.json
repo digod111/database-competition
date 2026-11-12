@@ -1,0 +1,529 @@
+{
+  "meta": {
+    "seed": 42,
+    "query_count": 40,
+    "generator": "scripts/gen_corpus.py"
+  },
+  "queries": [
+    {
+      "id": "q-t01",
+      "topic": "t01",
+      "text": "HNSW 索引是如何组织向量并完成近邻搜索的？",
+      "lang": "cn",
+      "relevant": [
+        "t01-c0",
+        "t01-c1",
+        "t01-c2",
+        "t01-e0",
+        "t01-c3",
+        "t01-e1"
+      ]
+    },
+    {
+      "id": "q-t02",
+      "topic": "t02",
+      "text": "How do vector databases combine vector search with full-text search?",
+      "lang": "en",
+      "relevant": [
+        "t02-c0",
+        "t02-c1",
+        "t02-c2",
+        "t02-e0",
+        "t02-c3",
+        "t02-e1"
+      ]
+    },
+    {
+      "id": "q-t03",
+      "topic": "t03",
+      "text": "IK 分词器的智能模式有什么特点，在 seekdb 中怎么配置？",
+      "lang": "cn",
+      "relevant": [
+        "t03-c0",
+        "t03-c1",
+        "t03-c2",
+        "t03-e0",
+        "t03-c3",
+        "t03-e1"
+      ]
+    },
+    {
+      "id": "q-t04",
+      "topic": "t04",
+      "text": "WebGPU 相比 WASM 在浏览器端推理上有什么优势？",
+      "lang": "cn",
+      "relevant": [
+        "t04-c0",
+        "t04-c1",
+        "t04-c2",
+        "t04-e0",
+        "t04-c3",
+        "t04-e1"
+      ]
+    },
+    {
+      "id": "q-t05",
+      "topic": "t05",
+      "text": "Why is WebAssembly widely used as a fallback for browser inference?",
+      "lang": "en",
+      "relevant": [
+        "t05-c0",
+        "t05-c1",
+        "t05-c2",
+        "t05-e0",
+        "t05-c3",
+        "t05-e1"
+      ]
+    },
+    {
+      "id": "q-t06",
+      "topic": "t06",
+      "text": "INT8 动态量化为什么能缩小模型体积且几乎不影响检索质量？",
+      "lang": "cn",
+      "relevant": [
+        "t06-c0",
+        "t06-c1",
+        "t06-c2",
+        "t06-e0",
+        "t06-c3",
+        "t06-e1"
+      ]
+    },
+    {
+      "id": "q-t07",
+      "topic": "t07",
+      "text": "How does multi-head self-attention work in Transformers?",
+      "lang": "en",
+      "relevant": [
+        "t07-c0",
+        "t07-c1",
+        "t07-c2",
+        "t07-e0",
+        "t07-c3",
+        "t07-e1"
+      ]
+    },
+    {
+      "id": "q-t08",
+      "topic": "t08",
+      "text": "RAG 为什么能减少大模型的幻觉问题？",
+      "lang": "cn",
+      "relevant": [
+        "t08-c0",
+        "t08-c1",
+        "t08-c2",
+        "t08-e0",
+        "t08-c3",
+        "t08-e1"
+      ]
+    },
+    {
+      "id": "q-t09",
+      "topic": "t09",
+      "text": "seekdb 如何用一条 SQL 完成向量与全文的混合检索？",
+      "lang": "cn",
+      "relevant": [
+        "t09-c0",
+        "t09-c1",
+        "t09-c2",
+        "t09-e0",
+        "t09-c3",
+        "t09-e1"
+      ]
+    },
+    {
+      "id": "q-t10",
+      "topic": "t10",
+      "text": "What is an inverted index and why does it speed up full-text search?",
+      "lang": "en",
+      "relevant": [
+        "t10-c0",
+        "t10-c1",
+        "t10-c2",
+        "t10-e0",
+        "t10-c3",
+        "t10-e1"
+      ]
+    },
+    {
+      "id": "q-t11",
+      "topic": "t11",
+      "text": "浅烘和深烘咖啡在风味上有什么区别？",
+      "lang": "cn",
+      "relevant": [
+        "t11-c0",
+        "t11-c1",
+        "t11-c2",
+        "t11-e0",
+        "t11-c3"
+      ]
+    },
+    {
+      "id": "q-t12",
+      "topic": "t12",
+      "text": "What does a typical marathon training plan include?",
+      "lang": "en",
+      "relevant": [
+        "t12-c0",
+        "t12-c1",
+        "t12-c2",
+        "t12-e0",
+        "t12-c3"
+      ]
+    },
+    {
+      "id": "q-t13",
+      "topic": "t13",
+      "text": "地中海饮食的核心食材和健康益处是什么？",
+      "lang": "cn",
+      "relevant": [
+        "t13-c0",
+        "t13-c1",
+        "t13-c2",
+        "t13-e0",
+        "t13-c3"
+      ]
+    },
+    {
+      "id": "q-t14",
+      "topic": "t14",
+      "text": "How does proof of stake differ from proof of work?",
+      "lang": "en",
+      "relevant": [
+        "t14-c0",
+        "t14-c1",
+        "t14-c2",
+        "t14-e0",
+        "t14-c3"
+      ]
+    },
+    {
+      "id": "q-t15",
+      "topic": "t15",
+      "text": "祝融号火星车有哪些主要发现？",
+      "lang": "cn",
+      "relevant": [
+        "t15-c0",
+        "t15-c1",
+        "t15-c2",
+        "t15-e0",
+        "t15-c3"
+      ]
+    },
+    {
+      "id": "q-t16",
+      "topic": "t16",
+      "text": "What is the event horizon of a black hole?",
+      "lang": "en",
+      "relevant": [
+        "t16-c0",
+        "t16-c1",
+        "t16-c2",
+        "t16-e0",
+        "t16-c3"
+      ]
+    },
+    {
+      "id": "q-t17",
+      "topic": "t17",
+      "text": "光合作用分为哪两个阶段，各有什么作用？",
+      "lang": "cn",
+      "relevant": [
+        "t17-c0",
+        "t17-c1",
+        "t17-c2",
+        "t17-e0",
+        "t17-c3"
+      ]
+    },
+    {
+      "id": "q-t18",
+      "topic": "t18",
+      "text": "What are the main causes and consequences of global warming?",
+      "lang": "en",
+      "relevant": [
+        "t18-c0",
+        "t18-c1",
+        "t18-c2",
+        "t18-e0",
+        "t18-c3"
+      ]
+    },
+    {
+      "id": "q-t19",
+      "topic": "t19",
+      "text": "太阳能和风能分别是如何发电的？",
+      "lang": "cn",
+      "relevant": [
+        "t19-c0",
+        "t19-c1",
+        "t19-c2",
+        "t19-e0",
+        "t19-c3"
+      ]
+    },
+    {
+      "id": "q-t20",
+      "topic": "t20",
+      "text": "中国书法有哪五种主要书体？",
+      "lang": "cn",
+      "relevant": [
+        "t20-c0",
+        "t20-c1",
+        "t20-c2",
+        "t20-e0",
+        "t20-c3"
+      ]
+    },
+    {
+      "id": "q-t21",
+      "topic": "t21",
+      "text": "Who are the most famous poets of the Tang dynasty?",
+      "lang": "en",
+      "relevant": [
+        "t21-c0",
+        "t21-c1",
+        "t21-c2",
+        "t21-e0",
+        "t21-c3"
+      ]
+    },
+    {
+      "id": "q-t22",
+      "topic": "t22",
+      "text": "古罗马文明对后世法律体系有什么影响？",
+      "lang": "cn",
+      "relevant": [
+        "t22-c0",
+        "t22-c1",
+        "t22-c2",
+        "t22-e0",
+        "t22-c3"
+      ]
+    },
+    {
+      "id": "q-t23",
+      "topic": "t23",
+      "text": "What was humanism and why was it central to the Renaissance?",
+      "lang": "en",
+      "relevant": [
+        "t23-c0",
+        "t23-c1",
+        "t23-c2",
+        "t23-e0",
+        "t23-c3"
+      ]
+    },
+    {
+      "id": "q-t24",
+      "topic": "t24",
+      "text": "爵士乐的标志性音乐元素有哪些？",
+      "lang": "cn",
+      "relevant": [
+        "t24-c0",
+        "t24-c1",
+        "t24-c2",
+        "t24-e0",
+        "t24-c3"
+      ]
+    },
+    {
+      "id": "q-t25",
+      "topic": "t25",
+      "text": "How did Impressionism get its name?",
+      "lang": "en",
+      "relevant": [
+        "t25-c0",
+        "t25-c1",
+        "t25-c2",
+        "t25-e0",
+        "t25-c3"
+      ]
+    },
+    {
+      "id": "q-t26",
+      "topic": "t26",
+      "text": "蒙太奇剪辑手法如何创造新的含义？",
+      "lang": "cn",
+      "relevant": [
+        "t26-c0",
+        "t26-c1",
+        "t26-c2",
+        "t26-e0",
+        "t26-c3"
+      ]
+    },
+    {
+      "id": "q-t27",
+      "topic": "t27",
+      "text": "What are the basic techniques for beginner rock climbers?",
+      "lang": "en",
+      "relevant": [
+        "t27-c0",
+        "t27-c1",
+        "t27-c2",
+        "t27-e0",
+        "t27-c3"
+      ]
+    },
+    {
+      "id": "q-t28",
+      "topic": "t28",
+      "text": "初学者应该掌握哪些滑雪基本技巧？",
+      "lang": "cn",
+      "relevant": [
+        "t28-c0",
+        "t28-c1",
+        "t28-c2",
+        "t28-e0",
+        "t28-c3"
+      ]
+    },
+    {
+      "id": "q-t29",
+      "topic": "t29",
+      "text": "中国传统木工的榫卯结构有什么特点？",
+      "lang": "cn",
+      "relevant": [
+        "t29-c0",
+        "t29-c1",
+        "t29-c2",
+        "t29-e0",
+        "t29-c3"
+      ]
+    },
+    {
+      "id": "q-t30",
+      "topic": "t30",
+      "text": "What should beginners know about watering succulents?",
+      "lang": "en",
+      "relevant": [
+        "t30-c0",
+        "t30-c1",
+        "t30-c2",
+        "t30-e0",
+        "t30-c3"
+      ]
+    },
+    {
+      "id": "q-t31",
+      "topic": "t31",
+      "text": "三分法构图的基本原理是什么？",
+      "lang": "cn",
+      "relevant": [
+        "t31-c0",
+        "t31-c1",
+        "t31-c2",
+        "t31-e0"
+      ]
+    },
+    {
+      "id": "q-t32",
+      "topic": "t32",
+      "text": "Why should you build an emergency fund first?",
+      "lang": "en",
+      "relevant": [
+        "t32-c0",
+        "t32-c1",
+        "t32-c2",
+        "t32-e0"
+      ]
+    },
+    {
+      "id": "q-t33",
+      "topic": "t33",
+      "text": "复利计算的公式是什么，为什么时间越长收益越大？",
+      "lang": "cn",
+      "relevant": [
+        "t33-c0",
+        "t33-c1",
+        "t33-c2",
+        "t33-e0"
+      ]
+    },
+    {
+      "id": "q-t34",
+      "topic": "t34",
+      "text": "多因素认证为什么能显著提升账户安全？",
+      "lang": "cn",
+      "relevant": [
+        "t34-c0",
+        "t34-c1",
+        "t34-c2",
+        "t34-e0"
+      ]
+    },
+    {
+      "id": "q-t35",
+      "topic": "t35",
+      "text": "How does the TLS handshake establish a secure connection?",
+      "lang": "en",
+      "relevant": [
+        "t35-c0",
+        "t35-c1",
+        "t35-c2",
+        "t35-e0"
+      ]
+    },
+    {
+      "id": "q-t36",
+      "topic": "t36",
+      "text": "Linux 内核如何划分用户态和内核态？",
+      "lang": "cn",
+      "relevant": [
+        "t36-c0",
+        "t36-c1",
+        "t36-c2",
+        "t36-e0"
+      ]
+    },
+    {
+      "id": "q-t37",
+      "topic": "t37",
+      "text": "What do the four ACID properties guarantee?",
+      "lang": "en",
+      "relevant": [
+        "t37-c0",
+        "t37-c1",
+        "t37-c2",
+        "t37-e0"
+      ]
+    },
+    {
+      "id": "q-t38",
+      "topic": "t38",
+      "text": "Python 语言的主要特点和应用领域是什么？",
+      "lang": "cn",
+      "relevant": [
+        "t38-c0",
+        "t38-c1",
+        "t38-c2",
+        "t38-e0"
+      ]
+    },
+    {
+      "id": "q-t39",
+      "topic": "t39",
+      "text": "How does message passing work in graph neural networks?",
+      "lang": "en",
+      "relevant": [
+        "t39-c0",
+        "t39-c1",
+        "t39-c2",
+        "t39-e0"
+      ]
+    },
+    {
+      "id": "q-t40",
+      "topic": "t40",
+      "text": "如何缓解大语言模型的幻觉问题？",
+      "lang": "cn",
+      "relevant": [
+        "t40-c0",
+        "t40-c1",
+        "t40-c2",
+        "t40-e0"
+      ]
+    }
+  ]
+}

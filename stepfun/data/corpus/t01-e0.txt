@@ -1,0 +1,3 @@
+The HNSW Index Algorithm
+
+HNSW stands for Hierarchical Navigable Small World, an approximate nearest neighbor search algorithm based on graph structures. It organizes vector data into a multi-layer navigable small world graph, where upper layers are sparse and lower layers are dense. During search it greedily traverses from the top layer downward, finishing with fine-grained neighbor lookup at the bottom. HNSW achieves a good trade-off between recall and query speed, and is adopted by many vector databases.

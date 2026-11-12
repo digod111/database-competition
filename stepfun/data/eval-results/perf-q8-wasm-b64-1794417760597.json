@@ -1,0 +1,88 @@
+{
+  "savedAt": "2026-11-11T17:22:40.597Z",
+  "kb": "perf-q8-wasm-b64",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QoderCN/0.5.6 Chrome/150.0.7871.250 Electron/43.8.4 Safari/537.36",
+  "webgpuDetected": true,
+  "run": {
+    "config": {
+      "dtype": "q8",
+      "backend": "wasm",
+      "kb": "perf-q8-wasm-b64",
+      "corpusSize": 200,
+      "batch": 64,
+      "repeats": 5,
+      "queryText": "HNSW 索引是如何组织向量并完成近邻搜索的？"
+    },
+    "docEmbed": {
+      "totalChunks": 200,
+      "totalMs": 37167.19999998808,
+      "docsPerSec": 5.3810887018678875,
+      "batchMs": [
+        14688.09999999404,
+        10845.699999988079,
+        10290.90000000596,
+        1342.5
+      ]
+    },
+    "dbWrite": {
+      "totalMs": 280.20000000000005,
+      "addMs": [
+        88.1,
+        81.2,
+        45.8,
+        65.1
+      ]
+    },
+    "queries": [
+      {
+        "run": 1,
+        "queryEmbedMs": 43.3999999910593,
+        "searchMs": 33.3,
+        "e2eMs": 83.69999998807907,
+        "rowCount": 10
+      },
+      {
+        "run": 2,
+        "queryEmbedMs": 46.900000005960464,
+        "searchMs": 18,
+        "e2eMs": 71.79999999701977,
+        "rowCount": 10
+      },
+      {
+        "run": 3,
+        "queryEmbedMs": 45.099999994039536,
+        "searchMs": 16.7,
+        "e2eMs": 67.69999998807907,
+        "rowCount": 10
+      },
+      {
+        "run": 4,
+        "queryEmbedMs": 42.8999999910593,
+        "searchMs": 17.2,
+        "e2eMs": 66.09999999403954,
+        "rowCount": 10
+      },
+      {
+        "run": 5,
+        "queryEmbedMs": 43.6000000089407,
+        "searchMs": 20.1,
+        "e2eMs": 69.70000000298023,
+        "rowCount": 10
+      }
+    ],
+    "summary": {
+      "queryEmbed": {
+        "firstMs": 43.3999999910593,
+        "warmMedianMs": 44.350000001490116
+      },
+      "seekdbSearch": {
+        "firstMs": 33.3,
+        "warmMedianMs": 17.6
+      },
+      "e2e": {
+        "firstMs": 83.69999998807907,
+        "warmMedianMs": 68.69999999552965
+      }
+    }
+  }
+}

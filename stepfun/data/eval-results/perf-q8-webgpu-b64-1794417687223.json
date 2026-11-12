@@ -1,0 +1,88 @@
+{
+  "savedAt": "2026-11-11T17:21:27.223Z",
+  "kb": "perf-q8-webgpu-b64",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QoderCN/0.5.6 Chrome/150.0.7871.250 Electron/43.8.4 Safari/537.36",
+  "webgpuDetected": true,
+  "run": {
+    "config": {
+      "dtype": "q8",
+      "backend": "webgpu",
+      "kb": "perf-q8-webgpu-b64",
+      "corpusSize": 200,
+      "batch": 64,
+      "repeats": 5,
+      "queryText": "HNSW 索引是如何组织向量并完成近邻搜索的？"
+    },
+    "docEmbed": {
+      "totalChunks": 200,
+      "totalMs": 33764.79999999702,
+      "docsPerSec": 5.923328436715682,
+      "batchMs": [
+        13244.5,
+        10025.5,
+        9244.699999988079,
+        1250.1000000089407
+      ]
+    },
+    "dbWrite": {
+      "totalMs": 254.70000000000002,
+      "addMs": [
+        57.4,
+        53.5,
+        88.4,
+        55.4
+      ]
+    },
+    "queries": [
+      {
+        "run": 1,
+        "queryEmbedMs": 139.09999999403954,
+        "searchMs": 19.7,
+        "e2eMs": 165,
+        "rowCount": 10
+      },
+      {
+        "run": 2,
+        "queryEmbedMs": 141.80000001192093,
+        "searchMs": 20.8,
+        "e2eMs": 169.30000001192093,
+        "rowCount": 10
+      },
+      {
+        "run": 3,
+        "queryEmbedMs": 145.30000001192093,
+        "searchMs": 16.9,
+        "e2eMs": 168.40000000596046,
+        "rowCount": 10
+      },
+      {
+        "run": 4,
+        "queryEmbedMs": 135.29999999701977,
+        "searchMs": 16.4,
+        "e2eMs": 158,
+        "rowCount": 10
+      },
+      {
+        "run": 5,
+        "queryEmbedMs": 143.5,
+        "searchMs": 20.9,
+        "e2eMs": 170.20000000298023,
+        "rowCount": 10
+      }
+    ],
+    "summary": {
+      "queryEmbed": {
+        "firstMs": 139.09999999403954,
+        "warmMedianMs": 142.65000000596046
+      },
+      "seekdbSearch": {
+        "firstMs": 19.7,
+        "warmMedianMs": 18.85
+      },
+      "e2e": {
+        "firstMs": 165,
+        "warmMedianMs": 168.8500000089407
+      }
+    }
+  }
+}

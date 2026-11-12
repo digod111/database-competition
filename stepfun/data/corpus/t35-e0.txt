@@ -1,0 +1,3 @@
+HTTPS and TLS
+
+HTTPS adds the TLS protocol on top of HTTP to encrypt data in transit. During the TLS handshake, asymmetric encryption negotiates a symmetric session key. Digital certificates issued by CAs verify server identity. HTTPS prevents man-in-the-middle eavesdropping and tampering.

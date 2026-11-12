@@ -1,0 +1,97 @@
+{
+  "savedAt": "2026-11-11T17:22:44.417Z",
+  "kb": "perf-fp32-webgpu-b16",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QoderCN/0.5.6 Chrome/150.0.7871.250 Electron/43.8.4 Safari/537.36",
+  "webgpuDetected": true,
+  "run": {
+    "config": {
+      "dtype": "fp32",
+      "backend": "webgpu",
+      "kb": "perf-fp32-webgpu-b16",
+      "corpusSize": 200,
+      "batch": 16,
+      "repeats": 5,
+      "queryText": "HNSW 索引是如何组织向量并完成近邻搜索的？"
+    },
+    "docEmbed": {
+      "totalChunks": 200,
+      "totalMs": 2638.699999973178,
+      "docsPerSec": 75.79489900406753,
+      "batchMs": [
+        286.09999999403954,
+        239.69999998807907,
+        236.29999999701977,
+        216,
+        205.6000000089407,
+        194.29999999701977,
+        168.70000000298023,
+        191.79999999701977,
+        192.59999999403954,
+        192.29999999701977,
+        197.20000000298023,
+        205.79999999701977,
+        112.29999999701977
+      ]
+    },
+    "dbWrite": {
+      "totalMs": 200.5,
+      "addMs": [
+        49.1,
+        53.8,
+        41,
+        56.6
+      ]
+    },
+    "queries": [
+      {
+        "run": 1,
+        "queryEmbedMs": 15.200000002980232,
+        "searchMs": 53.9,
+        "e2eMs": 75.6000000089407,
+        "rowCount": 10
+      },
+      {
+        "run": 2,
+        "queryEmbedMs": 14.700000002980232,
+        "searchMs": 25.3,
+        "e2eMs": 46.20000000298023,
+        "rowCount": 9
+      },
+      {
+        "run": 3,
+        "queryEmbedMs": 14.200000002980232,
+        "searchMs": 32.8,
+        "e2eMs": 53.20000000298023,
+        "rowCount": 9
+      },
+      {
+        "run": 4,
+        "queryEmbedMs": 14,
+        "searchMs": 26,
+        "e2eMs": 46,
+        "rowCount": 9
+      },
+      {
+        "run": 5,
+        "queryEmbedMs": 15.900000005960464,
+        "searchMs": 39.3,
+        "e2eMs": 61.599999994039536,
+        "rowCount": 9
+      }
+    ],
+    "summary": {
+      "queryEmbed": {
+        "firstMs": 15.200000002980232,
+        "warmMedianMs": 14.450000002980232
+      },
+      "seekdbSearch": {
+        "firstMs": 53.9,
+        "warmMedianMs": 29.4
+      },
+      "e2e": {
+        "firstMs": 75.6000000089407,
+        "warmMedianMs": 49.70000000298023
+      }
+    }
+  }
+}

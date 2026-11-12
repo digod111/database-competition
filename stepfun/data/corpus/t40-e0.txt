@@ -1,0 +1,3 @@
+LLM Hallucination
+
+LLM hallucination refers to plausible-looking but factually incorrect generated content. Errors in training data and model overconfidence can both cause hallucination. Retrieval augmentation, fact-checking, and prompt constraints are common mitigations. Lowering the temperature parameter reduces output randomness but cannot eliminate hallucination.

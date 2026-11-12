@@ -1,0 +1,3 @@
+Vector Databases
+
+Vector databases are designed to store high-dimensional vectors and provide efficient similarity search. Vector databases usually build approximate indexes such as HNSW or IVF on vector columns to accelerate queries. Many modern databases combine vector search with full-text search and scalar filtering to support hybrid queries.

@@ -1,0 +1,3 @@
+WebGPU in Browsers
+
+WebGPU is a next-generation browser graphics and compute API that gives direct access to GPU parallel computing. Compared with WebGL, WebGPU offers lower-level control and reduced driver overhead. When running machine learning inference in the browser, WebGPU is usually faster than WASM. Before use, check support via navigator.gpu and request an adapter.

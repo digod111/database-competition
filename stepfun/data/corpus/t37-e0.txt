@@ -1,0 +1,3 @@
+Database Transactions and ACID
+
+ACID are the four properties of database transactions: atomicity, consistency, isolation, and durability. Atomicity guarantees a transaction either fully succeeds or fully rolls back. Isolation determines the visibility levels between concurrent transactions. Durability ensures committed data survives system failures.

@@ -1,0 +1,3 @@
+The Linux Kernel
+
+The Linux kernel is the core of the operating system, handling process scheduling and memory management. The kernel separates user space and kernel space to protect the system. Device drivers run in kernel space and interact with hardware. The Linux kernel uses a modular design and supports loading driver modules on demand.

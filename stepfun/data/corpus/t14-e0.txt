@@ -1,0 +1,3 @@
+Blockchain Consensus
+
+Consensus mechanisms let nodes in a distributed network agree on ledger state. Proof of work relies on computing power competition and consumes high energy. Proof of stake selects validators based on token holdings and is far more energy efficient. Byzantine fault tolerant protocols use multiple voting rounds to guarantee fault tolerance.

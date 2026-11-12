@@ -1,0 +1,3 @@
+Retrieval-Augmented Generation
+
+Hybrid strategies combining vector and full-text search are often used to improve recall. Retrieval quality directly determines the upper bound of answer quality in a RAG system. RAG retrieves relevant documents before generation and feeds the results to the large model as context.

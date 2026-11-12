@@ -1,0 +1,3 @@
+Graph Neural Networks
+
+Graph neural networks process graph-structured data such as social networks and molecular structures. Message passing is the core of GNNs: nodes update representations by aggregating neighbor information. GNNs handle node classification, link prediction, and graph classification tasks. Over-smoothing is a major challenge for deep GNNs.

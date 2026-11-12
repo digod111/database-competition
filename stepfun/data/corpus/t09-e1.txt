@@ -1,0 +1,3 @@
+seekdb Hybrid Search
+
+Hybrid search can be done in a single SQL statement combining MATCH with vector distance ordering. seekdb is an AI-native database from OceanBase that stores vector, full-text, and scalar data in one system. seekdb is MySQL-compatible and supports the VECTOR column type and HNSW vector indexes.

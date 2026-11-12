@@ -1,0 +1,3 @@
+Inverted Index
+
+An inverted index records which documents each term appears in, and is the core data structure of full-text search engines. Tokenization is usually needed before building an inverted index to split documents into terms. Queries locate candidate documents directly by term, avoiding a full scan of every document. With skip lists, inverted indexes efficiently handle merge operations across multiple terms.

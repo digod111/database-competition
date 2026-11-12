@@ -1,0 +1,3 @@
+Compound Interest
+
+Compound interest means interest is added to the principal and then earns more interest. The compound interest formula is A = P(1+r)^n, where n is the number of periods. The longer the horizon, the stronger the compounding effect, dubbed the eighth wonder of the world. Starting regular investments early significantly amplifies long-term returns.

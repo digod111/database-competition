@@ -1,0 +1,3 @@
+Transformer Attention Mechanism
+
+The attention mechanism lets the model reference other tokens in the input sequence when processing each token. Self-attention computes relevance weights between tokens through query, key, and value matrices. Multi-head attention splits the representation space into multiple subspaces to capture different dependencies in parallel. The Transformer architecture is entirely based on attention and abandons traditional recurrent structures.

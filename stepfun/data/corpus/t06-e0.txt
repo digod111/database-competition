@@ -1,0 +1,3 @@
+INT8 Model Quantization
+
+INT8 quantization compresses model weights from 32-bit floats to 8-bit integers, greatly reducing model size. Dynamic quantization computes scale factors from activation ranges at inference time, which is simple and effective. Quantization usually introduces slight precision loss, but retrieval quality is often barely affected. Quantized models have clear advantages in memory footprint and loading speed.
